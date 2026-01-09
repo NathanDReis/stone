@@ -1,0 +1,129 @@
+/* css/components.css */
+
+.made-with {
+  margin-left: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.heart svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--accent);
+  vertical-align: middle;
+  margin: 0 0.2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 28px;
+  height: 28px;
+}
+
+.logo h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: .5px;
+}
+
+.box-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  width: 220px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Buttons */
+
+.fab {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+  color: var(--text-secondary);
+
+  cursor: pointer;
+}
+
+.fab:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.button {
+  border-radius: 20px;
+  padding: 10px 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  background-color: transparent;
+  color: var(--text-secondary);
+
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Editor de Markdown */
+
+.cm-editor {
+  flex: 1;
+  height: 100%;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
+
+.cm-md-hidden {
+  opacity: 0;
+  font-size: 0;
+  width: 0;
+}
+
+.cm-activeLine .cm-md-hidden {
+  opacity: 0.35;
+  font-size: inherit;
+}

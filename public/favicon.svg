@@ -1,0 +1,58 @@
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Stone logo"
+>
+  <defs>
+    <!-- Topo -->
+    <linearGradient id="topFacet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#bfdbfe"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+
+    <!-- Faceta esquerda -->
+    <linearGradient id="leftFacet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+
+    <!-- Faceta direita -->
+    <linearGradient id="rightFacet" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+
+    <!-- Centro azul -->
+    <linearGradient id="centerFacet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Topo -->
+  <polygon
+    points="20 14 32 6 44 14 32 22"
+    fill="url(#topFacet)"
+  />
+
+  <!-- Faceta esquerda -->
+  <polygon
+    points="20 14 6 26 26 52 32 22"
+    fill="url(#leftFacet)"
+  />
+
+  <!-- Faceta direita -->
+  <polygon
+    points="44 14 58 26 38 52 32 22"
+    fill="url(#rightFacet)"
+  />
+
+  <!-- Centro (azul mais vivo) -->
+  <polygon
+    points="26 52 32 58 38 52 32 22"
+    fill="url(#centerFacet)"
+  />
+</svg>
