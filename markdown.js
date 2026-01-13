@@ -1,14 +1,14 @@
 import { EditorState } from "@codemirror/state";
-import { 
-  EditorView, 
+import {
+  EditorView,
   keymap,
   highlightActiveLine,
   highlightActiveLineGutter,
   placeholder,
 } from "@codemirror/view";
-import { 
-  defaultKeymap, 
-  history, 
+import {
+  defaultKeymap,
+  history,
   historyKeymap,
   indentMore,
   indentLess
@@ -19,20 +19,35 @@ import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { indentOnInput } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
 
-import { 
-  markdownCompletions, 
-  markdownHighlight, 
+import {
+  markdownCompletions,
+  markdownHighlight,
   editorTheme,
-  hideMarkdownTokens
+  markdownDecorations
 } from "./src/lib";
 
 const state = EditorState.create({
   doc: "# Meu documento",
   extensions: [
-    editorTheme,         
-    hideMarkdownTokens,  
+    editorTheme,
+    markdownDecorations,
 
     keymap.of([
+      {
+        key: "Enter",
+        run: (view) => {
+          const line = view.state.doc.lineAt(view.state.selection.main.head);
+          const match = line.text.match(/^(\s*[-+*]|\s*\d+\.)\s*$/);
+
+          if (match) {
+            view.dispatch({
+              changes: { from: line.from, to: line.to, insert: "" }
+            });
+            return true;
+          }
+          return false;
+        }
+      },
       ...defaultKeymap,
       ...historyKeymap,
       ...searchKeymap,
@@ -44,7 +59,7 @@ const state = EditorState.create({
     EditorView.lineWrapping,
     history(),
 
-    markdown(),          
+    markdown(),
     autocompletion({
       override: [markdownCompletions]
     }),

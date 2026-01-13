@@ -1,4 +1,4 @@
 export { markdownCompletions } from "./autoComplete";
 export { markdownHighlight } from "./markdownHighLight";
 export { editorTheme } from "./editorTheme";
-export { hideMarkdownTokens } from "./hideMarkdownTokens";
+export { markdownDecorations } from "./markdownDecorations";

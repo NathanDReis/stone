@@ -117,8 +117,17 @@
   outline: none;
 }
 
+/* Markdown Decorations */
 .cm-md-hidden {
   opacity: 0;
   font-size: 0;
   width: 0;
+}
+
+.cm-task-widget,
+.cm-bullet-widget {
+  display: inline-block;
+  width: 1.2em;
+  text-align: center;
+  opacity: 0.7;
 }
