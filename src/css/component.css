@@ -107,10 +107,10 @@
 }
 
 /* Editor de Markdown */
-
 .cm-editor {
   flex: 1;
   height: 100%;
+  padding: 5dvh 10dvw;
 }
 
 .cm-editor.cm-focused {
@@ -121,9 +121,4 @@
   opacity: 0;
   font-size: 0;
   width: 0;
-}
-
-.cm-activeLine .cm-md-hidden {
-  opacity: 0.35;
-  font-size: inherit;
 }
