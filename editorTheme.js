@@ -56,5 +56,12 @@ export const editorTheme = EditorView.theme({
   ".cm-tooltip-autocomplete li[aria-selected]": {
     backgroundColor: "var(--accent)",
     color: "#fff"
+  },
+
+  ".cm-inserted": {
+    backgroundColor: "var(--warning)",
+    color: "var(--text-primary)",
+    padding: "2px 4px",
+    borderRadius: "3px"
   }
-}, { dark: true });
+}, { dark: false });
