@@ -1,7 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
-import { Decoration, ViewPlugin } from "@codemirror/view";
-
-import { WidgetType } from "@codemirror/view";
+import { Decoration, ViewPlugin, WidgetType } from "@codemirror/view";
 
 class TaskWidget extends WidgetType {
   constructor(view, checked) {
@@ -54,7 +52,6 @@ class TaskWidget extends WidgetType {
     return false;
   }
 }
-
 class BulletWidget extends WidgetType {
   toDOM() {
     const span = document.createElement("span");
@@ -65,6 +62,58 @@ class BulletWidget extends WidgetType {
 
   ignoreEvent() {
     return true;
+  }
+}
+
+class ImageWidget extends WidgetType {
+  constructor(src) {
+    super();
+    this.src = src;
+  }
+
+  toDOM() {
+    const img = document.createElement("img");
+    img.src = this.src;
+    img.style.maxWidth = "100%";
+    img.style.display = "block";
+    return img;
+  }
+
+  ignoreEvent() {
+    return true;
+  }
+}
+
+class LinkWidget extends WidgetType {
+  constructor(view, label, href) {
+    super();
+    this.view = view;
+    this.label = label;
+    this.href = href;
+  }
+
+  toDOM() {
+    const span = document.createElement("span");
+    span.className = "cm-md-link-widget";
+    span.textContent = this.label;
+
+    span.onmousedown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    span.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.open(this.href, "_blank", "noopener,noreferrer");
+    };
+
+    return span;
+  }
+
+  ignoreEvent() {
+    return false;
   }
 }
 
@@ -88,6 +137,8 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
             syntaxTree(view.state).iterate({
                 enter(node) {
+                    if (node.name === "InlineCode") return;
+
                     if (
                         node.name === "EmphasisMark" ||
                         node.name === "StrongEmphasisMark" ||
@@ -157,8 +208,53 @@ export const markdownDecorations = ViewPlugin.fromClass(
                             }
                         }
                     }
+                    
+                    if (node.name === "Image") {
+                      const text = view.state.sliceDoc(node.from, node.to);
+                      const match = /!\[([^\]]*)\]\(([^)]+)\)/.exec(text);
+                      if (!match) return;
 
-                    if (node.name === "InlineCode") return;
+                      const src = match[2];
+
+                      const isCursorInside = ranges.some(r =>
+                        r.from <= node.to && r.to >= node.from
+                      );
+
+                      if (!isCursorInside) {
+                        decorations.push(
+                          Decoration.replace({
+                            widget: new ImageWidget(src),
+                            inclusive: false
+                          }).range(node.from, node.to)
+                        );
+                      }
+                    }
+
+                    if (node.name === "Link") {
+                      const text = view.state.sliceDoc(node.from, node.to);
+
+                      const match = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(text);
+                      if (!match) return;
+
+                      const label = match[1];
+                      const href = match[2];
+
+                      const isCursorInside = ranges.some(r =>
+                        r.from <= node.to && r.to >= node.from
+                      );
+
+                      if (!isCursorInside) {
+                        // Substitui tudo pelo texto clicável
+                        decorations.push(
+                          Decoration.replace({
+                            widget: new LinkWidget(view, label, href),
+                            inclusive: false
+                          }).range(node.from, node.to)
+                        );
+                      }
+
+                      return;
+                    }
 
                     const text = view.state.sliceDoc(node.from, node.to);
                     let regex = /==([^\s=][^=]*?)==/g;

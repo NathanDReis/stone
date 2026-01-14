@@ -16,3 +16,20 @@ Document processes, record knowledge.
 ![Google Icons](https://img.shields.io/badge/Google%20Icons-757575?style=flat&logo=google&logoColor=fff)
 
 The software is still in the early stages of development.
+
+- [ ] code inline e code block
+- [ ] linha horizontal
+- [ ] table
+- [ ] citação
+- [ ] criar tags #tag
+- [ ] organização hierárquica dos títulos no documento
+- [ ] salvar documentação
+- [ ] organização hierárquica dos documentos no menu
+- [ ] poder fazer busca geral, ou por tags
+- [ ] links internos entre páginas
+- [ ] abrir pdf
+- [ ] gráficos de fluxo
+- [ ] cadastro por usuário
+- [ ] permissões de visualização do documento
+- [ ] poder editar as cores do tema e salvar no localStorage
+- [ ] grafo com todos os documentos e seus relacionamentos por links internos

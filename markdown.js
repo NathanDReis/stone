@@ -23,7 +23,7 @@ import {
 } from "./src/lib";
 
 const state = EditorState.create({
-  doc: "# Meu documento\nPrimeiro parágrafo\n- item 1\n- item 2\n- [ ] check\n# Tópico\n## Sub tópico\n\n==s==\n~~d~~\n\nMinha terra tem palmeiras\nOnde canta o sabiá\nAs aves que aqui gorjeiam\nNão gorjeiam como lá\n",
+  doc: "# Meu documento\nPrimeiro parágrafo\n- item 1\n- item 2\n- [ ] check\n# Tópico\n## Sub tópico\n\n==s==\n~~d~~\n\nMinha terra tem palmeiras\nOnde canta o sabiá\nAs aves que aqui gorjeiam\nNão gorjeiam como lá\n\n![Imagem](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)\n\n[Link Externo](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)\n",
   extensions: [
     editorTheme,
     markdownDecorations,
