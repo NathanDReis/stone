@@ -1,8 +1,8 @@
-/* css/global.css */
-
 @import url(./reset.css);
 @import url(./theme.css);
 @import url(./theme-dark.css);
 @import url(./theme-light.css);
+@import url(./theme-terr.css);
+@import url(./theme-terr-dark.css);
 @import url(./layout.css);
 @import url(./component.css);

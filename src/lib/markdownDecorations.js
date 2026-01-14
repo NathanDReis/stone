@@ -13,7 +13,11 @@ class TaskWidget extends WidgetType {
   toDOM() {
     const span = document.createElement("span");
     span.className = "cm-task-widget";
-    span.textContent = this.checked ? "✅" : "🟩";
+    span.innerHTML = this.checked
+      ? `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>`
+      : `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3" /></svg>`;
 
     span.onmousedown = (e) => {
       e.preventDefault();
@@ -116,21 +120,28 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
                             const taskMatch = text.match(/^(\s*[-*+]\s+)(\[[ xX]\])/);
                             if (taskMatch) {
-                                const markerLen = taskMatch[1].length;
-                                const boxLen = taskMatch[2].length;
-                                const isChecked = taskMatch[2].toLowerCase().includes("x");
+                              const markerLen = taskMatch[1].length;
+                              const boxLen = taskMatch[2].length;
+                              const isChecked = taskMatch[2].toLowerCase().includes("x");
 
-                                const boxFrom = node.form + markerLen;
-                                const boxTo = boxFrom + boxLen;
+                              const contentFrom = node.from + markerLen + boxLen + 1;
+                              const contentTo = node.to;
 
+                              decorations.push(
+                                Decoration.replace({
+                                  widget: new TaskWidget(view, isChecked),
+                                  inclusive: false
+                                }).range(node.from, node.from + markerLen + boxLen)
+                              );
+
+                              if (isChecked) {
                                 decorations.push(
-                                    Decoration.replace({
-                                        widget: new TaskWidget(view, isChecked),
-                                        inclusive: false
-                                    }).range(node.from, node.from + markerLen + boxLen)
+                                  Decoration.mark({ class: "cm-md-strike" })
+                                    .range(contentFrom, contentTo)
                                 );
+                              }
 
-                                return;
+                              return;
                             }
 
                             const bulletMatch = text.match(/^(\s*[-*+])\s/);
@@ -147,44 +158,74 @@ export const markdownDecorations = ViewPlugin.fromClass(
                         }
                     }
 
-if (node.name === "InlineCode") return;
+                    if (node.name === "InlineCode") return;
 
-const text = view.state.sliceDoc(node.from, node.to);
-const regex = /==([^\s=][^=]*?)==/g;
+                    const text = view.state.sliceDoc(node.from, node.to);
+                    let regex = /==([^\s=][^=]*?)==/g;
 
-let match;
-while ((match = regex.exec(text))) {
-  const full = match[0];     // ==texto==
-  const inner = match[1];   // texto
+                    let match;
+                    while ((match = regex.exec(text))) {
+                      const full = match[0];
+                      const inner = match[1];
 
-  // 🚫 ignora se terminar com espaço
-  if (inner.endsWith(" ")) continue;
+                      if (inner.endsWith(" ")) continue;
 
-  const from = node.from + match.index;
-  const to = from + full.length;
+                      const from = node.from + match.index;
+                      const to = from + full.length;
 
-  decorations.push(
-    Decoration.mark({ class: "cm-md-highlight" })
-      .range(from, to)
-  );
+                      decorations.push(
+                        Decoration.mark({ class: "cm-md-highlight" })
+                          .range(from, to)
+                      );
 
-  const isCursorInside = ranges.some(r =>
-    r.from <= to && r.to >= from
-  );
+                      const isCursorInside = ranges.some(r =>
+                        r.from <= to && r.to >= from
+                      );
 
-  if (!isCursorInside) {
-    // esconde os ==
-    decorations.push(
-      Decoration.mark({ class: "cm-md-hidden" })
-        .range(from, from + 2)
-    );
-    decorations.push(
-      Decoration.mark({ class: "cm-md-hidden" })
-        .range(to - 2, to)
-    );
-  }
-}
+                      if (!isCursorInside) {
+                        decorations.push(
+                          Decoration.mark({ class: "cm-md-hidden" })
+                            .range(from, from + 2)
+                        );
+                        decorations.push(
+                          Decoration.mark({ class: "cm-md-hidden" })
+                            .range(to - 2, to)
+                        );
+                      }
+                    }
 
+                    regex = /~~([^\s~][^~]*?)~~/g;
+
+                    match;
+                    while ((match = regex.exec(text))) {
+                      const full = match[0];
+                      const inner = match[1];
+
+                      if (inner.endsWith(" ")) continue;
+
+                      const from = node.from + match.index;
+                      const to = from + full.length;
+
+                      decorations.push(
+                        Decoration.mark({ class: "cm-md-strike" })
+                          .range(from, to)
+                      );
+
+                      const isCursorInside = ranges.some(r =>
+                        r.from <= to && r.to >= from
+                      );
+
+                      if (!isCursorInside) {
+                        decorations.push(
+                          Decoration.mark({ class: "cm-md-hidden" })
+                            .range(from, from + 2)
+                        );
+                        decorations.push(
+                          Decoration.mark({ class: "cm-md-hidden" })
+                            .range(to - 2, to)
+                        );
+                      }
+                    }
                 },
             });
 

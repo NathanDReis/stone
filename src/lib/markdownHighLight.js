@@ -7,7 +7,7 @@ export const markdownHighlight = HighlightStyle.define([
     fontWeight: "600", 
     fontSize: "2em", 
     color: "var(--text-primary)", 
-    letterSpacing: ".05em", 
+    letterSpacing: ".05em",
   },
   { tag: tags.heading2, fontWeight: "600", fontSize: "1.6em", color: "var(--text-primary)" },
   { tag: tags.heading3, fontWeight: "600", fontSize: "1.37em", color: "var(--text-primary)" },
@@ -24,5 +24,4 @@ export const markdownHighlight = HighlightStyle.define([
   { tag: tags.quote, color: "var(--text-secondary)", fontStyle: "italic" },
   { tag: tags.meta, color: "var(--text-muted)" },
   { tag: tags.comment, color: "var(--text-muted)", fontStyle: "italic" },
-  { tag: tags.inserted, backgroundColor: "var(--warning)", color: "var(--text-primary)", padding: "2px 0" },
 ]);
