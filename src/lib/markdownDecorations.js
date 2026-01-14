@@ -4,8 +4,9 @@ import { Decoration, ViewPlugin } from "@codemirror/view";
 import { WidgetType } from "@codemirror/view";
 
 class TaskWidget extends WidgetType {
-  constructor(checked) {
+  constructor(view, checked) {
     super();
+    this.view = view;
     this.checked = checked;
   }
 
@@ -13,11 +14,40 @@ class TaskWidget extends WidgetType {
     const span = document.createElement("span");
     span.className = "cm-task-widget";
     span.textContent = this.checked ? "✅" : "🟩";
+
+    span.onmousedown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    span.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const view = this.view;
+      const pos = view.posAtDOM(span);
+      const line = view.state.doc.lineAt(pos);
+
+      const match = line.text.match(/\[( |x|X)\]/);
+      if (!match) return;
+
+      const from = line.from + match.index;
+      const to = from + match[0].length;
+
+      view.dispatch({
+        changes: {
+          from,
+          to,
+          insert: this.checked ? "[ ]" : "[x]"
+        }
+      });
+    };
+
     return span;
   }
 
   ignoreEvent() {
-    return true;
+    return false;
   }
 }
 
@@ -86,17 +116,21 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
                             const taskMatch = text.match(/^(\s*[-*+]\s+)(\[[ xX]\])/);
                             if (taskMatch) {
-                            const markerLen = taskMatch[1].length;
-                            const boxLen = taskMatch[2].length;
-                            const isChecked = taskMatch[2].toLowerCase().includes("x");
+                                const markerLen = taskMatch[1].length;
+                                const boxLen = taskMatch[2].length;
+                                const isChecked = taskMatch[2].toLowerCase().includes("x");
 
-                            decorations.push(
-                                Decoration.replace({
-                                widget: new TaskWidget(isChecked),
-                                inclusive: false
-                                }).range(node.from, node.from + markerLen + boxLen)
-                            );
-                            return;
+                                const boxFrom = node.form + markerLen;
+                                const boxTo = boxFrom + boxLen;
+
+                                decorations.push(
+                                    Decoration.replace({
+                                        widget: new TaskWidget(view, isChecked),
+                                        inclusive: false
+                                    }).range(node.from, node.from + markerLen + boxLen)
+                                );
+
+                                return;
                             }
 
                             const bulletMatch = text.match(/^(\s*[-*+])\s/);
@@ -105,8 +139,8 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
                             decorations.push(
                                 Decoration.replace({
-                                widget: new BulletWidget(),
-                                inclusive: false
+                                    widget: new BulletWidget(),
+                                    inclusive: false
                                 }).range(node.from, node.from + markerLen)
                             );
                             }

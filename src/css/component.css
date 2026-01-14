@@ -124,10 +124,16 @@
   width: 0;
 }
 
-.cm-task-widget,
 .cm-bullet-widget {
   display: inline-block;
   width: 1.2em;
   text-align: center;
   opacity: 0.7;
+}
+
+.cm-task-widget {
+  cursor: pointer;
+  display: inline-block;
+  width: 1.4em;
+  text-align: center;
 }
