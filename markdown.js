@@ -27,7 +27,7 @@ import {
 } from "./src/lib";
 
 const state = EditorState.create({
-  doc: "# Meu documento",
+  doc: "# Meu documento\nPrimeiro parágrafo\n- item 1\n- item 2\n- [ ] check\n# Tópico\n## Sub tópico\n\n==s==\n",
   extensions: [
     editorTheme,
     markdownDecorations,

@@ -6,5 +6,6 @@
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --success: #16a34a;
   --warning: #facc15;
+  --warning-transparent: #facc1549;
   --error: #dc2626;
 }

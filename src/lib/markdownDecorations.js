@@ -95,7 +95,7 @@ export const markdownDecorations = ViewPlugin.fromClass(
                         const checkRange = parent || node;
 
                         const isCursorInside = ranges.some(r =>
-                        r.from <= checkRange.to && r.to >= checkRange.from
+                          r.from <= checkRange.to && r.to >= checkRange.from
                         );
 
                         if (!isCursorInside) {
@@ -146,8 +146,51 @@ export const markdownDecorations = ViewPlugin.fromClass(
                             }
                         }
                     }
+
+if (node.name === "InlineCode") return;
+
+const text = view.state.sliceDoc(node.from, node.to);
+const regex = /==([^\s=][^=]*?)==/g;
+
+let match;
+while ((match = regex.exec(text))) {
+  const full = match[0];     // ==texto==
+  const inner = match[1];   // texto
+
+  // 🚫 ignora se terminar com espaço
+  if (inner.endsWith(" ")) continue;
+
+  const from = node.from + match.index;
+  const to = from + full.length;
+
+  decorations.push(
+    Decoration.mark({ class: "cm-md-highlight" })
+      .range(from, to)
+  );
+
+  const isCursorInside = ranges.some(r =>
+    r.from <= to && r.to >= from
+  );
+
+  if (!isCursorInside) {
+    // esconde os ==
+    decorations.push(
+      Decoration.mark({ class: "cm-md-hidden" })
+        .range(from, from + 2)
+    );
+    decorations.push(
+      Decoration.mark({ class: "cm-md-hidden" })
+        .range(to - 2, to)
+    );
+  }
+}
+
                 },
             });
+
+            decorations.sort((a, b) =>
+              a.from === b.from ? a.startSide - b.startSide : a.from - b.from
+            );
 
             return Decoration.set(decorations);
         }

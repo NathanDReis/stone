@@ -2,7 +2,13 @@ import { HighlightStyle } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 
 export const markdownHighlight = HighlightStyle.define([
-  { tag: tags.heading1, fontWeight: "600", fontSize: "2em", color: "var(--text-primary)", letterSpacing: ".05em" },
+  { 
+    tag: tags.heading1, 
+    fontWeight: "600", 
+    fontSize: "2em", 
+    color: "var(--text-primary)", 
+    letterSpacing: ".05em", 
+  },
   { tag: tags.heading2, fontWeight: "600", fontSize: "1.6em", color: "var(--text-primary)" },
   { tag: tags.heading3, fontWeight: "600", fontSize: "1.37em", color: "var(--text-primary)" },
   { tag: tags.heading4, fontWeight: "600", fontSize: "1.25em", color: "var(--text-primary)" },
