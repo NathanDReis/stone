@@ -160,6 +160,18 @@ export const markdownDecorations = ViewPlugin.fromClass(
                             );
                         }
                     }
+                    console.log(node.name)
+                    if (["ATXHeading1","ATXHeading2","ATXHeading3","ATXHeading4","ATXHeading5","ATXHeading6"].includes(node.name)) {
+                      const line = view.state.doc.lineAt(node.from);
+
+                      decorations.push(
+                        Decoration.line({
+                          attributes: {
+                            class: "cm-heading-line"
+                          }
+                        }).range(line.from)
+                      );
+                    }
 
                     if (node.name === "ListItem") {
                         const isCursorInside = ranges.some(
