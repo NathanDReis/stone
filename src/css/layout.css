@@ -3,7 +3,13 @@ body {
 }
 
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
   height: 70px;
+  width: 99%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,6 +23,7 @@ body {
 
 .site-layout {
   display: flex;
+  margin-top: 70px;
 }
 
 .site-menu {
