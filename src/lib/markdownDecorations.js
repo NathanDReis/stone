@@ -117,6 +117,8 @@ class LinkWidget extends WidgetType {
   }
 }
 
+const linesTitles = ["ATXHeading1","ATXHeading2","ATXHeading3","ATXHeading4","ATXHeading5","ATXHeading6"];
+
 export const markdownDecorations = ViewPlugin.fromClass(
     class {
         decorations;
@@ -160,8 +162,8 @@ export const markdownDecorations = ViewPlugin.fromClass(
                             );
                         }
                     }
-                    console.log(node.name)
-                    if (["ATXHeading1","ATXHeading2","ATXHeading3","ATXHeading4","ATXHeading5","ATXHeading6"].includes(node.name)) {
+
+                    if (linesTitles.includes(node.name)) {
                       const line = view.state.doc.lineAt(node.from);
 
                       decorations.push(
