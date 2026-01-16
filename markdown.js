@@ -8,7 +8,7 @@ import {
 } from "@codemirror/view";
 import { history } from "@codemirror/commands";
 import { markdown } from "@codemirror/lang-markdown";
-import { autocompletion } from "@codemirror/autocomplete";
+// import { autocompletion } from "@codemirror/autocomplete";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { indentOnInput } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
@@ -35,9 +35,9 @@ const state = EditorState.create({
     markdown({
       extensions: [GFM]
     }),
-    autocompletion({
-      override: [markdownCompletions]
-    }),
+    // autocompletion({
+    //   override: [markdownCompletions]
+    // }),
 
     highlightSelectionMatches(),
     indentOnInput(),

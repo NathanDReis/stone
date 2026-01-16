@@ -189,8 +189,10 @@ export const markdownDecorations = ViewPlugin.fromClass(
                               const boxLen = taskMatch[2].length;
                               const isChecked = taskMatch[2].toLowerCase().includes("x");
 
+                              const line = view.state.doc.lineAt(node.from);
+
                               const contentFrom = node.from + markerLen + boxLen + 1;
-                              const contentTo = node.to;
+                              const contentTo = line.to;
 
                               decorations.push(
                                 Decoration.replace({
