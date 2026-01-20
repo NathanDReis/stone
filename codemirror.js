@@ -11,12 +11,14 @@ import { markdown } from "@codemirror/lang-markdown";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { indentOnInput } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
+import { GFM } from "@lezer/markdown";
 
 import {
   markdownHighlight,
   editorTheme,
   markdownDecorations,
   keyMaps,
+  tableDecorations
 } from "./src/lib";
 
 const stripTildeFences = EditorState.transactionFilter.of(tr => {
@@ -50,6 +52,10 @@ Primeiro parágrafo
 # Tópico
 ## Sub tópico
 
+| Coluna 1 | Coluna 2 |
+| -------- | -------- |
+| Valor 1  | Valor 2  |
+
 ==s==
 ~~d~~
 
@@ -65,13 +71,16 @@ Não gorjeiam como lá
   extensions: [
     editorTheme,
     markdownDecorations,
+    tableDecorations,
 
     stripTildeFences,
 
     keymap.of(keyMaps),
     EditorView.lineWrapping,
     history(),
-    markdown(),
+    markdown({
+      extensions: [GFM]
+    }),
 
     highlightSelectionMatches(),
     indentOnInput(),

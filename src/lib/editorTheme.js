@@ -16,6 +16,38 @@ export const editorTheme = [
       padding: "16px"
     },
 
+    ".cm-md-table-wrap": {
+      margin: "12px 0",
+      overflowX: "auto"
+    },
+
+    ".cm-md-table": {
+      borderCollapse: "collapse",
+      width: "100%",
+      fontSize: "0.95rem",
+      backgroundColor: "var(--bg-main)"
+    },
+
+    ".cm-md-table th, .cm-md-table td": {
+      border: "1px solid var(--border-muted)",
+      padding: "6px 10px",
+      textAlign: "left",
+      verticalAlign: "top"
+    },
+
+    ".cm-md-table th": {
+      backgroundColor: "var(--bg-secondary)",
+      fontWeight: "600"
+    },
+
+    ".cm-md-table tbody tr:hover": {
+      backgroundColor: "color-mix(in srgb, var(--accent) 8%, transparent)"
+    },
+
+    ".cm-md-table-hidden": {
+      display: "none"
+    },
+
     ".cm-scroller": {
       overflow: "auto"
     },

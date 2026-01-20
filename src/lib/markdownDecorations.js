@@ -1,126 +1,15 @@
 import { syntaxTree } from "@codemirror/language";
-import { Decoration, ViewPlugin, WidgetType } from "@codemirror/view";
-
-class TaskWidget extends WidgetType {
-  constructor(view, checked) {
-    super();
-    this.view = view;
-    this.checked = checked;
-  }
-
-  toDOM() {
-    const span = document.createElement("span");
-    span.className = "cm-task-widget";
-    span.innerHTML = this.checked
-      ? `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>`
-      : `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3" /></svg>`;
-
-    span.onmousedown = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
-    span.onclick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const view = this.view;
-      const pos = view.posAtDOM(span);
-      const line = view.state.doc.lineAt(pos);
-
-      const match = line.text.match(/\[( |x|X)\]/);
-      if (!match) return;
-
-      const content = match.input.replace(`- [${match[1]}]`, '');
-      if (!content.length) return;
-
-      const from = line.from + match.index;
-      const to = from + match[0].length;
-
-      view.dispatch({
-        changes: {
-          from,
-          to,
-          insert: this.checked ? "[ ]" : "[x]"
-        }
-      });
-    };
-
-    return span;
-  }
-
-  ignoreEvent() {
-    return false;
-  }
-}
-class BulletWidget extends WidgetType {
-  toDOM() {
-    const span = document.createElement("span");
-    span.className = "cm-bullet-widget";
-    span.textContent = "•";
-    return span;
-  }
-
-  ignoreEvent() {
-    return true;
-  }
-}
-
-class ImageWidget extends WidgetType {
-  constructor(src) {
-    super();
-    this.src = src;
-  }
-
-  toDOM() {
-    const img = document.createElement("img");
-    img.src = this.src;
-    img.style.maxWidth = "100%";
-    img.style.display = "block";
-    return img;
-  }
-
-  ignoreEvent() {
-    return true;
-  }
-}
-
-class LinkWidget extends WidgetType {
-  constructor(view, label, href) {
-    super();
-    this.view = view;
-    this.label = label;
-    this.href = href;
-  }
-
-  toDOM() {
-    const span = document.createElement("span");
-    span.className = "cm-md-link-widget";
-    span.textContent = this.label;
-
-    span.onmousedown = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
-    span.onclick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      window.open(this.href, "_blank", "noopener,noreferrer");
-    };
-
-    return span;
-  }
-
-  ignoreEvent() {
-    return false;
-  }
-}
+import { Decoration, ViewPlugin } from "@codemirror/view";
+import {
+  BulletWidget,
+  ImageWidget,
+  LinkWidget,
+  TaskWidget,
+} from "./widgets";
 
 const linesTitles = ["ATXHeading1","ATXHeading2","ATXHeading3","ATXHeading4","ATXHeading5","ATXHeading6"];
+const linesMark = ["EmphasisMark","StrongEmphasisMark","CodeMark","HeaderMark"];
+
 function safeMark(from, to, className) {
   if (from >= to) return null;
   return Decoration.mark({ class: className }).range(from, to);
@@ -152,12 +41,7 @@ export const markdownDecorations = ViewPlugin.fromClass(
                 enter(node) {
                     if (node.name === "InlineCode") return;
 
-                    if (
-                        node.name === "EmphasisMark" ||
-                        node.name === "StrongEmphasisMark" ||
-                        node.name === "CodeMark" ||
-                        node.name === "HeaderMark"
-                    ) {
+                    if (linesMark.includes(node.name)) {
                         const parent = node.node.parent;
 
                         const checkRange = parent || node;
