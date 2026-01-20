@@ -130,25 +130,6 @@
   opacity: 0.7;
 }
 
-.cm-task-widget {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 1.8em;
-  height: 1.8em;
-
-  color: var(--accent);
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-.cm-task-widget svg {
-  width: 3rem;
-  height: 3rem;
-  display: block;
-}
-
 .cm-md-highlight {
   background-color: var(--warning-transparent);
   color: var(--text-primary);
@@ -159,16 +140,6 @@
 .cm-md-strike {
   text-decoration: line-through;
   opacity: 0.9;
-}
-
-.cm-md-link-widget {
-  color: var(--accent);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.cm-md-link-widget:hover {
-  opacity: 0.85;
 }
 
 /* Title */
@@ -199,4 +170,39 @@
 
 .cm-header-1 {
   font-size: 2rem;
+}
+
+/* Lista */
+.cm-task-widget.is-disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.cm-md-link-widget {
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cm-md-link-widget:hover {
+  opacity: 0.85;
+}
+
+.cm-task-widget {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.8em;
+  height: 1.8em;
+
+  color: var(--accent);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.cm-task-widget svg {
+  width: 3rem;
+  height: 3rem;
+  display: block;
 }

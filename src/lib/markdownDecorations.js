@@ -33,6 +33,9 @@ class TaskWidget extends WidgetType {
       const match = line.text.match(/\[( |x|X)\]/);
       if (!match) return;
 
+      const content = match.input.replace(`- [${match[1]}]`, '');
+      if (!content.length) return;
+
       const from = line.from + match.index;
       const to = from + match[0].length;
 
@@ -118,6 +121,14 @@ class LinkWidget extends WidgetType {
 }
 
 const linesTitles = ["ATXHeading1","ATXHeading2","ATXHeading3","ATXHeading4","ATXHeading5","ATXHeading6"];
+function safeMark(from, to, className) {
+  if (from >= to) return null;
+  return Decoration.mark({ class: className }).range(from, to);
+}
+
+function pushSafe(arr, deco) {
+  if (deco) arr.push(deco);
+}
 
 export const markdownDecorations = ViewPlugin.fromClass(
     class {
@@ -156,10 +167,7 @@ export const markdownDecorations = ViewPlugin.fromClass(
                         );
 
                         if (!isCursorInside) {
-                            decorations.push(
-                                Decoration.mark({ class: "cm-md-hidden" })
-                                .range(node.from, node.to)
-                            );
+                          pushSafe(decorations, safeMark(node.from, node.to, "cm-md-hidden"));
                         }
                     }
 
@@ -176,168 +184,147 @@ export const markdownDecorations = ViewPlugin.fromClass(
                     }
 
                     if (node.name === "ListItem") {
-                        const isCursorInside = ranges.some(
-                            r => r.from <= node.to && r.to >= node.from
-                        );
+                      const isCursorInside = ranges.some(
+                        r => r.from <= node.to && r.to >= node.from
+                      );
 
-                        if (!isCursorInside) {
-                            const text = view.state.sliceDoc(node.from, node.to);
+                      if (!isCursorInside) {
+                          const text = view.state.sliceDoc(node.from, node.to);
 
-                            const taskMatch = text.match(/^(\s*[-*+]\s+)(\[[ xX]\])/);
-                            if (taskMatch) {
-                              const markerLen = taskMatch[1].length;
-                              const boxLen = taskMatch[2].length;
-                              const isChecked = taskMatch[2].toLowerCase().includes("x");
+                          const taskMatch = text.match(/^(\s*[-*+]\s+)(\[[ xX]\])/);
+                          if (taskMatch) {
+                            const markerLen = taskMatch[1].length;
+                            const boxLen = taskMatch[2].length;
+                            const isChecked = taskMatch[2].toLowerCase().includes("x");
 
-                              const line = view.state.doc.lineAt(node.from);
+                            const line = view.state.doc.lineAt(node.from);
 
-                              const contentFrom = node.from + markerLen + boxLen + 1;
-                              const contentTo = line.to;
-
-                              decorations.push(
-                                Decoration.replace({
-                                  widget: new TaskWidget(view, isChecked),
-                                  inclusive: false
-                                }).range(node.from, node.from + markerLen + boxLen)
-                              );
-
-                              if (isChecked) {
-                                decorations.push(
-                                  Decoration.mark({ class: "cm-md-strike" })
-                                    .range(contentFrom, contentTo)
-                                );
-                              }
-
-                              return;
-                            }
-
-                            const bulletMatch = text.match(/^(\s*[-*+])\s/);
-                            if (bulletMatch) {
-                            const markerLen = bulletMatch[1].length;
+                            const contentFrom = node.from + markerLen + boxLen + 1;
+                            const contentTo = line.to;
 
                             decorations.push(
-                                Decoration.replace({
-                                    widget: new BulletWidget(),
-                                    inclusive: false
-                                }).range(node.from, node.from + markerLen)
+                              Decoration.replace({
+                                widget: new TaskWidget(view, isChecked),
+                                inclusive: false
+                              }).range(node.from, node.from + markerLen + boxLen)
                             );
+
+                            if (isChecked) {
+                              pushSafe(decorations, safeMark(contentFrom, contentTo, "cm-md-strike"));
                             }
-                        }
-                    }
-                    
-                    if (node.name === "Image") {
-                      const text = view.state.sliceDoc(node.from, node.to);
-                      const match = /!\[([^\]]*)\]\(([^)]+)\)/.exec(text);
-                      if (!match) return;
 
-                      const src = match[2];
+                            return;
+                          }
 
-                      const isCursorInside = ranges.some(r =>
-                        r.from <= node.to && r.to >= node.from
-                      );
+                          const bulletMatch = text.match(/^(\s*[-*+])\s/);
+                          if (bulletMatch) {
+                          const markerLen = bulletMatch[1].length;
 
-                      if (!isCursorInside) {
-                        decorations.push(
-                          Decoration.replace({
-                            widget: new ImageWidget(src),
-                            inclusive: false
-                          }).range(node.from, node.to)
-                        );
+                          decorations.push(
+                              Decoration.replace({
+                                  widget: new BulletWidget(),
+                                  inclusive: false
+                              }).range(node.from, node.from + markerLen)
+                          );
+                          }
                       }
-                    }
-
-                    if (node.name === "Link") {
-                      const text = view.state.sliceDoc(node.from, node.to);
-
-                      const match = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(text);
-                      if (!match) return;
-
-                      const label = match[1];
-                      const href = match[2];
-
-                      const isCursorInside = ranges.some(r =>
-                        r.from <= node.to && r.to >= node.from
-                      );
-
-                      if (!isCursorInside) {
-                        // Substitui tudo pelo texto clicável
-                        decorations.push(
-                          Decoration.replace({
-                            widget: new LinkWidget(view, label, href),
-                            inclusive: false
-                          }).range(node.from, node.to)
-                        );
-                      }
-
-                      return;
-                    }
-
+                  }
+                  
+                  if (node.name === "Image") {
                     const text = view.state.sliceDoc(node.from, node.to);
-                    let regex = /==([^\s=][^=]*?)==/g;
+                    const match = /!\[([^\]]*)\]\(([^)]+)\)/.exec(text);
+                    if (!match) return;
 
-                    let match;
-                    while ((match = regex.exec(text))) {
-                      const full = match[0];
-                      const inner = match[1];
+                    const src = match[2];
 
-                      if (inner.endsWith(" ")) continue;
+                    const isCursorInside = ranges.some(r =>
+                      r.from <= node.to && r.to >= node.from
+                    );
 
-                      const from = node.from + match.index;
-                      const to = from + full.length;
-
+                    if (!isCursorInside) {
                       decorations.push(
-                        Decoration.mark({ class: "cm-md-highlight" })
-                          .range(from, to)
+                        Decoration.replace({
+                          widget: new ImageWidget(src),
+                          inclusive: false
+                        }).range(node.from, node.to)
                       );
+                    }
+                  }
 
-                      const isCursorInside = ranges.some(r =>
-                        r.from <= to && r.to >= from
+                  if (node.name === "Link") {
+                    const text = view.state.sliceDoc(node.from, node.to);
+
+                    const match = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(text);
+                    if (!match) return;
+
+                    const label = match[1];
+                    const href = match[2];
+
+                    const isCursorInside = ranges.some(r =>
+                      r.from <= node.to && r.to >= node.from
+                    );
+
+                    if (!isCursorInside) {
+                      // Substitui tudo pelo texto clicável
+                      decorations.push(
+                        Decoration.replace({
+                          widget: new LinkWidget(view, label, href),
+                          inclusive: false
+                        }).range(node.from, node.to)
                       );
-
-                      if (!isCursorInside) {
-                        decorations.push(
-                          Decoration.mark({ class: "cm-md-hidden" })
-                            .range(from, from + 2)
-                        );
-                        decorations.push(
-                          Decoration.mark({ class: "cm-md-hidden" })
-                            .range(to - 2, to)
-                        );
-                      }
                     }
 
-                    regex = /~~([^\s~][^~]*?)~~/g;
+                    return;
+                  }
 
-                    match;
-                    while ((match = regex.exec(text))) {
-                      const full = match[0];
-                      const inner = match[1];
+                  const text = view.state.sliceDoc(node.from, node.to);
+                  let regex = /==([^\s=][^=]*?)==/g;
 
-                      if (inner.endsWith(" ")) continue;
+                  let match;
+                  while ((match = regex.exec(text))) {
+                    const full = match[0];
+                    const inner = match[1];
 
-                      const from = node.from + match.index;
-                      const to = from + full.length;
+                    if (inner.endsWith(" ")) continue;
 
-                      decorations.push(
-                        Decoration.mark({ class: "cm-md-strike" })
-                          .range(from, to)
-                      );
+                    const from = node.from + match.index;
+                    const to = from + full.length;
 
-                      const isCursorInside = ranges.some(r =>
-                        r.from <= to && r.to >= from
-                      );
+                    pushSafe(decorations, safeMark(from, to, "cm-md-highlight"));
 
-                      if (!isCursorInside) {
-                        decorations.push(
-                          Decoration.mark({ class: "cm-md-hidden" })
-                            .range(from, from + 2)
-                        );
-                        decorations.push(
-                          Decoration.mark({ class: "cm-md-hidden" })
-                            .range(to - 2, to)
-                        );
-                      }
+                    const isCursorInside = ranges.some(r =>
+                      r.from <= to && r.to >= from
+                    );
+
+                    if (!isCursorInside) {
+                      pushSafe(decorations, safeMark(from, from + 2, "cm-md-hidden"));
+                      pushSafe(decorations, safeMark(to - 2, to, "cm-md-hidden"));
                     }
+                  }
+
+                  regex = /~~([^\s~][^~]*?)~~/g;
+
+                  match;
+                  while ((match = regex.exec(text))) {
+                    const full = match[0];
+                    const inner = match[1];
+
+                    if (inner.endsWith(" ")) continue;
+
+                    const from = node.from + match.index;
+                    const to = from + full.length;
+
+                    pushSafe(decorations, safeMark(from, to, "cm-md-strike"));
+
+                    const isCursorInside = ranges.some(r =>
+                      r.from <= to && r.to >= from
+                    );
+
+                    if (!isCursorInside) {
+                      pushSafe(decorations, safeMark(from, from + 2, "cm-md-hidden"));
+                      pushSafe(decorations, safeMark(to - 2, to, "cm-md-hidden"));
+                    }
+                  }
                 },
             });
 

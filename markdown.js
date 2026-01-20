@@ -8,36 +8,70 @@ import {
 } from "@codemirror/view";
 import { history } from "@codemirror/commands";
 import { markdown } from "@codemirror/lang-markdown";
-// import { autocompletion } from "@codemirror/autocomplete";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { indentOnInput } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
-import { GFM } from "@lezer/markdown";
 
 import {
-  markdownCompletions,
   markdownHighlight,
   editorTheme,
   markdownDecorations,
   keyMaps,
 } from "./src/lib";
 
+const stripTildeFences = EditorState.transactionFilter.of(tr => {
+  if (!tr.docChanged) return tr;
+
+  const text = tr.newDoc.toString();
+
+  const cleaned = text
+    .split("\n")
+    .filter(line => !/^\s*~{3,}\s*$/.test(line))
+    .join("\n");
+
+  if (cleaned === text) return tr;
+
+  return [{
+    changes: {
+      from: 0,
+      to: tr.newDoc.length,
+      insert: cleaned
+    }
+  }];
+});
+
 const state = EditorState.create({
-  doc: "# Meu documento\nPrimeiro parágrafo\n- item 1\n- item 2\n- [ ] check\n# Tópico\n## Sub tópico\n\n==s==\n~~d~~\n\nMinha terra tem palmeiras\nOnde canta o sabiá\nAs aves que aqui gorjeiam\nNão gorjeiam como lá\n\n![Imagem](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)\n\n[Link Externo](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)\n",
+  doc: `# Meu documento
+Primeiro parágrafo
+- item 1
+- item 2
+- [ ] check
+
+# Tópico
+## Sub tópico
+
+==s==
+~~d~~
+
+Minha terra tem palmeiras
+Onde canta o sabiá
+As aves que aqui gorjeiam
+Não gorjeiam como lá
+
+![Imagem](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
+
+[Link Externo](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
+`,
   extensions: [
     editorTheme,
     markdownDecorations,
 
-    keymap.of(keyMaps),
+    stripTildeFences,
 
+    keymap.of(keyMaps),
     EditorView.lineWrapping,
     history(),
-    markdown({
-      extensions: [GFM]
-    }),
-    // autocompletion({
-    //   override: [markdownCompletions]
-    // }),
+    markdown(),
 
     highlightSelectionMatches(),
     indentOnInput(),
