@@ -316,6 +316,21 @@ export const markdownDecorations = ViewPlugin.fromClass(
               pushSafe(decorations, safeMark(to - 2, to, "cm-md-hidden"));
             }
           }
+
+          // Tags detection: only if not inside code or metadata
+          const skipNode = ["InlineCode", "FencedCode", "CodeMark", "Link", "Image", "HeaderMark", "CodeInfo", "HTMLBlock", "Comment"].includes(node.name);
+          if (!skipNode) {
+            regex = /(?:^|\s)(#[a-zA-Z_áàâãéèêíïóôõöúçñ][a-zA-Z\d_áàâãéèêíïóôõöúçñ\-_/]*)/g;
+            while ((match = regex.exec(text))) {
+              const fullMatch = match[0];
+              const tagPart = match[1];
+              const startOffset = match.index + (fullMatch.startsWith("#") ? 0 : 1);
+              const from = node.from + startOffset;
+              const to = from + tagPart.length;
+
+              pushSafe(decorations, safeMark(from, to, "cm-md-tag"));
+            }
+          }
         },
       });
 

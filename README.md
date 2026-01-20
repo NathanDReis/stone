@@ -17,8 +17,6 @@ Document processes, record knowledge.
 
 The software is still in the early stages of development.
 
-- [ ] citação
-- [ ] criar tags #tag
 - [ ] organização hierárquica dos títulos no documento
 - [ ] salvar documentação
 - [ ] organização hierárquica dos documentos no menu
