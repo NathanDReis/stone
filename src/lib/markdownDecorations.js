@@ -5,6 +5,7 @@ import {
   ImageWidget,
   LinkWidget,
   TaskWidget,
+  AlertWidget,
 } from "./widgets";
 
 const linesTitles = ["ATXHeading1", "ATXHeading2", "ATXHeading3", "ATXHeading4", "ATXHeading5", "ATXHeading6"];
@@ -40,6 +41,79 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
       syntaxTree(view.state).iterate({
         enter(node) {
+          if (node.name.toLowerCase() === "blockquote") {
+            const lineFromNum = view.state.doc.lineAt(node.from).number;
+            const lineToNum = view.state.doc.lineAt(node.to).number;
+
+            const firstLineText = view.state.doc.line(lineFromNum).text;
+            let activeType = firstLineText.match(/^\s*>\s*\[!(info|success|warning|error)\]/i) ? null : "default";
+
+            for (let i = lineFromNum; i <= lineToNum; i++) {
+              const line = view.state.doc.line(i);
+              const text = line.text;
+              const match = text.match(/^\s*>\s*\[!(info|success|warning|error)\]/i);
+
+              if (match) {
+                activeType = match[1].toLowerCase();
+              }
+
+              if (activeType) {
+                const classes = [`cm-md-blockquote-alert`, `cm-alert-${activeType}`];
+
+                const nextLine = (i < lineToNum) ? view.state.doc.line(i + 1) : null;
+                const nextMatch = nextLine ? nextLine.text.match(/^\s*>\s*\[!(info|success|warning|error)\]/i) : null;
+
+                // Is TOP: first line of node OR has its own marker
+                if (i === lineFromNum || match) classes.push("cm-alert-line-top");
+
+                // Is BOTTOM: last line of node OR next line has a new marker
+                if (i === lineToNum || nextMatch) classes.push("cm-alert-line-bottom");
+
+                // Is MIDDLE: not top AND not bottom
+                if (!(i === lineFromNum || match) && !(i === lineToNum || nextMatch)) {
+                  classes.push("cm-alert-line-middle");
+                }
+
+                decorations.push(
+                  Decoration.line({
+                    attributes: { class: classes.join(" ") }
+                  }).range(line.from)
+                );
+
+                const isCursorOnLine = ranges.some(
+                  r => r.from <= line.to && r.to >= line.from
+                );
+
+                if (!isCursorOnLine) {
+                  const quoteMatch = text.match(/^\s*>\s*/);
+                  if (quoteMatch) {
+                    pushSafe(decorations, safeMark(line.from, line.from + quoteMatch[0].length, "cm-md-hidden"));
+                  }
+
+                  if (match) {
+                    const bracketStartOffset = text.indexOf("[!");
+                    const bracketEndOffset = text.indexOf("]", bracketStartOffset);
+                    if (bracketStartOffset !== -1 && bracketEndOffset !== -1) {
+                      const from = line.from + bracketStartOffset;
+                      const to = line.from + bracketEndOffset + 1;
+                      pushSafe(decorations, safeMark(from, to, "cm-md-hidden"));
+                    }
+                  }
+                }
+
+                // Adiciona o widget: se for um marcador [!tipo] OU se for o início de uma citação padrão
+                if (match || (i === lineFromNum && activeType === "default")) {
+                  decorations.push(
+                    Decoration.widget({
+                      widget: new AlertWidget(activeType),
+                      side: -1
+                    }).range(line.from)
+                  );
+                }
+              }
+            }
+          }
+
           if (node.name === "InlineCode") {
             pushSafe(decorations, safeMark(node.from, node.to, "cm-md-inline-code"));
           }
@@ -246,7 +320,7 @@ export const markdownDecorations = ViewPlugin.fromClass(
       });
 
       decorations.sort((a, b) =>
-        a.from === b.from ? a.startSide - b.startSide : a.from - b.from
+        a.from === b.from ? (a.value.startSide || 0) - (b.value.startSide || 0) : a.from - b.from
       );
 
       return Decoration.set(decorations);

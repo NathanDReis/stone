@@ -130,6 +130,12 @@ Não gorjeiam como lá
 ![Imagem](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
 
 [Link Externo](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
+
+> Esta é uma citação
+> [!info] Esta é uma informação útil.
+> [!success] Operação realizada com sucesso!
+> [!warning] Atenção: verifique os dados antes de prosseguir.
+> [!error] Ocorreu um erro crítico no sistema.
 `,
   extensions: [
     editorTheme,
