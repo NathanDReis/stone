@@ -75,7 +75,8 @@ import {
   editorTheme,
   markdownDecorations,
   keyMaps,
-  tableDecorations
+  tableDecorations,
+  updateToC
 } from "./src/lib";
 
 const stripTildeFences = EditorState.transactionFilter.of(tr => {
@@ -158,7 +159,12 @@ Não gorjeiam como lá
     syntaxHighlighting(markdownHighlight),
     highlightActiveLine(),
     highlightActiveLineGutter(),
-    placeholder("O que irá documentar hoje?")
+    placeholder("O que irá documentar hoje?"),
+    EditorView.updateListener.of((update) => {
+      if (update.docChanged) {
+        updateToC(update.view);
+      }
+    })
   ]
 });
 
@@ -166,3 +172,5 @@ const view = new EditorView({
   state,
   parent: document.querySelector(".site-main")
 });
+
+updateToC(view);

@@ -1,3 +1,8 @@
+* {
+  scroll-behavior: smooth;
+  scroll-padding-top: 70px;
+}
+
 body {
   font-family: var(--font-sans);
 }
@@ -23,13 +28,17 @@ body {
 
 .site-layout {
   display: flex;
-  margin-top: 70px;
 }
 
 .site-menu {
   width: 250px;
-  min-height: calc(100dvh - 70px);
+  height: 100dvh;
+  position: sticky;
+  top: 0;
   background-color: var(--bg-tertiary);
+  padding: calc(70px + 24px) 20px 24px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .box-content {
@@ -46,9 +55,11 @@ body {
 
 .site-main {
   width: 100%;
-  min-height: calc(100dvh - 70px);
+  min-height: 100dvh;
+  padding-top: 70px;
   background-color: var(--bg-main);
   color: var(--text-primary);
+  box-sizing: border-box;
 }
 
 .site-footer {
@@ -69,6 +80,8 @@ body {
 
 .site-index {
   width: 200px;
-  min-height: calc(100dvh - 70px);
+  height: 100dvh;
+  position: sticky;
+  top: 0;
   background-color: var(--bg-main);
 }

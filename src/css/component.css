@@ -510,3 +510,99 @@
 .cm-md-tag:active {
   transform: scale(0.95) !important;
 }
+
+/* Table of Contents (ToC) Sidebar */
+.site-index {
+  padding: 24px 20px;
+  border-left: 1px solid var(--bg-tertiary);
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  box-sizing: border-box;
+}
+
+.toc-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.toc-item a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.toc-item a:hover {
+  color: var(--accent);
+  background-color: color-mix(in srgb, var(--accent) 5%, transparent);
+  padding-left: 12px;
+}
+
+.toc-level-1 {
+  margin-left: 0;
+  font-weight: 600;
+}
+
+.toc-level-2 {
+  margin-left: 12px;
+}
+
+.toc-level-3 {
+  margin-left: 24px;
+}
+
+.toc-level-4 {
+  margin-left: 36px;
+}
+
+.toc-level-5 {
+  margin-left: 48px;
+}
+
+.toc-level-6 {
+  margin-left: 60px;
+}
+
+/* Custom Scrollbar for ToC */
+.site-index::-webkit-scrollbar {
+  width: 4px;
+}
+
+.site-index::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.site-index::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+}
+
+.site-index::-webkit-scrollbar-thumb:hover {
+  background: var(--border-muted);
+}
