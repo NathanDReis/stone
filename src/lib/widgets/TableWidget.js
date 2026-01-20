@@ -36,10 +36,8 @@ export class TableWidget extends WidgetType {
 
     this.rows[0].forEach((_, j) => {
       const td = document.createElement("td");
-      if (this.rows[0].length > 1) {
-        const btn = this.createRemoveBtn(() => this.removeColumn(j, view), "Remover Coluna");
-        td.appendChild(btn);
-      }
+      const btn = this.createRemoveBtn(() => this.removeColumn(j, view), "Remover Coluna");
+      td.appendChild(btn);
       removeColRow.appendChild(td);
     });
     table.appendChild(removeColRow);
@@ -50,10 +48,8 @@ export class TableWidget extends WidgetType {
       // Row Removal Button
       const removeTd = document.createElement("td");
       removeTd.className = "cm-md-table-remove-cell";
-      if (this.rows.length > 2) { // 1 header + 1 data row minimum
-        const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
-        removeTd.appendChild(btn);
-      }
+      const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
+      removeTd.appendChild(btn);
       tr.appendChild(removeTd);
 
       row.forEach((cell, j) => {
@@ -150,18 +146,28 @@ export class TableWidget extends WidgetType {
   }
 
   removeRow(index, view) {
-    if (this.rows.length <= 2) return;
     this.rows.splice(index, 1);
+    if (this.rows.length === 1) { // Only header removal row left logically, or handle empty
+      // If we remove the last data row, should we remove the header too? 
+      // User says "when it has a single row it should be able to exclude too".
+      // Let's check if the remaining row is the one we just spliced from.
+    }
     this.sync(view);
   }
 
   removeColumn(index, view) {
-    if (this.rows[0].length <= 1) return;
     this.rows.forEach(row => row.splice(index, 1));
     this.sync(view);
   }
 
   sync(view) {
+    if (this.rows.length === 0 || this.rows[0].length === 0) {
+      view.dispatch({
+        changes: { from: this.from, to: this.to, insert: "" }
+      });
+      return;
+    }
+
     const separator = "| " + this.rows[0].map(() => "---").join(" | ") + " |";
     const finalMarkdown = [
       "| " + this.rows[0].join(" | ") + " |",
