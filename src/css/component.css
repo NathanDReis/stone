@@ -235,7 +235,7 @@
 
 .cm-alert-default {
   background-color: rgba(255, 255, 255, 0.05) !important;
-  border-left-color: rgba(255, 255, 255, 0.3) !important;
+  border-left-color: rgba(255, 255, 255, 0.452) !important;
   color: var(--text-secondary);
 }
 
@@ -272,7 +272,7 @@
 }
 
 .cm-alert-color-default {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
 }
 
 .cm-alert-icon svg {
