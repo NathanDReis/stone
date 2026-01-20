@@ -317,3 +317,36 @@
   outline-offset: -2px;
   background-color: color-mix(in srgb, var(--accent) 5%, transparent);
 }
+
+/* Code and Horizontal Rule Styles */
+.cm-md-inline-code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: #e2a5fb;
+}
+
+.cm-md-code-block-line {
+  background: rgba(255, 255, 255, 0.03);
+  display: block;
+}
+
+.cm-md-hr-line {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.cm-md-hr-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background-color: var(--cm-border, #ddd);
+  pointer-events: none;
+}

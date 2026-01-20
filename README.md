@@ -17,9 +17,6 @@ Document processes, record knowledge.
 
 The software is still in the early stages of development.
 
-- [ ] code inline e code block
-- [ ] linha horizontal
-- [ ] table
 - [ ] citação
 - [ ] criar tags #tag
 - [ ] organização hierárquica dos títulos no documento

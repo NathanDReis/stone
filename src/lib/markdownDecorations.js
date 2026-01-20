@@ -8,7 +8,7 @@ import {
 } from "./widgets";
 
 const linesTitles = ["ATXHeading1", "ATXHeading2", "ATXHeading3", "ATXHeading4", "ATXHeading5", "ATXHeading6"];
-const linesMark = ["EmphasisMark", "StrongEmphasisMark", "CodeMark", "HeaderMark"];
+const linesMark = ["EmphasisMark", "StrongEmphasisMark", "CodeMark", "HeaderMark", "CodeInfo"];
 
 function safeMark(from, to, className) {
   if (from >= to) return null;
@@ -40,7 +40,39 @@ export const markdownDecorations = ViewPlugin.fromClass(
 
       syntaxTree(view.state).iterate({
         enter(node) {
-          if (node.name === "InlineCode") return;
+          if (node.name === "InlineCode") {
+            pushSafe(decorations, safeMark(node.from, node.to, "cm-md-inline-code"));
+          }
+
+          if (node.name === "FencedCode") {
+            const lineFrom = view.state.doc.lineAt(node.from).number;
+            const lineTo = view.state.doc.lineAt(node.to).number;
+
+            for (let i = lineFrom; i <= lineTo; i++) {
+              const line = view.state.doc.line(i);
+              decorations.push(
+                Decoration.line({
+                  attributes: { class: "cm-md-code-block-line" }
+                }).range(line.from)
+              );
+            }
+          }
+
+          if (node.name === "HorizontalRule") {
+            const isCursorInside = ranges.some(
+              r => r.from <= node.to && r.to >= node.from
+            );
+
+            if (!isCursorInside) {
+              const line = view.state.doc.lineAt(node.from);
+              decorations.push(
+                Decoration.line({
+                  attributes: { class: "cm-md-hr-line" }
+                }).range(line.from)
+              );
+              pushSafe(decorations, safeMark(node.from, node.to, "cm-md-hidden"));
+            }
+          }
 
           if (linesMark.includes(node.name)) {
             const parent = node.node.parent;

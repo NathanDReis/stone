@@ -7,11 +7,68 @@ import {
   placeholder,
 } from "@codemirror/view";
 import { history } from "@codemirror/commands";
-import { markdown } from "@codemirror/lang-markdown";
+import { markdown, commonmarkLanguage } from "@codemirror/lang-markdown";
+import { javascript } from "@codemirror/lang-javascript";
+import { css } from "@codemirror/lang-css";
+import { html } from "@codemirror/lang-html";
+import { sql } from "@codemirror/lang-sql";
+import { python } from "@codemirror/lang-python";
+import { json } from "@codemirror/lang-json";
+import { xml } from "@codemirror/lang-xml";
+import { StreamLanguage } from "@codemirror/language";
+import { pascal } from "@codemirror/legacy-modes/mode/pascal";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { indentOnInput } from "@codemirror/language";
-import { syntaxHighlighting } from "@codemirror/language";
+import { syntaxHighlighting, LanguageDescription } from "@codemirror/language";
 import { GFM } from "@lezer/markdown";
+
+const languages = [
+  LanguageDescription.of({
+    name: "javascript",
+    alias: ["js", "jsx"],
+    load: () => Promise.resolve(javascript())
+  }),
+  LanguageDescription.of({
+    name: "typescript",
+    alias: ["ts", "tsx"],
+    load: () => Promise.resolve(javascript())
+  }),
+  LanguageDescription.of({
+    name: "html",
+    alias: ["html"],
+    load: () => Promise.resolve(html())
+  }),
+  LanguageDescription.of({
+    name: "css",
+    alias: ["css"],
+    load: () => Promise.resolve(css())
+  }),
+  LanguageDescription.of({
+    name: "sql",
+    alias: ["sql"],
+    load: () => Promise.resolve(sql())
+  }),
+  LanguageDescription.of({
+    name: "python",
+    alias: ["py", "python"],
+    load: () => Promise.resolve(python())
+  }),
+  LanguageDescription.of({
+    name: "json",
+    alias: ["json"],
+    load: () => Promise.resolve(json())
+  }),
+  LanguageDescription.of({
+    name: "xml",
+    alias: ["xml"],
+    load: () => Promise.resolve(xml())
+  }),
+  LanguageDescription.of({
+    name: "pascal",
+    alias: ["pascal", "delphi"],
+    load: () => Promise.resolve(StreamLanguage.define(pascal))
+  })
+];
 
 import {
   markdownHighlight,
@@ -59,6 +116,12 @@ Primeiro parágrafo
 ==s==
 ~~d~~
 
+***
+
+
+
+---
+
 Minha terra tem palmeiras
 Onde canta o sabiá
 As aves que aqui gorjeiam
@@ -79,6 +142,8 @@ Não gorjeiam como lá
     EditorView.lineWrapping,
     history(),
     markdown({
+      base: commonmarkLanguage,
+      codeLanguages: languages,
       extensions: [GFM]
     }),
 
