@@ -16,14 +16,46 @@ export class TableWidget extends WidgetType {
   }
 
   toDOM(view) {
+    const container = document.createElement("div");
+    container.className = "cm-md-table-container";
+
+    const mainWrap = document.createElement("div");
+    mainWrap.className = "cm-md-table-main-wrap";
+
     const wrap = document.createElement("div");
     wrap.className = "cm-md-table-wrap";
 
     const table = document.createElement("table");
     table.className = "cm-md-table";
 
+    // Header Removal Buttons
+    const removeColRow = document.createElement("tr");
+    removeColRow.className = "cm-md-table-remove-row";
+    // Empty cell for the row removal column
+    removeColRow.appendChild(document.createElement("td"));
+
+    this.rows[0].forEach((_, j) => {
+      const td = document.createElement("td");
+      if (this.rows[0].length > 1) {
+        const btn = this.createRemoveBtn(() => this.removeColumn(j, view), "Remover Coluna");
+        td.appendChild(btn);
+      }
+      removeColRow.appendChild(td);
+    });
+    table.appendChild(removeColRow);
+
     this.rows.forEach((row, i) => {
       const tr = document.createElement("tr");
+
+      // Row Removal Button
+      const removeTd = document.createElement("td");
+      removeTd.className = "cm-md-table-remove-cell";
+      if (this.rows.length > 2) { // 1 header + 1 data row minimum
+        const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
+        removeTd.appendChild(btn);
+      }
+      tr.appendChild(removeTd);
+
       row.forEach((cell, j) => {
         const el = document.createElement(i === 0 ? "th" : "td");
         el.textContent = cell;
@@ -64,7 +96,69 @@ export class TableWidget extends WidgetType {
     });
 
     wrap.appendChild(table);
-    return wrap;
+
+    const addColBtn = document.createElement("button");
+    addColBtn.className = "cm-md-table-add-btn cm-add-col";
+    addColBtn.title = "Adicionar Coluna";
+    addColBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+    addColBtn.onclick = (e) => {
+      e.stopPropagation();
+      this.addColumn(view);
+    };
+
+    mainWrap.appendChild(wrap);
+    mainWrap.appendChild(addColBtn);
+
+    container.appendChild(mainWrap);
+
+    const addRowBtn = document.createElement("button");
+    addRowBtn.className = "cm-md-table-add-btn cm-add-row";
+    addRowBtn.title = "Adicionar Linha";
+    addRowBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+    addRowBtn.onclick = (e) => {
+      e.stopPropagation();
+      this.addRow(view);
+    };
+
+    container.appendChild(addRowBtn);
+
+    return container;
+  }
+
+  createRemoveBtn(onClick, title) {
+    const btn = document.createElement("button");
+    btn.className = "cm-md-table-remove-btn";
+    btn.title = title;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    btn.onmousedown = (e) => e.stopPropagation();
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      onClick();
+    };
+    return btn;
+  }
+
+  addColumn(view) {
+    this.rows.forEach(row => row.push("Nova"));
+    this.sync(view);
+  }
+
+  addRow(view) {
+    const newRow = this.rows[0].map(() => "Nova");
+    this.rows.push(newRow);
+    this.sync(view);
+  }
+
+  removeRow(index, view) {
+    if (this.rows.length <= 2) return;
+    this.rows.splice(index, 1);
+    this.sync(view);
+  }
+
+  removeColumn(index, view) {
+    if (this.rows[0].length <= 1) return;
+    this.rows.forEach(row => row.splice(index, 1));
+    this.sync(view);
   }
 
   sync(view) {
