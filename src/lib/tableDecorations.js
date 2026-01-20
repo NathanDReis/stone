@@ -5,20 +5,20 @@ import { TableWidget } from "./widgets/TableWidget";
 
 export const tableDecorations = StateField.define({
   create(state) {
-    return build(state);
+    return buildDecorations(state);
   },
 
   update(deco, tr) {
     if (tr.docChanged || tr.selection) {
-      return build(tr.state);
+      return buildDecorations(tr.state);
     }
     return deco;
   },
 
-  provide: f => EditorView.decorations.from(f)
+  provide: f => EditorView.decorations.from(f),
 });
 
-function build(state) {
+function buildDecorations(state) {
   const decorations = [];
   const ranges = state.selection.ranges;
 
@@ -26,46 +26,35 @@ function build(state) {
     enter(node) {
       if (node.name !== "Table") return;
 
-      const cursorInside = ranges.some(r =>
-        r.from >= node.from && r.to <= node.to
+      const cursorInside = ranges.some(
+        r => r.from >= node.from && r.to <= node.to
       );
       if (cursorInside) return;
 
       const text = state.sliceDoc(node.from, node.to);
-
       const rows = text
         .trim()
         .split("\n")
         .filter(l => !/^\|\s*-+/.test(l))
-        .map(row =>
-          row
+        .map(line =>
+          line
             .slice(1, -1)
             .split("|")
             .map(c => c.trim())
         );
 
-      const startLine = state.doc.lineAt(node.from);
+      if (!rows.length) return;
+
+      const from = state.doc.lineAt(node.from).from;
+      const to = state.doc.lineAt(node.to).to;
 
       decorations.push(
-        Decoration.widget({
-          widget: new TableWidget(rows),
-          block: true
-        }).range(startLine.from)
+        Decoration.replace({
+          widget: new TableWidget(rows, from, to),
+          block: true,
+        }).range(from, to)
       );
-
-      let pos = node.from;
-      while (pos < node.to) {
-        const line = state.doc.lineAt(pos);
-
-        decorations.push(
-          Decoration.line({
-            attributes: { class: "cm-md-table-hidden" }
-          }).range(line.from)
-        );
-
-        pos = line.to + 1;
-      }
-    }
+    },
   });
 
   return Decoration.set(decorations, true);

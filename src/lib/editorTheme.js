@@ -44,10 +44,6 @@ export const editorTheme = [
       backgroundColor: "color-mix(in srgb, var(--accent) 8%, transparent)"
     },
 
-    ".cm-md-table-hidden": {
-      display: "none"
-    },
-
     ".cm-scroller": {
       overflow: "auto"
     },
