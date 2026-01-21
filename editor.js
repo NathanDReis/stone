@@ -103,18 +103,32 @@ const stripTildeFences = EditorState.transactionFilter.of(tr => {
   }];
 });
 
+let lastSavedMarkdown = null;
+
 const state = EditorState.create({
   doc: `# Meu documento
+# Relatório Financeiro
 
+> Resumo executivo do módulo financeiro.
 
+Este documento explica o fluxo #financeiro e #contabilidade.
 
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
 
+## Sub Tópico
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
 
-
-![[exemplo.pdf]]
-
-
-`,
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
+\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n`,
   extensions: [
     editorTheme,
     markdownDecorations,
@@ -142,6 +156,7 @@ const state = EditorState.create({
     EditorView.updateListener.of((update) => {
       if (update.docChanged) {
         updateToC(update.view);
+        scheduleSave(update.state);
       }
     })
   ]
@@ -154,3 +169,99 @@ const view = new EditorView({
 
 updateToC(view);
 new ContextMenu(view);
+
+let saveTimeout = null;
+function scheduleSave(state) {
+  clearTimeout(saveTimeout);
+
+  saveTimeout = setTimeout(() => {
+    saveDocument(state);
+  }, 500);
+}
+
+function saveDocument(state) {
+  const markdown = state.doc.toString();
+
+  if (markdown === lastSavedMarkdown) {
+    return;
+  }
+
+  lastSavedMarkdown = markdown;
+
+  const now = new Date().toISOString();
+
+  const doc = {
+    id: 1,
+    title: extractTitle(markdown),
+    description: extractDescription(markdown),
+    markdown,
+    tags: extractTags(markdown),
+    updated_at: now,
+    updated_by: 1
+  };
+
+  localStorage.setItem(
+    `doc:1`,
+    JSON.stringify(doc)
+  );
+}
+
+function extractTitle(markdown) {
+  const firstLine = markdown
+    .split("\n")
+    .find(line => line.trim().length > 0);
+
+  if (!firstLine) return null;
+
+  return firstLine.replace(/^#+\s*/, "").trim();
+}
+
+function extractDescription(markdown) {
+  const lines = markdown.split("\n");
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith(">")) {
+      return trimmed.replace(/^>\s*/, "").trim();
+    }
+  }
+
+  return null;
+}
+
+function extractTags(markdown) {
+  const tags = new Set();
+  const lines = markdown.split("\n");
+
+  let inCodeBlock = false;
+
+  for (let line of lines) {
+    const trimmed = line.trim();
+
+    if (/^(```|~~~)/.test(trimmed)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+
+    if (
+      inCodeBlock ||
+      trimmed.startsWith(">") ||
+      trimmed.startsWith("-") ||
+      trimmed.startsWith("*") ||
+      trimmed.startsWith("+")
+    ) {
+      continue;
+    }
+
+    const cleanLine = line.replace(/`[^`]*`/g, "");
+
+    const matches = cleanLine.match(/(^|\s)#([a-zA-Z0-9_-]+)/g);
+    if (matches) {
+      matches.forEach(tag => {
+        tags.add(tag.trim().replace(/^#/, ""));
+      });
+    }
+  }
+
+  return Array.from(tags);
+}
