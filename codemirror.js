@@ -105,8 +105,8 @@ const state = EditorState.create({
 Primeiro parágrafo
 - item 1
 - item 2
-- [ ] check
 
+- [ ] check
 # Tópico
 ## Sub tópico
 
@@ -116,13 +116,8 @@ Primeiro parágrafo
 
 ==s==
 ~~d~~
-
 ***
-
-
-
 ---
-
 Minha terra tem palmeiras
 Onde canta o sabiá
 As aves que aqui gorjeiam

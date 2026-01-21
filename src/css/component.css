@@ -513,7 +513,7 @@
 
 /* Table of Contents (ToC) Sidebar */
 .site-index {
-  padding: 24px 20px;
+  padding: calc(70px + 24px) 20px 24px 20px;
   border-left: 1px solid var(--bg-tertiary);
   position: sticky;
   top: 0;
@@ -541,52 +541,88 @@
 }
 
 .toc-item {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   line-height: 1.4;
 }
 
+.toc-item-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.toc-item-content:hover {
+  background-color: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.toc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.toc-toggle:hover {
+  color: var(--accent);
+}
+
+.toc-dot {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.toc-dot::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background-color: var(--bg-tertiary);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
 .toc-item a {
+  flex: 1;
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.85rem;
-  transition: all 0.2s ease;
-  display: block;
+  padding: 4px 4px 4px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 4px 8px;
-  border-radius: 4px;
+  transition: color 0.2s ease;
 }
 
 .toc-item a:hover {
   color: var(--accent);
-  background-color: color-mix(in srgb, var(--accent) 5%, transparent);
-  padding-left: 12px;
 }
 
-.toc-level-1 {
-  margin-left: 0;
-  font-weight: 600;
+/* Hierarchical indentation */
+.toc-list .toc-list {
+  margin-left: 14px;
+  border-left: 1px solid var(--bg-tertiary);
+  transition: all 0.3s ease;
 }
 
-.toc-level-2 {
-  margin-left: 12px;
+.toc-item.is-collapsed>.toc-list {
+  display: none;
 }
 
-.toc-level-3 {
-  margin-left: 24px;
+.toc-item.is-collapsed .toc-toggle svg {
+  transform: rotate(-90deg);
 }
 
-.toc-level-4 {
-  margin-left: 36px;
-}
-
-.toc-level-5 {
-  margin-left: 48px;
-}
-
-.toc-level-6 {
-  margin-left: 60px;
+.toc-item-content .toc-toggle svg {
+  transition: transform 0.2s ease;
 }
 
 /* Custom Scrollbar for ToC */

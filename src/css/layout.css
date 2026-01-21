@@ -84,4 +84,6 @@ body {
   position: sticky;
   top: 0;
   background-color: var(--bg-main);
+  padding: calc(70px + 24px) 20px 24px 20px;
+  box-sizing: border-box;
 }
