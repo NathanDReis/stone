@@ -55,12 +55,9 @@ export class MermaidWidget extends WidgetType {
             if (pos === null) return;
 
             const doc = view.state.doc;
-            const textParams = { from: pos };
 
             let endPos = pos;
             let foundEnd = false;
-
-            const iter = doc.iterRange(pos);
 
             const line = doc.lineAt(pos);
             if (!line.text.trim().startsWith("```")) {
@@ -145,17 +142,6 @@ export class MermaidWidget extends WidgetType {
             try {
                 const pos = view.posAtDOM(div);
                 if (pos !== null) {
-                    // Place cursor inside the block to trigger the plugin to remove the decoration
-                    // The decoration covers [from, to]. pos is 'from'.
-                    // We want to set selection to pos + 1 (inside the code block)
-                    // provided the block is not empty.
-                    const line = view.state.doc.lineAt(pos);
-                    // If it's a replace decoration, the widget replaces the whole range.
-                    // Setting cursor at pos should work if 'inclusive' logic allows it,
-                    // but the plugin logic `isCursorInside` checks `r.from <= node.to && r.to >= node.from`.
-                    // So pos (start) should trigger it if it matches node.from.
-                    // But to be safe, let's target inside.
-
                     const targetPos = Math.min(pos + 1, view.state.doc.length);
 
                     view.dispatch({
@@ -189,18 +175,10 @@ export class MermaidWidget extends WidgetType {
                     <pre style="color: #ef4444; font-size: 0.8rem; white-space: pre-wrap; margin: 0;">${error.message}</pre>
                 </div>
             `;
-            // Ensure click on error bubbles to main div.onclick
         }
     }
 
     ignoreEvent(event) {
-        // Allow clicks to pass through to our handler, but block other default CM behavior
-        // if we want to handle them. For a replacement widget, returning true is usually best
-        // to prevent partial selection of the widget content.
-        // However, if we want clicks, we must ensure they reach our listener.
-        // Events on the DOM node will bubble to our listener regardless of this return value
-        // UNLESS CodeMirror intercepts them aggressively.
-        // Returning true tells CodeMirror "I handled this (or ignore it), don't do your default processing".
         return true;
     }
 }

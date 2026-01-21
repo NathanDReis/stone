@@ -45,9 +45,10 @@ export class MermaidEditorUI {
 
                 <div class="mermaid-form-group">
                     <div class="mermaid-add-connection">
-                        <select class="mermaid-node-select"></select>
-                        <select class="mermaid-edge-type-new" title="Tipo de Seta">
-                            <option value="-->">→</option>
+                    <input type="text" list="mermaid-nodes-list" class="mermaid-node-input" placeholder="Novo nó..." title="Selecione ou digite um novo nome">
+                    <datalist id="mermaid-nodes-list"></datalist>
+                    <select class="mermaid-edge-type-new" title="Tipo de Seta">
+                        <option value="-->">→</option>
                             <option value="-.->">⇢</option>
                             <option value="==>">⇒</option>
                             <option value="---">─</option>
@@ -185,25 +186,17 @@ export class MermaidEditorUI {
     }
 
     renderNodeSelect() {
-        const select = this.element.querySelector('.mermaid-node-select');
-        select.innerHTML = '';
+        const dataList = this.element.querySelector('#mermaid-nodes-list');
+        dataList.innerHTML = '';
 
-        const others = this.allNodes.filter(n => n.id !== this.currentNode.id);
-
-        if (others.length === 0) {
-            const opt = document.createElement('option');
-            opt.text = "Sem outros nós";
-            select.disabled = true;
-            select.appendChild(opt);
-            return;
-        }
-
-        select.disabled = false;
-        others.forEach(node => {
-            const opt = document.createElement('option');
-            opt.value = node.id;
-            opt.textContent = node.label || node.id;
-            select.appendChild(opt);
+        this.allNodes.forEach(node => {
+            if (node.id === this.currentNode.id) return;
+            const option = document.createElement('option');
+            option.value = node.id;
+            if (node.label && node.label !== node.id) {
+                option.label = node.label;
+            }
+            dataList.appendChild(option);
         });
     }
 
@@ -216,11 +209,13 @@ export class MermaidEditorUI {
     }
 
     onAddConnection() {
-        const select = this.element.querySelector('.mermaid-node-select');
+        const input = this.element.querySelector('.mermaid-node-input');
         const typeSelect = this.element.querySelector('.mermaid-edge-type-new');
-        if (!select.value) return;
 
-        this.callbacks.onAddConnection(this.currentNode.id, select.value, typeSelect.value);
+        const targetId = input.value.trim();
+        if (!targetId) return;
+
+        this.callbacks.onAddConnection(this.currentNode.id, targetId, typeSelect.value);
         this.hide();
     }
 }
