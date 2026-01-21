@@ -6,3 +6,4 @@ export { keyMaps } from "./keyMaps";
 export { tableDecorations } from "./tableDecorations";
 export { updateToC } from "./toc";
 export { ContextMenu } from "./contextMenu";
+export { pdfPlugin } from "./pdfPlugin";

@@ -21,8 +21,6 @@ The software is still in the early stages of development.
 - [ ] organização hierárquica dos documentos no menu
 - [ ] poder fazer busca geral, ou por tags
 - [ ] links internos entre páginas
-- [ ] abrir pdf
-- [ ] gráficos de fluxo
 - [ ] cadastro por usuário
 - [ ] permissões de visualização do documento
 - [ ] poder editar as cores do tema e salvar no localStorage

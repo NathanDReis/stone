@@ -77,7 +77,8 @@ import {
   keyMaps,
   tableDecorations,
   updateToC,
-  ContextMenu
+  ContextMenu,
+  pdfPlugin
 } from "./src/lib";
 import { mermaidPlugin } from "./src/lib/mermaidPlugin";
 
@@ -141,6 +142,7 @@ const state = EditorState.create({
     highlightActiveLineGutter(),
     placeholder("O que irá documentar hoje?"),
     mermaidPlugin,
+    pdfPlugin,
     EditorView.updateListener.of((update) => {
       if (update.docChanged) {
         updateToC(update.view);
