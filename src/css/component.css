@@ -664,6 +664,23 @@
   pointer-events: none;
 }
 
+.context-menu-submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 180px;
+  background: var(--bg-secondary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .context-menu.is-visible {
   opacity: 1;
   transform: translateY(0);
@@ -684,10 +701,16 @@
   cursor: pointer;
   text-align: left;
   transition: background-color 0.15s ease;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .context-menu-item:hover {
   background-color: var(--bg-tertiary);
+}
+
+.context-menu-item.has-submenu:hover>.context-menu-submenu {
+  display: flex;
 }
 
 .context-menu-icon {
@@ -710,6 +733,13 @@
   color: var(--text-muted);
   font-family: var(--font-mono);
   opacity: 0.6;
+}
+
+.context-menu-arrow {
+  font-size: 1.2rem;
+  line-height: 0.5;
+  color: var(--text-muted);
+  margin-left: 8px;
 }
 
 .context-menu-separator {
