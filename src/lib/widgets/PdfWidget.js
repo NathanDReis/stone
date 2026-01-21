@@ -10,7 +10,6 @@ export class PdfWidget extends WidgetType {
         this.scale = 1.0;
         this.container = null;
         this.canvas = null;
-        this.source = markdownSource;
     }
 
     eq(other) {

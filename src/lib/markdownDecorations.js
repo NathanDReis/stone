@@ -63,13 +63,8 @@ export const markdownDecorations = ViewPlugin.fromClass(
                 const nextLine = (i < lineToNum) ? view.state.doc.line(i + 1) : null;
                 const nextMatch = nextLine ? nextLine.text.match(/^\s*>\s*\[!(info|success|warning|error)\]/i) : null;
 
-                // Is TOP: first line of node OR has its own marker
                 if (i === lineFromNum || match) classes.push("cm-alert-line-top");
-
-                // Is BOTTOM: last line of node OR next line has a new marker
                 if (i === lineToNum || nextMatch) classes.push("cm-alert-line-bottom");
-
-                // Is MIDDLE: not top AND not bottom
                 if (!(i === lineFromNum || match) && !(i === lineToNum || nextMatch)) {
                   classes.push("cm-alert-line-middle");
                 }
@@ -101,7 +96,6 @@ export const markdownDecorations = ViewPlugin.fromClass(
                   }
                 }
 
-                // Adiciona o widget: se for um marcador [!tipo] OU se for o início de uma citação padrão
                 if (match || (i === lineFromNum && activeType === "default")) {
                   decorations.push(
                     Decoration.widget({
@@ -256,7 +250,6 @@ export const markdownDecorations = ViewPlugin.fromClass(
             );
 
             if (!isCursorInside) {
-              // Substitui tudo pelo texto clicável
               decorations.push(
                 Decoration.replace({
                   widget: new LinkWidget(view, label, href),
@@ -317,7 +310,6 @@ export const markdownDecorations = ViewPlugin.fromClass(
             }
           }
 
-          // Tags detection: only if not inside code or metadata
           const skipNode = ["InlineCode", "FencedCode", "CodeMark", "Link", "Image", "HeaderMark", "CodeInfo", "HTMLBlock", "Comment"].includes(node.name);
           if (!skipNode) {
             regex = /(?:^|\s)(#[a-zA-Z_áàâãéèêíïóôõöúçñ][a-zA-Z\d_áàâãéèêíïóôõöúçñ\-_/]*)/g;

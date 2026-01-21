@@ -111,11 +111,7 @@ const state = EditorState.create({
 
 
 
-
-
-
-
-
+![[exemplo.pdf]]
 
 
 `,
