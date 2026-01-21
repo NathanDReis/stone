@@ -79,6 +79,7 @@ import {
   updateToC,
   ContextMenu
 } from "./src/lib";
+import { mermaidPlugin } from "./src/lib/mermaidPlugin";
 
 const stripTildeFences = EditorState.transactionFilter.of(tr => {
   if (!tr.docChanged) return tr;
@@ -103,36 +104,19 @@ const stripTildeFences = EditorState.transactionFilter.of(tr => {
 
 const state = EditorState.create({
   doc: `# Meu documento
-Primeiro parágrafo
-- item 1
-- item 2
 
-- [ ] check
-# Tópico
-## Sub tópico
 
-| Coluna 1 | Coluna 2 |
-| -------- | -------- |
-| Valor 1  | Valor 2  |
 
-==s==
-~~d~~
-***
----
-Minha terra tem palmeiras
-Onde canta o sabiá
-As aves que aqui gorjeiam
-Não gorjeiam como lá
 
-![Imagem](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
 
-[Link Externo](https://images.pexels.com/photos/1183434/pexels-photo-1183434.jpeg)
 
-> Esta é uma citação
-> [!info] Esta é uma informação útil.
-> [!success] Operação realizada com sucesso!
-> [!warning] Atenção: verifique os dados antes de prosseguir.
-> [!error] Ocorreu um erro crítico no sistema.
+
+
+
+
+
+
+
 `,
   extensions: [
     editorTheme,
@@ -156,6 +140,7 @@ Não gorjeiam como lá
     highlightActiveLine(),
     highlightActiveLineGutter(),
     placeholder("O que irá documentar hoje?"),
+    mermaidPlugin,
     EditorView.updateListener.of((update) => {
       if (update.docChanged) {
         updateToC(update.view);

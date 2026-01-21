@@ -747,3 +747,23 @@
   background-color: var(--bg-tertiary);
   margin: 4px 6px;
 }
+
+/* Mermaid Widget */
+.mermaid-widget {
+  display: block;
+  margin: 1rem 0;
+  text-align: center;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.mermaid-widget:hover {
+  box-shadow: 0 0 0 2px var(--color-accent, #3b82f6);
+}
+
+.mermaid-widget svg {
+  max-width: 100%;
+  height: auto;
+}
