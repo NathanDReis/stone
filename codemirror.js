@@ -76,7 +76,8 @@ import {
   markdownDecorations,
   keyMaps,
   tableDecorations,
-  updateToC
+  updateToC,
+  ContextMenu
 } from "./src/lib";
 
 const stripTildeFences = EditorState.transactionFilter.of(tr => {
@@ -169,3 +170,4 @@ const view = new EditorView({
 });
 
 updateToC(view);
+new ContextMenu(view);

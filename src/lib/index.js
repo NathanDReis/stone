@@ -5,3 +5,4 @@ export { markdownDecorations } from "./markdownDecorations";
 export { keyMaps } from "./keyMaps";
 export { tableDecorations } from "./tableDecorations";
 export { updateToC } from "./toc";
+export { ContextMenu } from "./contextMenu";
