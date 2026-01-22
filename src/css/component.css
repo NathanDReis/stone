@@ -84,6 +84,11 @@
   color: var(--text-primary);
 }
 
+.fab-mini {
+  width: 24px;
+  height: 24px;
+}
+
 .button {
   border-radius: 20px;
   padding: 10px 15px;
@@ -490,7 +495,7 @@
 /* Tag Styling (Obsidian Style) */
 .cm-md-tag {
   color: var(--accent) !important;
-  background-color: color-mix(in srgb, var(--accent) 15%, transparent) !important;
+  background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important;
   border-radius: 999px !important;
   padding: 1px 8px !important;
   font-size: 0.9em !important;

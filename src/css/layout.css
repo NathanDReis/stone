@@ -31,14 +31,48 @@ body {
 }
 
 .site-menu {
-  width: 250px;
-  height: 100dvh;
   position: sticky;
-  top: 0;
+  top: 70px;
+  left: 0;
+  margin-top: 70px;
+
+  width: 70px;
+  height: 100dvh;
   background-color: var(--bg-tertiary);
-  padding: calc(70px + 24px) 20px 24px 20px;
   box-sizing: border-box;
   overflow-y: auto;
+  transition: .3s;
+}
+
+.site-menu .site-menu-actions {
+  height: 50px;
+  background-color: var(--bg-main);
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-menu .site-menu-actions div {
+  display: none;
+}
+
+.site-menu.actived {
+  width: 400px;
+}
+
+.site-menu.actived .site-menu-actions {
+  justify-content: space-between;
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.site-menu.actived .site-menu-actions div {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0 10px;
+  gap: 10px;
 }
 
 .box-content {
