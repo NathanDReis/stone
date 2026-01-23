@@ -1,18 +1,17 @@
-version: "3.9"
-
 services:
-  postgres:
+  postgres_db:
     image: postgres:16
     container_name: postgres_db
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: app_db
-      POSTGRES_USER: app_user
-      POSTGRES_PASSWORD: app_password
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: stone
+      POSTGRES_USER: stone
+      POSTGRES_PASSWORD: stone
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
+
