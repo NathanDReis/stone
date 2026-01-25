@@ -3,6 +3,7 @@
     color: var(--text-primary);
     font-size: 0.9rem;
     overflow-y: auto;
+    height: calc(100dvh - 70px);
 }
 
 .tree-empty {

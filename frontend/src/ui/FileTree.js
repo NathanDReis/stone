@@ -17,10 +17,10 @@ export class FileTree {
         this.container.classList.add('tree-container');
         this.container.innerHTML = '<div class="tree-empty">Carregando...</div>';
 
-        // Container Drop (Move to Root)
         this.container.addEventListener('dragover', (e) => this._handleContainerDragOver(e));
         this.container.addEventListener('dragleave', (e) => this._handleContainerDragLeave(e));
         this.container.addEventListener('drop', (e) => this._handleContainerDrop(e));
+        this.container.addEventListener('click', (e) => this._handleContainerClick(e));
     }
 
     render(nodes) {
@@ -348,6 +348,15 @@ export class FileTree {
 
         this.onNodeMove(nodeId, null);
     }
+
+    _handleContainerClick(e) {
+        // If clicking directly on the container (background), deselect
+        if (e.target === this.container || e.target.classList.contains('tree-list') || e.target.classList.contains('tree-empty')) {
+            this.setActiveNode(null);
+            this.onFileSelect(null); // Notify parent/controller
+        }
+    }
+
     _handleNodeDblClick(node, event, labelElement, textElement) {
         event.stopPropagation();
 
