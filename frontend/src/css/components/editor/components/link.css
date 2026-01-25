@@ -1,0 +1,9 @@
+.cm-md-link-widget {
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cm-md-link-widget:hover {
+  opacity: 0.85;
+}

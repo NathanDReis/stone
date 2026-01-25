@@ -1,24 +1,37 @@
 * {
   scroll-behavior: smooth;
-  scroll-padding-top: 70px;
+}
+
+html {
+  scrollbar-color: var(--text-primary) var(--bg-tertiary);
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--text-primary);
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-tertiary);
 }
 
 body {
   font-family: var(--font-sans);
 }
 
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
+/* HEADER */
 
+.site-header {
   height: 70px;
-  width: 99%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 24px 0 10px;
 
   background-color: var(--bg-secondary);
   color: var(--text-primary);
@@ -26,22 +39,41 @@ body {
   border-bottom: 1px solid var(--bg-tertiary);
 }
 
+/* Ações do Header */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .site-layout {
   display: flex;
 }
 
 .site-menu {
-  position: sticky;
-  top: 70px;
-  left: 0;
-  margin-top: 70px;
-
   width: 70px;
-  height: 100dvh;
+  min-height: calc(100dvh - 70px);
   background-color: var(--bg-tertiary);
   box-sizing: border-box;
-  overflow-y: auto;
   transition: .3s;
+}
+
+.site-menu::-webkit-scrollbar {
+  height: 6px;
+}
+
+.site-menu::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+}
+
+.site-menu::-webkit-scrollbar-thumb {
+  background: var(--text-primary);
+  border-radius: 10px;
+}
+
+.site-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-tertiary);
 }
 
 .site-menu .site-menu-actions {
@@ -78,23 +110,24 @@ body {
 .box-content {
   width: 100%;
   min-height: calc(100dvh - 70px);
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 
 .box-main {
   width: 100%;
-  min-height: calc(100dvh - 70px);
+  flex: 1;
   display: flex;
 }
 
 .site-main {
   width: 100%;
-  min-height: 100dvh;
-  padding-top: 70px;
+  flex: 1;
   background-color: var(--bg-main);
   color: var(--text-primary);
-  box-sizing: border-box;
 }
+
+/* FOOTER */
 
 .site-footer {
   padding: 1rem;
@@ -112,12 +145,16 @@ body {
   font-weight: 600;
 }
 
-.site-index {
-  width: 200px;
-  height: 100dvh;
-  position: sticky;
-  top: 0;
-  background-color: var(--bg-main);
-  padding: calc(70px + 24px) 20px 24px 20px;
-  box-sizing: border-box;
+/* Destaque Footer */
+.made-with {
+  margin-left: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.heart svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--accent);
+  vertical-align: middle;
+  margin: 0 0.2rem;
 }

@@ -1,9 +1,7 @@
-/* Tree Container */
 .tree-container {
     padding: 10px 0;
     color: var(--text-primary);
     font-size: 0.9rem;
-    height: 100%;
     overflow-y: auto;
 }
 
@@ -14,29 +12,23 @@
     font-size: 0.8rem;
 }
 
-/* Tree List */
 .tree-list {
     list-style: none;
     padding-left: 0;
     margin: 0;
 }
 
-/* Sub-lists indentation */
 .tree-node .tree-list {
     display: none;
-    /* Collapsed by default */
     padding-left: 14px;
-    /* Indentation */
     margin-left: 7px;
     border-left: 1px solid var(--bg-tertiary);
 }
 
 .tree-node.expanded>.tree-list {
     display: block;
-    /* Expanded */
 }
 
-/* Node Label */
 .tree-label {
     display: flex;
     align-items: center;
@@ -51,17 +43,14 @@
     margin-bottom: 2px;
 
     border: 1px solid transparent;
-    /* Prepare for drag highlight */
 }
 
 .tree-label:hover {
     background-color: var(--bg-tertiary);
-    /* Hover effect */
 }
 
 .tree-label.active {
     background-color: color-mix(in srgb, var(--accent) 15%, transparent);
-    /* Active file background */
     color: var(--accent);
 }
 
@@ -69,16 +58,13 @@
     font-weight: 500;
 }
 
-/* Drag and Drop Highlight */
 .tree-label.drop-target {
     background-color: color-mix(in srgb, var(--accent) 20%, transparent);
     outline: 1px solid var(--accent);
 }
 
-/* Inline Input Styles */
 .tree-input-label {
     padding: 4px 12px;
-    /* Tighter padding for input */
     background-color: var(--bg-tertiary);
     border: 1px solid var(--accent);
 }
@@ -94,7 +80,6 @@
 }
 
 
-/* Arrow Icon */
 .tree-arrow {
     font-size: 16px !important;
     color: var(--text-muted);
@@ -110,7 +95,6 @@
     transform: rotate(90deg);
 }
 
-/* Folder/File Icons */
 .tree-icon {
     font-size: 18px !important;
     width: 18px;
@@ -120,11 +104,9 @@
     justify-content: center;
 }
 
-/* Text */
 .tree-text {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
-    /* Prevent text selection during drag */
 }

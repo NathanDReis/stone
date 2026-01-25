@@ -1,0 +1,13 @@
+.cm-md-inline-code {
+  background: var(--text-muted);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  color: var(--bg-main);
+}
+
+.cm-md-code-block-line {
+  background: #161210;
+  display: block;
+}

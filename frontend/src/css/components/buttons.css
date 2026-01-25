@@ -1,0 +1,24 @@
+.fab {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+  color: var(--text-secondary);
+
+  cursor: pointer;
+}
+
+.fab:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.fab-mini {
+  width: 24px;
+  height: 24px;
+}

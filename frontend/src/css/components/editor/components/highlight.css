@@ -1,0 +1,6 @@
+.cm-md-highlight {
+  background-color: var(--warning-transparent);
+  color: var(--text-primary);
+  padding: 2px 4px;
+  border-radius: 3px;
+}

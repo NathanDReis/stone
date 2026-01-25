@@ -1,0 +1,28 @@
+.cm-heading-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 2.5;
+
+  width: 100%;
+  position: relative;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.cm-heading-line:has(.cm-header-1)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: .5rem;
+
+  height: 1px;
+  background-color: #ddd;
+
+  pointer-events: none;
+}
+
+.cm-header-1 {
+  font-size: 2rem;
+}

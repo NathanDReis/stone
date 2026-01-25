@@ -1,0 +1,19 @@
+/* Header */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 28px;
+  height: 28px;
+}
+
+.logo h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: .5px;
+}

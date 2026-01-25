@@ -1,0 +1,15 @@
+@import url(./components/component.css);
+
+.cm-editor {
+  flex: 1;
+  height: 100%;
+  padding: 24px 20px;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
+
+.cm-md-hidden {
+  display: none;
+}
