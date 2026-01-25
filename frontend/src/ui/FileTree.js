@@ -4,6 +4,7 @@ export class FileTree {
         this.onFileSelect = options.onFileSelect || (() => { });
         this.onNodeCreate = options.onNodeCreate || (() => { });
         this.onNodeMove = options.onNodeMove || (() => { });
+        this.onNodeRename = options.onNodeRename || (() => { });
 
         this.expandedFolders = new Set();
         this.nodes = [];
@@ -87,6 +88,7 @@ export class FileTree {
 
             // Event Listeners
             label.onclick = (e) => this._handleNodeClick(node, e);
+            label.ondblclick = (e) => this._handleNodeDblClick(node, e, label, text);
 
             // Drag & Drop Handlers
             label.addEventListener('dragstart', (e) => this._handleDragStart(e, node));
@@ -271,7 +273,9 @@ export class FileTree {
     _handleNodeClick(node, event) {
         event.stopPropagation();
 
-        if (node.type === 'folder') {
+        const isArrow = event.target.classList.contains('tree-arrow');
+
+        if (node.type === 'folder' && isArrow) {
             if (this.expandedFolders.has(node.id)) {
                 this.expandedFolders.delete(node.id);
             } else {
@@ -279,15 +283,34 @@ export class FileTree {
             }
             this.render(this.nodes);
         } else {
+            // Select without re-rendering to preserve DOM for double-click
             this.activeNodeId = node.id;
-            this.render(this.nodes);
-            this.onFileSelect(node);
+            this.onFileSelect(node); // This might call setActiveNode
+
+            // Ensure UI is updated in case onFileSelect didn't trigger a render 
+            // (or if we optimize setActiveNode to not render)
+            this._updateActiveClasses();
         }
     }
 
     setActiveNode(id) {
         this.activeNodeId = id;
-        this.render(this.nodes);
+        this._updateActiveClasses();
+        // this.render(this.nodes); // Avoid full re-render
+    }
+
+    _updateActiveClasses() {
+        // Remove active class from all
+        const allLabels = this.container.querySelectorAll('.tree-label');
+        allLabels.forEach(l => l.classList.remove('active'));
+
+        if (this.activeNodeId) {
+            const li = this.container.querySelector(`li[data-id="${this.activeNodeId}"]`);
+            if (li) {
+                const label = li.querySelector('.tree-label');
+                if (label) label.classList.add('active');
+            }
+        }
     }
 
     // --- Container Handlers (Root) ---
@@ -324,5 +347,59 @@ export class FileTree {
         if (node.parent_id === null) return; // Already at root
 
         this.onNodeMove(nodeId, null);
+    }
+    _handleNodeDblClick(node, event, labelElement, textElement) {
+        event.stopPropagation();
+
+        // Prevent multiple inputs
+        if (labelElement.querySelector('input')) return;
+
+        // Hide text, show input
+        textElement.style.display = 'none';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'tree-input';
+        input.value = node.name;
+        input.style.width = 'calc(100% - 30px)'; // Adjust width to fit
+
+        // Insert input after icon (before or instead of text)
+        labelElement.appendChild(input);
+
+        input.focus();
+
+        // Select text (filename only if possible, but simple select all for now is fine)
+        input.select();
+
+        const commit = () => {
+            const newName = input.value.trim();
+            if (newName && newName !== node.name) {
+                this.onNodeRename(node.id, newName);
+            } else {
+                cancel();
+            }
+        };
+
+        const cancel = () => {
+            input.remove();
+            textElement.style.display = '';
+        };
+
+        // Handlers
+        input.addEventListener('blur', () => {
+            commit(); // Or cancel? VS Code commits on blur.
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                input.blur(); // Will trigger commit
+            } else if (e.key === 'Escape') {
+                cancel();
+                e.stopPropagation(); // Prevent tree navigation bubbling
+            }
+        });
+
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('dblclick', (e) => e.stopPropagation());
     }
 }

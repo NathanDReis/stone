@@ -141,4 +141,24 @@ export class FileSystemService {
             });
         }
     }
+    updateNodeName(id, newName) {
+        if (!newName || newName.trim() === '') {
+            throw new Error("Name cannot be empty");
+        }
+
+        const node = this.getNode(id);
+        if (!node) throw new Error(`Node ${id} not found`);
+
+        if (node.name === newName) return node;
+
+        node.name = newName;
+
+        // Regenerate path
+        const newPath = this._generatePath(newName, node.parent_id);
+        this._updatePathsRecursive(node, newPath);
+
+        node.updated_at = this._generateTimestamp();
+
+        return node;
+    }
 }

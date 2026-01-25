@@ -62,6 +62,15 @@ const fileTree = new FileTree(treeContainer, {
             alert(e.message);
             loadTree(); // Snap back
         }
+    },
+    onNodeRename: (nodeId, newName) => {
+        try {
+            fileSystem.updateNodeName(nodeId, newName);
+            loadTree();
+        } catch (e) {
+            alert(e.message);
+            loadTree();
+        }
     }
 });
 
