@@ -1,3 +1,5 @@
+import { ConfirmDialog } from './ConfirmDialog.js';
+
 export class FileTree {
     constructor(containerElement, options = {}) {
         this.container = containerElement;
@@ -11,6 +13,7 @@ export class FileTree {
         this.expandedFolders = new Set();
         this.nodes = [];
         this.activeNodeId = null;
+        this.dialog = new ConfirmDialog();
 
         this.init();
     }
@@ -399,7 +402,12 @@ export class FileTree {
 
     _handleSeparatorDblClick(node, event) {
         event.stopPropagation();
-        this.onNodeDelete(node.id);
+        this.dialog.show({
+            title: "Excluir Separador",
+            message: "Tem certeza que deseja remover este separador?",
+            confirmText: "Excluir",
+            onConfirm: () => this.onNodeDelete(node.id)
+        });
     }
 
     _handleKeyDown(e) {
@@ -408,8 +416,13 @@ export class FileTree {
 
             if (this.activeNodeId) {
                 const node = this.nodes.find(n => n.id === this.activeNodeId);
-                if (node && confirm(`Deseja excluir "${node.name}"?`)) {
-                    this.onNodeDelete(this.activeNodeId);
+                if (node) {
+                    this.dialog.show({
+                        title: "Excluir Item",
+                        message: `Tem certeza que deseja excluir "${node.name}"? Esta ação não pode ser desfeita.`,
+                        confirmText: "Excluir",
+                        onConfirm: () => this.onNodeDelete(this.activeNodeId)
+                    });
                 }
             }
         }
