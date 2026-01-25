@@ -35,22 +35,22 @@
 
 .cm-alert-info {
   background-color: rgba(33, 150, 243, 0.1) !important;
-  box-shadow: inset 4px 0 0 0 #2196f3 !important;
+  box-shadow: inset 4px 0 0 0 var(--info) !important;
 }
 
 .cm-alert-success {
   background-color: rgba(76, 175, 80, 0.1) !important;
-  box-shadow: inset 4px 0 0 0 #4caf50 !important;
+  box-shadow: inset 4px 0 0 0 var(--success) !important;
 }
 
 .cm-alert-warning {
   background-color: rgba(255, 193, 7, 0.1) !important;
-  box-shadow: inset 4px 0 0 0 #ffc107 !important;
+  box-shadow: inset 4px 0 0 0 var(--warning) !important;
 }
 
 .cm-alert-error {
   background-color: rgba(244, 67, 54, 0.1) !important;
-  box-shadow: inset 4px 0 0 0 #f44336 !important;
+  box-shadow: inset 4px 0 0 0 var(--error) !important;
 }
 
 .cm-alert-default {
@@ -76,19 +76,19 @@
 }
 
 .cm-alert-color-info {
-  color: #2196f3;
+  color: var(--info);
 }
 
 .cm-alert-color-success {
-  color: #4caf50;
+  color: var(--success);
 }
 
 .cm-alert-color-warning {
-  color: #ffc107;
+  color: var(--warning);
 }
 
 .cm-alert-color-error {
-  color: #f44336;
+  color: var(--error);
 }
 
 .cm-alert-color-default {

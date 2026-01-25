@@ -1,4 +1,3 @@
-export { markdownCompletions } from "./autoComplete";
 export { markdownHighlight } from "./markdownHighLight";
 export { editorTheme } from "./editorTheme";
 export { markdownDecorations } from "./markdownDecorations";
