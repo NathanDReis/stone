@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="./src/css/global.css">
+    <link rel="stylesheet" href="./src/css/tree.css">
 <body>
     <header class="site-header">
         <div class="logo">
@@ -31,7 +32,7 @@
         </div>
 
         <div class="actions">
-            <button type="button" class="fab" onclick="alterTheme()">
+            <button type="button" class="fab" id="btn-theme">
                 <span class="material-symbols-outlined">
                     format_paint
                 </span>
@@ -48,23 +49,23 @@
         <menu class="site-menu actived">
             <article class="site-menu-actions">
                 <div>
-                    <button type="button" class="fab fab-mini" onclick="addNote()">
+                    <button type="button" class="fab fab-mini" id="btn-add-file">
                         <span class="material-symbols-outlined">
                             note_add
                         </span>
                     </button>
-                    <button type="button" class="fab fab-mini" onclick="addFolder()">
+                    <button type="button" class="fab fab-mini" id="btn-add-folder">
                         <span class="material-symbols-outlined">
                             create_new_folder
                         </span>
                     </button>
-                    <button type="button" class="fab fab-mini" onclick="sync()">
+                    <button type="button" class="fab fab-mini" id="btn-sync">
                         <span class="material-symbols-outlined">
                             sync
                         </span>
                     </button>
                 </div>
-                <button type="button" class="fab fab-mini" onclick="toggleSiteMenu()">
+                <button type="button" class="fab fab-mini" id="btn-toggle-menu">
                     <span class="material-symbols-outlined">
                         menu
                     </span>
@@ -100,6 +101,5 @@
         </div>
     </div>
 </body>
-<script type="module" src="./editor.js"></script>
-<script src="./index.js"></script>
+<script type="module" src="./src/main.js"></script>
 </html>

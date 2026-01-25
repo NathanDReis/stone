@@ -106,29 +106,6 @@ const stripTildeFences = EditorState.transactionFilter.of(tr => {
 let lastSavedMarkdown = null;
 
 const state = EditorState.create({
-  doc: `# Meu documento
-# Relatório Financeiro
-
-> Resumo executivo do módulo financeiro.
-
-Este documento explica o fluxo #financeiro e #contabilidade.
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-
-## Sub Tópico
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci unde consequatur eos soluta amet, sequi corrupti aperiam natus, voluptatibus ullam placeat eum delectus molestias nesciunt. Dolorum illum laudantium fuga exercitationem?
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n`,
   extensions: [
     editorTheme,
     markdownDecorations,

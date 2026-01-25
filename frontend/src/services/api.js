@@ -1,4 +1,4 @@
-const axios = require('axios'); // Assuming axios will be used, though user just said 'fetch'
+const axios = require('axios');
 
 const api = {
     getUsers: async () => {
