@@ -6,6 +6,14 @@
     height: calc(100dvh - 70px);
 }
 
+.site-menu .tree-container {
+    display: none;
+}
+
+.site-menu.actived .tree-container {
+    display: block;
+}
+
 .tree-empty {
     padding: 20px;
     text-align: center;

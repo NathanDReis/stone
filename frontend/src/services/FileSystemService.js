@@ -248,4 +248,27 @@ export class FileSystemService {
             });
         }
     }
+
+    deleteNode(id) {
+        const nodeIndex = this.nodes.findIndex(n => n.id === id);
+        if (nodeIndex === -1) {
+            throw new Error(`Node ${id} not found`);
+        }
+
+        const node = this.nodes[nodeIndex];
+
+        if (node.type === 'folder') {
+            const children = this.nodes.filter(n => n.parent_id === id);
+            children.forEach(child => this.deleteNode(child.id));
+        }
+
+        this.nodes.splice(nodeIndex, 1);
+
+        if (node.type === 'file') {
+            const docIndex = this.documents.findIndex(d => d.id === id);
+            if (docIndex !== -1) {
+                this.documents.splice(docIndex, 1);
+            }
+        }
+    }
 }

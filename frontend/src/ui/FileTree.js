@@ -6,6 +6,7 @@ export class FileTree {
         this.onNodeMove = options.onNodeMove || (() => { });
         this.onNodeRename = options.onNodeRename || (() => { });
         this.onNodeReorder = options.onNodeReorder || (() => { });
+        this.onNodeDelete = options.onNodeDelete || (() => { });
 
         this.expandedFolders = new Set();
         this.nodes = [];
@@ -55,6 +56,7 @@ export class FileTree {
                 hr.addEventListener('dragstart', (e) => this._handleDragStart(e, node));
                 hr.addEventListener('dragover', (e) => this._handleDragOver(e, node));
                 hr.addEventListener('drop', (e) => this._handleDrop(e, node));
+                hr.addEventListener('dblclick', (e) => this._handleSeparatorDblClick(node, e));
 
                 li.appendChild(hr);
                 ul.appendChild(li);
@@ -391,5 +393,10 @@ export class FileTree {
 
         input.addEventListener('click', (e) => e.stopPropagation());
         input.addEventListener('dblclick', (e) => e.stopPropagation());
+    }
+
+    _handleSeparatorDblClick(node, event) {
+        event.stopPropagation();
+        this.onNodeDelete(node.id);
     }
 }

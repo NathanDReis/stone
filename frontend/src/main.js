@@ -76,6 +76,14 @@ const fileTree = new FileTree(treeContainer, {
             alert(e.message);
             loadTree();
         }
+    },
+    onNodeDelete: (nodeId) => {
+        try {
+            fileSystem.deleteNode(nodeId);
+            loadTree();
+        } catch (e) {
+            alert(e.message);
+        }
     }
 });
 
