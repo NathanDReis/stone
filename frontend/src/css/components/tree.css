@@ -4,6 +4,7 @@
     font-size: 0.9rem;
     overflow-y: auto;
     height: calc(100dvh - 70px);
+    outline: none;
 }
 
 .site-menu .tree-container {

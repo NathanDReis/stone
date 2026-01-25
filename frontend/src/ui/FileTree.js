@@ -17,12 +17,14 @@ export class FileTree {
 
     init() {
         this.container.classList.add('tree-container');
+        this.container.tabIndex = 0;
         this.container.innerHTML = '<div class="tree-empty">Carregando...</div>';
 
         this.container.addEventListener('dragover', (e) => this._handleContainerDragOver(e));
         this.container.addEventListener('dragleave', (e) => this._handleContainerDragLeave(e));
         this.container.addEventListener('drop', (e) => this._handleContainerDrop(e));
         this.container.addEventListener('click', (e) => this._handleContainerClick(e));
+        this.container.addEventListener('keydown', (e) => this._handleKeyDown(e));
     }
 
     render(nodes) {
@@ -398,5 +400,18 @@ export class FileTree {
     _handleSeparatorDblClick(node, event) {
         event.stopPropagation();
         this.onNodeDelete(node.id);
+    }
+
+    _handleKeyDown(e) {
+        if (e.key === 'Delete') {
+            if (e.target.tagName === 'INPUT') return;
+
+            if (this.activeNodeId) {
+                const node = this.nodes.find(n => n.id === this.activeNodeId);
+                if (node && confirm(`Deseja excluir "${node.name}"?`)) {
+                    this.onNodeDelete(this.activeNodeId);
+                }
+            }
+        }
     }
 }
