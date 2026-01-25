@@ -2,3 +2,22 @@
 @import url(./themes/theme.css);
 @import url(./layout.css);
 @import url(./components/component.css);
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--border-muted, rgba(128, 128, 128, 0.4));
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-muted, rgba(128, 128, 128, 0.6));
+}

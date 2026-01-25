@@ -97,7 +97,7 @@ function loadTree() {
 }
 
 function openFile(node) {
-    if (!node) {
+    if (!node || node.type === 'folder') {
         activeFileId = null;
         editor.setContent('');
         return;
