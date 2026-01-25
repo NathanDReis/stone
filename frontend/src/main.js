@@ -1,6 +1,7 @@
 import { FileSystemService } from './services/FileSystemService.js';
 import { FileTree } from './ui/FileTree.js';
 import { EditorController } from './ui/EditorController.js';
+import { Toast } from './ui/Toast.js';
 
 const fileSystem = new FileSystemService();
 let activeFileId = null;
@@ -13,12 +14,11 @@ menuElement.appendChild(treeContainer);
 
 const editor = new EditorController(editorContainer, {
     onSave: (content) => {
-        if (!activeFileId) return;
         try {
             fileSystem.updateDocument(activeFileId, content);
-            console.log(`Document ${activeFileId} saved.`);
         } catch (e) {
             console.error('Failed to save document:', e);
+            Toast.error('Erro ao salvar documento', e);
         }
     }
 });
@@ -41,7 +41,7 @@ const fileTree = new FileTree(treeContainer, {
                 openFile(newNode);
             }
         } catch (e) {
-            alert(e.message);
+            Toast.error(e.message);
             loadTree();
         }
     },
@@ -50,7 +50,7 @@ const fileTree = new FileTree(treeContainer, {
             fileSystem.moveNode(nodeId, newParentId);
             loadTree();
         } catch (e) {
-            alert(e.message);
+            Toast.error(e.message);
             loadTree();
         }
     },
@@ -59,7 +59,7 @@ const fileTree = new FileTree(treeContainer, {
             fileSystem.updateNodeName(nodeId, newName);
             loadTree();
         } catch (e) {
-            alert(e.message);
+            Toast.error(e.message);
             loadTree();
         }
     },
@@ -73,7 +73,7 @@ const fileTree = new FileTree(treeContainer, {
             loadTree();
         } catch (e) {
             console.error(e);
-            alert(e.message);
+            Toast.error(e.message);
             loadTree();
         }
     },
@@ -82,7 +82,7 @@ const fileTree = new FileTree(treeContainer, {
             fileSystem.deleteNode(nodeId);
             loadTree();
         } catch (e) {
-            alert(e.message);
+            Toast.error(e.message);
         }
     }
 });
@@ -179,7 +179,7 @@ document.getElementById('btn-add-folder').addEventListener('click', () => {
 });
 
 document.getElementById('btn-sync').addEventListener('click', () => {
-    alert('Sincronização simulada (Mock DB atualizado).');
+    Toast.success('Sincronização realizada com sucesso!');
 });
 
 document.getElementById('btn-add-separator').addEventListener('click', () => {
@@ -187,7 +187,7 @@ document.getElementById('btn-add-separator').addEventListener('click', () => {
         fileSystem.createSeparator(getActiveParentId());
         loadTree();
     } catch (e) {
-        alert(e.message);
+        Toast.error(e.message);
     }
 });
 

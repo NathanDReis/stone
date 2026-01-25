@@ -177,11 +177,11 @@ export class EditorController {
     }
 
     setContent(text) {
-        this.lastSavedMarkdown = text; // Match initial content to avoid unsaved changes trigger
+        this.lastSavedMarkdown = text;
         const transaction = this.view.state.update({
             changes: { from: 0, to: this.view.state.doc.length, insert: text }
         });
         this.view.dispatch(transaction);
-        updateToC(this.view); // Update ToC on load
+        updateToC(this.view);
     }
 }
