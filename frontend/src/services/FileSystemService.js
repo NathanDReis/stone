@@ -38,10 +38,17 @@ export class FileSystemService {
         return `${parent.path}/${name}`;
     }
 
+    _getNextOrder(parentId) {
+        const siblings = this.nodes.filter(n => n.parent_id === parentId);
+        if (siblings.length === 0) return 0;
+        return Math.max(...siblings.map(n => n.order || 0)) + 1;
+    }
+
     createFolder(name, parentId = null) {
         const id = this._generateId();
         const now = this._generateTimestamp();
         const path = this._generatePath(name, parentId);
+        const order = this._getNextOrder(parentId);
 
         const folderNode = {
             id,
@@ -49,6 +56,7 @@ export class FileSystemService {
             name,
             type: 'folder',
             path,
+            order,
             created_at: now,
             updated_at: now
         };
@@ -61,6 +69,7 @@ export class FileSystemService {
         const id = this._generateId();
         const now = this._generateTimestamp();
         const path = this._generatePath(name, parentId);
+        const order = this._getNextOrder(parentId);
 
         const fileNode = {
             id,
@@ -68,6 +77,7 @@ export class FileSystemService {
             name,
             type: 'file',
             path,
+            order,
             created_at: now,
             updated_at: now
         };
@@ -85,6 +95,26 @@ export class FileSystemService {
         return fileNode;
     }
 
+    createSeparator(parentId = null) {
+        const id = this._generateId();
+        const now = this._generateTimestamp();
+        const order = this._getNextOrder(parentId);
+
+        const separatorNode = {
+            id,
+            parent_id: parentId,
+            name: 'separator',
+            type: 'separator',
+            path: '',
+            order,
+            created_at: now,
+            updated_at: now
+        };
+
+        this.nodes.push(separatorNode);
+        return separatorNode;
+    }
+
     updateDocument(id, content) {
         const docIndex = this.documents.findIndex(d => d.id === id);
         if (docIndex === -1) {
@@ -94,12 +124,10 @@ export class FileSystemService {
         const now = this._generateTimestamp();
         const doc = this.documents[docIndex];
 
-        // Update document
         doc.content = content;
         doc.version += 1;
         doc.updated_at = now;
 
-        // Also update the node's updated_at
         const nodeIndex = this.nodes.findIndex(n => n.id === id);
         if (nodeIndex !== -1) {
             this.nodes[nodeIndex].updated_at = now;
@@ -125,8 +153,87 @@ export class FileSystemService {
         }
 
         node.parent_id = newParentId;
-        const newPath = this._generatePath(node.name, newParentId);
+        node.order = this._getNextOrder(newParentId);
+
+        if (node.type !== 'separator') {
+            const newPath = this._generatePath(node.name, newParentId);
+            this._updatePathsRecursive(node, newPath);
+        }
+
+        node.updated_at = this._generateTimestamp();
+
+        return node;
+    }
+
+    reorderNode(nodeId, targetNodeId, position) {
+        const node = this.getNode(nodeId);
+        const targetNode = this.getNode(targetNodeId);
+
+        if (!node || !targetNode) return;
+
+        let newParentId = targetNode.parent_id;
+
+        if (position === 'inside') {
+            if (targetNode.type !== 'folder') return;
+            newParentId = targetNode.id;
+        }
+
+        if (node.type === 'folder' && newParentId) {
+            let parent = this.getNode(newParentId);
+            while (parent) {
+                if (parent.id === nodeId) {
+                    return;
+                }
+                parent = parent.parent_id ? this.getNode(parent.parent_id) : null;
+            }
+        }
+
+        node.parent_id = newParentId;
+
+        if (node.type !== 'separator') {
+            const newPath = this._generatePath(node.name, newParentId);
+            this._updatePathsRecursive(node, newPath);
+        }
+
+        const siblings = this.nodes.filter(n => n.parent_id === newParentId && n.id !== nodeId);
+
+        siblings.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        let targetIndex = -1;
+        if (position !== 'inside') {
+            targetIndex = siblings.findIndex(n => n.id === targetNodeId);
+        }
+
+        if (position === 'before') {
+            siblings.splice(targetIndex, 0, node);
+        } else if (position === 'after') {
+            siblings.splice(targetIndex + 1, 0, node);
+        } else {
+            siblings.push(node);
+        }
+
+        siblings.forEach((n, index) => {
+            n.order = index;
+        });
+
+        return node;
+    }
+
+    updateNodeName(id, newName) {
+        if (!newName || newName.trim() === '') {
+            throw new Error("Name cannot be empty");
+        }
+
+        const node = this.getNode(id);
+        if (!node) throw new Error(`Node ${id} not found`);
+
+        if (node.name === newName) return node;
+
+        node.name = newName;
+
+        const newPath = this._generatePath(newName, node.parent_id);
         this._updatePathsRecursive(node, newPath);
+
         node.updated_at = this._generateTimestamp();
 
         return node;
@@ -140,25 +247,5 @@ export class FileSystemService {
                 this._updatePathsRecursive(child, `${newPath}/${child.name}`);
             });
         }
-    }
-    updateNodeName(id, newName) {
-        if (!newName || newName.trim() === '') {
-            throw new Error("Name cannot be empty");
-        }
-
-        const node = this.getNode(id);
-        if (!node) throw new Error(`Node ${id} not found`);
-
-        if (node.name === newName) return node;
-
-        node.name = newName;
-
-        // Regenerate path
-        const newPath = this._generatePath(newName, node.parent_id);
-        this._updatePathsRecursive(node, newPath);
-
-        node.updated_at = this._generateTimestamp();
-
-        return node;
     }
 }

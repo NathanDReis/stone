@@ -111,3 +111,40 @@
     text-overflow: ellipsis;
     user-select: none;
 }
+
+/* Drag & Drop Visual Indicators */
+.tree-label.drop-top {
+    box-shadow: 0 -2px 0 var(--accent);
+}
+
+.tree-label.drop-bottom {
+    box-shadow: 0 2px 0 var(--accent);
+}
+
+.tree-label.drop-inside {
+    background-color: color-mix(in srgb, var(--accent) 20%, transparent);
+    outline: 1px solid var(--accent);
+}
+
+.tree-separator-node {
+    padding: 2px 0;
+}
+
+.tree-separator {
+    border: none;
+    border-top: 1px solid var(--border-muted);
+    margin: 4px 12px;
+    height: 6px;
+    background: transparent;
+    cursor: grab;
+}
+
+.tree-separator.drop-top {
+    border-top: 2px solid var(--accent);
+}
+
+.tree-separator.drop-bottom {
+    border-bottom: 2px solid var(--accent);
+    border-top: 1px solid var(--border-muted);
+    /* Reset top */
+}

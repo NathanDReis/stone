@@ -2,22 +2,15 @@ import { FileSystemService } from './services/FileSystemService.js';
 import { FileTree } from './ui/FileTree.js';
 import { EditorController } from './ui/EditorController.js';
 
-// --- Initialization ---
-
-// Services
 const fileSystem = new FileSystemService();
 let activeFileId = null;
 
-// UI Elements
 const menuElement = document.querySelector('.site-menu');
 const editorContainer = document.querySelector('.site-main');
 const treeContainer = document.createElement('div');
 treeContainer.id = 'file-tree-root';
 menuElement.appendChild(treeContainer);
 
-// --- Components ---
-
-// Editor
 const editor = new EditorController(editorContainer, {
     onSave: (content) => {
         if (!activeFileId) return;
@@ -30,7 +23,6 @@ const editor = new EditorController(editorContainer, {
     }
 });
 
-// File Tree
 const fileTree = new FileTree(treeContainer, {
     onFileSelect: (node) => {
         openFile(node);
@@ -45,13 +37,12 @@ const fileTree = new FileTree(treeContainer, {
             }
             loadTree();
 
-            // If it's a file, open it
             if (newNode.type === 'file') {
                 openFile(newNode);
             }
         } catch (e) {
             alert(e.message);
-            loadTree(); // Revert UI
+            loadTree();
         }
     },
     onNodeMove: (nodeId, newParentId) => {
@@ -60,7 +51,7 @@ const fileTree = new FileTree(treeContainer, {
             loadTree();
         } catch (e) {
             alert(e.message);
-            loadTree(); // Snap back
+            loadTree();
         }
     },
     onNodeRename: (nodeId, newName) => {
@@ -71,22 +62,38 @@ const fileTree = new FileTree(treeContainer, {
             alert(e.message);
             loadTree();
         }
+    },
+    onNodeReorder: (nodeId, targetNodeId, position) => {
+        try {
+            if (position === 'root-append') {
+                fileSystem.moveNode(nodeId, null);
+            } else {
+                fileSystem.reorderNode(nodeId, targetNodeId, position);
+            }
+            loadTree();
+        } catch (e) {
+            console.error(e);
+            alert(e.message);
+            loadTree();
+        }
     }
 });
-
-// --- Logic ---
 
 function loadTree() {
     const nodes = fileSystem.getNodes();
     fileTree.render(nodes);
 
-    // Maintain active highlight
     if (activeFileId) {
         fileTree.setActiveNode(activeFileId);
     }
 }
 
 function openFile(node) {
+    if (!node) {
+        activeFileId = null;
+        editor.setContent('');
+        return;
+    }
     activeFileId = node.id;
     const doc = fileSystem.getDocument(node.id);
 
@@ -112,8 +119,6 @@ function getActiveParentId() {
     }
     return null;
 }
-
-// --- Theme & Layout Logic ---
 
 const $html = document.querySelector("html");
 const $siteMenu = document.querySelector(".site-menu");
@@ -157,23 +162,28 @@ if ($siteMenu.classList.contains('actived')) {
     activeSiteMenu = false;
 }
 
-// --- Event Listeners ---
-
 document.getElementById('btn-add-file').addEventListener('click', () => {
-    // Start Inline Creation
     fileTree.startCreation('file', getActiveParentId());
 });
 
 document.getElementById('btn-add-folder').addEventListener('click', () => {
-    // Start Inline Creation
     fileTree.startCreation('folder', getActiveParentId());
 });
 
 document.getElementById('btn-sync').addEventListener('click', () => {
     alert('Sincronização simulada (Mock DB atualizado).');
 });
+
+document.getElementById('btn-add-separator').addEventListener('click', () => {
+    try {
+        fileSystem.createSeparator(getActiveParentId());
+        loadTree();
+    } catch (e) {
+        alert(e.message);
+    }
+});
+
 document.getElementById('btn-toggle-menu').addEventListener('click', toggleSiteMenu);
 document.getElementById('btn-theme').addEventListener('click', alterTheme);
 
-// --- Boot ---
 loadTree();
