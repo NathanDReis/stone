@@ -1,3 +1,5 @@
+import { Toast } from "../../ui/Toast";
+
 export class MermaidEditorUI {
     constructor() {
         this.element = null;
@@ -203,6 +205,10 @@ export class MermaidEditorUI {
     onSave() {
         const newVal = this.element.querySelector('.mermaid-label-input').value;
         const newShape = this.element.querySelector('.mermaid-shape-select').value;
+
+        if (!newVal || !newVal.trim().length) {
+            return Toast.warning("Não foi possível ler o nome do nó");
+        }
 
         this.callbacks.onUpdateNode(this.currentNode.id, newVal, newShape);
         this.hide();

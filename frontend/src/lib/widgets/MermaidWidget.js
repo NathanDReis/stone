@@ -49,7 +49,7 @@ export class MermaidWidget extends WidgetType {
         const div = document.createElement("div");
         div.className = "mermaid-widget";
         div.style.cursor = "default";
-        div.setAttribute("title", "Click diagram background to edit source, or nodes to assist edit");
+        div.setAttribute("title", "Clique no fundo do diagrama para editar a fonte ou nos nós para editar");
 
         const updateCode = (newCode) => {
             const pos = view.posAtDOM(div);

@@ -234,3 +234,10 @@ document.addEventListener('app-close', () => {
 
 loadTree();
 openFile(null);
+
+const $burgerMenu = document.querySelector("#btn-toggle-menu");
+const $menu = document.querySelector(".site-menu");
+$burgerMenu.onclick = () => toogleMenu();
+function toogleMenu() {
+    $menu.classList.toggle("actived");
+}
