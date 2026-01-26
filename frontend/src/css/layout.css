@@ -22,6 +22,7 @@ html::-webkit-scrollbar-thumb:hover {
 
 body {
   font-family: var(--font-sans);
+  background-color: var(--bg-main);
 }
 
 /* HEADER */
@@ -56,24 +57,7 @@ body {
   background-color: var(--bg-tertiary);
   box-sizing: border-box;
   transition: .3s;
-}
-
-.site-menu::-webkit-scrollbar {
-  height: 6px;
-}
-
-.site-menu::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 10px;
-}
-
-.site-menu::-webkit-scrollbar-thumb {
-  background: var(--text-primary);
-  border-radius: 10px;
-}
-
-.site-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-tertiary);
+  overflow: hidden;
 }
 
 .site-menu .site-menu-actions {
@@ -125,6 +109,11 @@ body {
   flex: 1;
   background-color: var(--bg-main);
   color: var(--text-primary);
+}
+
+.site-main .editor {
+  width: 100%;
+  flex: 1;
 }
 
 /* FOOTER */

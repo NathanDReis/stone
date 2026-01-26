@@ -1,13 +1,39 @@
 .site-index {
-  padding: 24px 20px;
   border-left: 1px solid var(--bg-tertiary);
-  position: sticky;
-  top: 0;
-  min-height: calc(100dvh - 70px);
+  border-bottom: 1px solid var(--bg-tertiary);
+  height: calc(50dvh - 70px);
+  padding: 24px 20px;
+  max-height: calc(100dvh - 70px);  
   overflow-y: auto;
   font-family: var(--font-sans);
   background-color: var(--bg-main);
-  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
+}
+
+/* Transparent Editor Scrollbar */
+.site-index::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.site-index::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.site-index::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.site-index::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+.site-index::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .toc-title {

@@ -106,9 +106,10 @@ const stripTildeFences = EditorState.transactionFilter.of(tr => {
 export class EditorController {
     constructor(parentElement, options = {}) {
         this.parentElement = parentElement;
-        this.onSave = options.onSave || (() => { });
+        this.onSave = options.onSave || (() => {});
         this.lastSavedMarkdown = null;
         this.saveTimeout = null;
+        this.visible = true;
 
         this.initEditor();
     }
@@ -157,6 +158,23 @@ export class EditorController {
         new ContextMenu(this.view);
     }
 
+    hide() {
+        if (!this.visible) return;
+
+        this.parentElement.style.display = "none";
+        this.visible = false;
+    }
+
+    show() {
+        if (this.visible) return;
+
+        this.parentElement.style.display = "";
+        this.visible = true;
+
+        this.view.requestMeasure();
+        this.view.focus();
+    }
+
     scheduleSave(state) {
         clearTimeout(this.saveTimeout);
 
@@ -168,9 +186,7 @@ export class EditorController {
     triggerSave(state) {
         const markdown = state.doc.toString();
 
-        if (markdown === this.lastSavedMarkdown) {
-            return;
-        }
+        if (markdown === this.lastSavedMarkdown) return;
 
         this.lastSavedMarkdown = markdown;
         this.onSave(markdown);

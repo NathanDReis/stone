@@ -2,15 +2,19 @@ import { FileSystemService } from './services/FileSystemService.js';
 import { FileTree } from './ui/FileTree.js';
 import { EditorController } from './ui/EditorController.js';
 import { Toast } from './ui/Toast.js';
+import { EmptyState } from './ui/EmptyState.js';
 
 const fileSystem = new FileSystemService();
 let activeFileId = null;
 
 const menuElement = document.querySelector('.site-menu');
-const editorContainer = document.querySelector('.site-main');
+const emptyStateContainer = document.querySelector('.site-main .empty-state');
+const editorContainer = document.querySelector('.site-main .editor');
 const treeContainer = document.createElement('div');
 treeContainer.id = 'file-tree-root';
 menuElement.appendChild(treeContainer);
+
+const emptyState = new EmptyState(emptyStateContainer);
 
 const editor = new EditorController(editorContainer, {
     onSave: (content) => {
@@ -100,8 +104,13 @@ function openFile(node) {
     if (!node || node.type === 'folder') {
         activeFileId = null;
         editor.setContent('');
+        emptyState.show();
+        editor.hide();
         return;
     }
+    
+    emptyState.hide();
+    editor.show();
     activeFileId = node.id;
     const doc = fileSystem.getDocument(node.id);
 
@@ -194,4 +203,40 @@ document.getElementById('btn-add-separator').addEventListener('click', () => {
 document.getElementById('btn-toggle-menu').addEventListener('click', toggleSiteMenu);
 document.getElementById('btn-theme').addEventListener('click', alterTheme);
 
+function handleClose() {
+    if (activeFileId) {
+        fileTree.setActiveNode(null);
+        openFile(null);
+    } else {
+        try {
+            window.close();
+            setTimeout(() => {
+                Toast.info('O navegador bloqueou o fechamento automático. Use Ctrl+W.');
+            }, 100);
+        } catch (err) {
+            console.warn("Could not close window", err);
+        }
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    if (e.altKey && (e.key === 'n' || e.key === 'N' || e.code === 'KeyN')) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById('btn-add-file').click();
+        return;
+    }
+    if (e.altKey && (e.key === 'o' || e.key === 'O' || e.code === 'KeyO')) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById('search').focus();
+        return;
+    }
+}, true);
+
+document.addEventListener('app-close', () => {
+    handleClose();
+});
+
 loadTree();
+openFile(null);

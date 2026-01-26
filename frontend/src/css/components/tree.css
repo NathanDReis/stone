@@ -3,8 +3,10 @@
     color: var(--text-primary);
     font-size: 0.9rem;
     overflow-y: auto;
-    height: calc(100dvh - 70px);
+    height: calc(100dvh - 170px);
     outline: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
 }
 
 .site-menu .tree-container {
@@ -13,6 +15,31 @@
 
 .site-menu.actived .tree-container {
     display: block;
+}
+
+/* Transparent Editor Scrollbar */
+.tree-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.tree-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tree-container::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.tree-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+.tree-container::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .tree-empty {
