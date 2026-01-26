@@ -7,7 +7,7 @@ export const initialDocuments = [
     },
     {
         "id": "3",
-        "content": "# Introdução\n\nBem-vindo à documentação.\n\n[[2]]",
+        "content": "# Introdução\n\nBem-vindo à documentação.\n\n[[2]]\n\nDocumento a parte para teste do filtro do search",
         "version": 1,
         "updated_at": "2026-01-01T00:00:01.000Z"
     }

@@ -3,6 +3,7 @@ import { FileTree } from './ui/FileTree.js';
 import { EditorController } from './ui/EditorController.js';
 import { Toast } from './ui/Toast.js';
 import { EmptyState } from './ui/EmptyState.js';
+import { SearchController } from './ui/SearchController.js';
 
 const fileSystem = new FileSystemService();
 let activeFileId = null;
@@ -231,6 +232,16 @@ window.addEventListener('keydown', (e) => {
 document.addEventListener('app-close', () => {
     handleClose();
 });
+
+const searchController = new SearchController(
+    document.getElementById('search'),
+    fileSystem,
+    {
+        onSelect: (node) => {
+            openFile(node);
+        }
+    }
+);
 
 loadTree();
 openFile(null);
