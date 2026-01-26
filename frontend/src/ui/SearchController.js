@@ -1,38 +1,34 @@
+import { Toast } from '../ui/Toast';
+
 export class SearchController {
     constructor(searchElement, fileSystem, options = {}) {
         this.input = searchElement;
         this.fileSystem = fileSystem;
         this.onSelect = options.onSelect || (() => { });
         this.resultsContainer = null;
+        this.toast = new Toast();
 
         this.init();
     }
 
     init() {
-        // Create results container
         this.resultsContainer = document.createElement('div');
         this.resultsContainer.className = 'search-results';
 
-        // Append to the parent .box-search to ensure correct positioning
         const boxSearch = this.input.closest('.box-search');
         if (boxSearch) {
             boxSearch.appendChild(this.resultsContainer);
-            // Ensure positioning context if not already set
             const computedStyle = window.getComputedStyle(boxSearch);
             if (computedStyle.position === 'static') {
                 boxSearch.style.position = 'relative';
             }
         } else {
-            console.error('SearchController: .box-search container not found');
-            // Fallback: append to body but positioning will be tricky without more logic
-            // For now, assume structure is correct as validified.
+            this.toast.error('SearchController: container box-search não encontrado');
         }
 
-        // Add event listeners
         this.input.addEventListener('input', (e) => this.handleInput(e));
         this.input.addEventListener('focus', (e) => this.handleInput(e));
 
-        // Close on click outside
         document.addEventListener('click', (e) => {
             if (!this.input.contains(e.target) && !this.resultsContainer.contains(e.target)) {
                 this.hideResults();
@@ -63,7 +59,6 @@ export class SearchController {
                 const index = contentLower.indexOf(query);
                 if (index !== -1) {
                     contentMatch = true;
-                    // Extract snippet
                     const start = Math.max(0, index - 20);
                     const end = Math.min(doc.content.length, index + query.length + 40);
                     snippet = (start > 0 ? '...' : '') +
@@ -101,26 +96,21 @@ export class SearchController {
             const item = document.createElement('div');
             item.className = 'search-item';
 
-            // Icon
             const icon = document.createElement('span');
             icon.className = 'material-symbols-outlined';
             icon.textContent = 'description';
 
-            // Content Wrapper
             const content = document.createElement('div');
             content.className = 'search-item-content';
 
-            // Title
             const title = document.createElement('div');
             title.className = 'search-item-title';
             title.textContent = node.name;
             content.appendChild(title);
 
-            // Snippet
             if (snippet) {
                 const snippetEl = document.createElement('div');
                 snippetEl.className = 'search-item-snippet';
-                // Highlight query
                 const regex = new RegExp(`(${query})`, 'gi');
                 snippetEl.innerHTML = snippet.replace(regex, '<strong>$1</strong>');
                 content.appendChild(snippetEl);
@@ -132,7 +122,7 @@ export class SearchController {
             item.addEventListener('click', () => {
                 this.onSelect(node);
                 this.hideResults();
-                this.input.value = ''; // Clear search
+                this.input.value = '';
             });
 
             this.resultsContainer.appendChild(item);
