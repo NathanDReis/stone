@@ -1,0 +1,29 @@
+.internal-link {
+    text-decoration: none;
+    transition: all 0.2s;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.internal-link-valid {
+    color: var(--accent-color, #4a9eff);
+    border-bottom: 1px solid var(--accent-color, #4a9eff);
+    cursor: pointer;
+}
+
+.internal-link-valid:hover {
+    opacity: 0.8;
+    background: var(--bg-hover);
+    border-bottom-width: 2px;
+}
+
+.internal-link-invalid {
+    color: var(--text-error, #ff6b6b);
+    text-decoration: line-through;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.internal-link-invalid:hover {
+    opacity: 0.8;
+}

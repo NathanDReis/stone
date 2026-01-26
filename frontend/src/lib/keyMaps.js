@@ -45,6 +45,18 @@ export const keyMaps = [
     run: (view) => wrapSelection(view, "==")
   },
   {
+    key: "Ctrl-k",
+    mac: "Cmd-k",
+    run: (view) => {
+      const { from, to } = view.state.selection.main;
+      view.dispatch({
+        changes: { from, to, insert: "[[]]" },
+        selection: { anchor: from + 2 }
+      });
+      return true;
+    }
+  },
+  {
     key: "Ctrl-Shift-s",
     run: view => wrapSelection(view, "~~")
   },

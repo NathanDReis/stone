@@ -1,0 +1,78 @@
+/* Autocomplete dropdown styling */
+.cm-tooltip-autocomplete {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    font-family: var(--font-family);
+    max-height: 300px;
+    z-index: 1000;
+}
+
+.cm-tooltip-autocomplete>ul {
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.cm-tooltip-autocomplete>ul>li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: background-color 0.15s ease;
+}
+
+.cm-tooltip-autocomplete>ul>li:hover,
+.cm-tooltip-autocomplete>ul>li[aria-selected] {
+    background-color: var(--hover-bg);
+}
+
+/* File name */
+.cm-completionLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* File path detail */
+.cm-completionDetail {
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* File icon indicator */
+.cm-completionIcon {
+    display: none;
+}
+
+/* Scrollbar styling for autocomplete list */
+.cm-tooltip-autocomplete>ul::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cm-tooltip-autocomplete>ul::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .cm-tooltip-autocomplete {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+}

@@ -206,7 +206,11 @@ export class FileTree {
     }
 
     _handleDragStart(e, node) {
-        e.dataTransfer.setData('application/json', JSON.stringify({ nodeId: node.id }));
+        e.dataTransfer.setData('application/json', JSON.stringify({
+            nodeId: node.id,
+            nodeType: node.type,
+            nodeName: node.name
+        }));
         e.dataTransfer.effectAllowed = 'move';
     }
 

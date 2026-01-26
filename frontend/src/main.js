@@ -17,6 +17,10 @@ menuElement.appendChild(treeContainer);
 const emptyState = new EmptyState(emptyStateContainer);
 
 const editor = new EditorController(editorContainer, {
+    fileSystem: fileSystem,
+    onNavigate: (node) => {
+        openFile(node);
+    },
     onSave: (content) => {
         try {
             fileSystem.updateDocument(activeFileId, content);
@@ -52,6 +56,10 @@ const fileTree = new FileTree(treeContainer, {
     onNodeMove: (nodeId, newParentId) => {
         try {
             fileSystem.moveNode(nodeId, newParentId);
+            // Invalidate cache for this UUID in case path affects display
+            if (editor.linkResolver) {
+                editor.linkResolver.invalidateCache(nodeId);
+            }
             loadTree();
         } catch (e) {
             Toast.error(e.message);
@@ -61,6 +69,10 @@ const fileTree = new FileTree(treeContainer, {
     onNodeRename: (nodeId, newName) => {
         try {
             fileSystem.updateNodeName(nodeId, newName);
+            // Invalidate cache for this UUID so link display names update
+            if (editor.linkResolver) {
+                editor.linkResolver.invalidateCache(nodeId);
+            }
             loadTree();
         } catch (e) {
             Toast.error(e.message);
@@ -84,6 +96,10 @@ const fileTree = new FileTree(treeContainer, {
     onNodeDelete: (nodeId) => {
         try {
             fileSystem.deleteNode(nodeId);
+            // Clear entire cache so broken links become invalid
+            if (editor.linkResolver) {
+                editor.linkResolver.invalidateCache();
+            }
             loadTree();
         } catch (e) {
             Toast.error(e.message);
@@ -108,7 +124,7 @@ function openFile(node) {
         editor.hide();
         return;
     }
-    
+
     emptyState.hide();
     editor.show();
     activeFileId = node.id;

@@ -78,9 +78,12 @@ import {
     tableDecorations,
     updateToC,
     ContextMenu,
-    pdfPlugin
+    pdfPlugin,
+    createInternalLinkPlugin,
+    createLinkAutocomplete
 } from "../lib";
 import { mermaidPlugin } from "../lib/mermaidPlugin";
+import { LinkResolver } from "../services/LinkResolver";
 
 const stripTildeFences = EditorState.transactionFilter.of(tr => {
     if (!tr.docChanged) return tr;
@@ -106,47 +109,67 @@ const stripTildeFences = EditorState.transactionFilter.of(tr => {
 export class EditorController {
     constructor(parentElement, options = {}) {
         this.parentElement = parentElement;
-        this.onSave = options.onSave || (() => {});
+        this.onSave = options.onSave || (() => { });
+        this.onNavigate = options.onNavigate || (() => { });
+        this.fileSystem = options.fileSystem;
         this.lastSavedMarkdown = null;
         this.saveTimeout = null;
         this.visible = true;
+        this.linkResolver = null;
 
         this.initEditor();
     }
 
     initEditor() {
+        // Initialize LinkResolver if fileSystem is provided
+        if (this.fileSystem) {
+            this.linkResolver = new LinkResolver(this.fileSystem);
+        }
+
+        const extensions = [
+            editorTheme,
+            markdownDecorations,
+            tableDecorations,
+
+            stripTildeFences,
+
+            keymap.of(keyMaps),
+            EditorView.lineWrapping,
+            history(),
+            markdown({
+                base: commonmarkLanguage,
+                codeLanguages: languages,
+                extensions: [GFM]
+            }),
+
+            highlightSelectionMatches(),
+            indentOnInput(),
+            syntaxHighlighting(markdownHighlight),
+            highlightActiveLine(),
+            highlightActiveLineGutter(),
+            placeholder("O que irá documentar hoje?"),
+            mermaidPlugin,
+            pdfPlugin,
+            EditorView.updateListener.of((update) => {
+                if (update.docChanged) {
+                    updateToC(update.view);
+                    this.scheduleSave(update.state);
+                }
+            })
+        ];
+
+        // Add internal link plugin if linkResolver is available
+        if (this.linkResolver) {
+            extensions.push(createInternalLinkPlugin(this.linkResolver, this.onNavigate));
+        }
+
+        // Add link autocomplete if fileSystem is available
+        if (this.fileSystem) {
+            extensions.push(createLinkAutocomplete(this.fileSystem));
+        }
+
         const state = EditorState.create({
-            extensions: [
-                editorTheme,
-                markdownDecorations,
-                tableDecorations,
-
-                stripTildeFences,
-
-                keymap.of(keyMaps),
-                EditorView.lineWrapping,
-                history(),
-                markdown({
-                    base: commonmarkLanguage,
-                    codeLanguages: languages,
-                    extensions: [GFM]
-                }),
-
-                highlightSelectionMatches(),
-                indentOnInput(),
-                syntaxHighlighting(markdownHighlight),
-                highlightActiveLine(),
-                highlightActiveLineGutter(),
-                placeholder("O que irá documentar hoje?"),
-                mermaidPlugin,
-                pdfPlugin,
-                EditorView.updateListener.of((update) => {
-                    if (update.docChanged) {
-                        updateToC(update.view);
-                        this.scheduleSave(update.state);
-                    }
-                })
-            ]
+            extensions
         });
 
         this.view = new EditorView({
