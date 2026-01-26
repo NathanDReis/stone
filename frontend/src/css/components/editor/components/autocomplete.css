@@ -1,13 +1,14 @@
-/* Autocomplete dropdown styling */
 .cm-tooltip-autocomplete {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #1f1f1f;
+    border: 1px solid #111;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     overflow: hidden;
-    font-family: var(--font-family);
-    max-height: 300px;
+    min-width: 320px;
+    max-width: 450px;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .cm-tooltip-autocomplete>ul {
@@ -16,6 +17,7 @@
     padding: 4px;
     max-height: 300px;
     overflow-y: auto;
+    flex-grow: 1;
 }
 
 .cm-tooltip-autocomplete>ul>li {
@@ -24,37 +26,52 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    transition: background-color 0.15s ease;
+    gap: 3px;
+    transition: background-color 0.1s ease;
+    margin-bottom: 2px;
+    color: #dcddde;
 }
 
 .cm-tooltip-autocomplete>ul>li:hover,
 .cm-tooltip-autocomplete>ul>li[aria-selected] {
-    background-color: var(--hover-bg);
+    background-color: #2f2f2f;
 }
 
-/* File name */
 .cm-completionLabel {
     font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
+    font-weight: 600;
+    color: #dcddde;
+    line-height: 1.2;
 }
 
-/* File path detail */
 .cm-completionDetail {
     font-size: 12px;
-    color: var(--text-secondary);
-    opacity: 0.7;
+    color: #8c8c8c;
+    opacity: 0.8;
+    font-family: monospace;
 }
 
-/* File icon indicator */
 .cm-completionIcon {
     display: none;
 }
 
-/* Scrollbar styling for autocomplete list */
+.cm-tooltip-autocomplete::after {
+    content: "Digite # para linkar o título \00A0 Digite ^ para linkar blocos \A Digite | para alterar o texto de exibição";
+    display: block;
+    border-top: 1px solid #111;
+    background-color: #1f1f1f;
+    color: #8c8c8c;
+    font-size: 11px;
+    padding: 8px 12px;
+    text-align: center;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    opacity: 0.8;
+    margin-top: auto;
+}
+
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar-track {
@@ -62,17 +79,10 @@
 }
 
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 4px;
+    background-color: #444;
+    border-radius: 3px;
 }
 
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
-}
-
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .cm-tooltip-autocomplete {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
+    background-color: #555;
 }
