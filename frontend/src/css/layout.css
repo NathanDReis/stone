@@ -2,27 +2,10 @@
   scroll-behavior: smooth;
 }
 
-html {
-  scrollbar-color: var(--text-primary) var(--bg-tertiary);
-}
-
-html::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 10px;
-}
-
-html::-webkit-scrollbar-thumb {
-  background: var(--text-primary);
-  border-radius: 10px;
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-tertiary);
-}
-
-body {
+body, html {
   font-family: var(--font-sans);
   background-color: var(--bg-main);
+  overflow: hidden;
 }
 
 /* HEADER */
@@ -121,6 +104,7 @@ body {
 .site-footer {
   padding: 1rem;
   text-align: center;
+  height: 15px;
 
   background-color: var(--bg-secondary);
   color: var(--text-muted);

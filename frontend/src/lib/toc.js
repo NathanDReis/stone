@@ -101,8 +101,9 @@ function renderList(view, nodes, parentPath) {
             e.preventDefault();
             view.dispatch({
                 selection: { anchor: node.from },
-                effects: EditorView.scrollIntoView(node.from, { y: "start", yMargin: 80 }),
-                scrollIntoView: true
+                effects: EditorView.scrollIntoView(node.from, {
+                    y: "center"
+                })
             });
             view.focus();
         };

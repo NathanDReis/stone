@@ -4,7 +4,7 @@
   flex: 1;
   height: 100%;
   padding: 24px 20px;
-  max-height: calc(100dvh - 70px);
+  max-height: calc(100dvh - 90px - 2rem);
 }
 
 .cm-editor.cm-focused {
