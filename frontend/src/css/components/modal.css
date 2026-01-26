@@ -131,7 +131,6 @@
     text-align: center;
 }
 
-/* New Create Card */
 .theme-card-create {
     display: flex;
     flex-direction: column;
@@ -140,6 +139,7 @@
     border: 2px dashed var(--border-muted);
     background-color: transparent;
     color: var(--text-muted);
+    padding: 20px;
 }
 
 .theme-card-create:hover {
@@ -147,7 +147,6 @@
     color: var(--accent);
 }
 
-/* Delete Button */
 .theme-delete-btn {
     position: absolute;
     top: 4px;
@@ -174,7 +173,6 @@
     background: var(--error);
 }
 
-/* Editor Form */
 .theme-editor {
     display: flex;
     flex-direction: column;

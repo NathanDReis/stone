@@ -1,5 +1,6 @@
 import { WidgetType } from "@codemirror/view";
 import { PdfViewer } from "../pdf/PdfViewer";
+import { Toast } from "../../ui/Toast";
 
 export class PdfWidget extends WidgetType {
     constructor(url, linkText = null, view = null, start = 0, end = 0) {
@@ -174,7 +175,7 @@ export class PdfWidget extends WidgetType {
             await this.createAllPages();
         } catch (error) {
             this.pagesContainer.innerHTML = `<div class="pdf-error">Erro ao carregar PDF: ${error.message}</div>`;
-            console.error(error);
+            Toast.error(error.message || "Não foi possível carregar o PDF");
         }
     }
 
@@ -231,7 +232,7 @@ export class PdfWidget extends WidgetType {
             await this.viewer.renderPage(pageNumber, pageEl.canvas, this.scale);
             pageEl.rendered = true;
         } catch (error) {
-            console.error(`Error rendering page ${pageNumber}:`, error);
+            Toast.error(`Erro na renderização da página: ${pageNumber}`);
         }
     }
 

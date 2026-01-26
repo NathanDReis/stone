@@ -25,8 +25,7 @@ const editor = new EditorController(editorContainer, {
         try {
             fileSystem.updateDocument(activeFileId, content);
         } catch (e) {
-            console.error('Failed to save document:', e);
-            Toast.error('Erro ao salvar documento', e);
+            Toast.error(`Erro ao salvar documento: ${e.message ?? e}`, 10000);
         }
     }
 });
@@ -56,7 +55,6 @@ const fileTree = new FileTree(treeContainer, {
     onNodeMove: (nodeId, newParentId) => {
         try {
             fileSystem.moveNode(nodeId, newParentId);
-            // Invalidate cache for this UUID in case path affects display
             if (editor.linkResolver) {
                 editor.linkResolver.invalidateCache(nodeId);
             }
@@ -69,7 +67,6 @@ const fileTree = new FileTree(treeContainer, {
     onNodeRename: (nodeId, newName) => {
         try {
             fileSystem.updateNodeName(nodeId, newName);
-            // Invalidate cache for this UUID so link display names update
             if (editor.linkResolver) {
                 editor.linkResolver.invalidateCache(nodeId);
             }
@@ -88,7 +85,6 @@ const fileTree = new FileTree(treeContainer, {
             }
             loadTree();
         } catch (e) {
-            console.error(e);
             Toast.error(e.message);
             loadTree();
         }
@@ -96,7 +92,6 @@ const fileTree = new FileTree(treeContainer, {
     onNodeDelete: (nodeId) => {
         try {
             fileSystem.deleteNode(nodeId);
-            // Clear entire cache so broken links become invalid
             if (editor.linkResolver) {
                 editor.linkResolver.invalidateCache();
             }
@@ -134,7 +129,7 @@ function openFile(node) {
         editor.setContent(doc.content);
         fileTree.setActiveNode(node.id);
     } else {
-        console.error(`Document for node ${node.id} not found.`);
+        Toast.error(`Document for node ${node.id} not found.`);
         editor.setContent('');
     }
 }
@@ -160,10 +155,8 @@ import { ThemeModal } from './ui/ThemeModal.js';
 const themeManager = new ThemeManager();
 const themeModal = new ThemeModal(themeManager);
 
-// Register all defined themes
 Object.values(themes).forEach(theme => themeManager.register(theme));
 
-// Apply saved or default theme on startup
 const startTheme = themeManager.loadWait();
 themeManager.apply(startTheme);
 
@@ -215,7 +208,7 @@ function handleClose() {
                 Toast.info('O navegador bloqueou o fechamento automático. Use Ctrl+W.');
             }, 100);
         } catch (err) {
-            console.warn("Could not close window", err);
+            Toast.warning(`Could not close window: ${err.message ?? err}`);
         }
     }
 }

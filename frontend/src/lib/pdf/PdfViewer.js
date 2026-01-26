@@ -1,6 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import { Toast } from '../../ui/Toast';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
@@ -16,14 +17,9 @@ export class PdfViewer {
             this.loadingTask.destroy();
         }
 
-        try {
-            this.loadingTask = pdfjsLib.getDocument(url);
-            this.pdfDoc = await this.loadingTask.promise;
-            return this.pdfDoc;
-        } catch (error) {
-            console.error("Error loading PDF:", error);
-            throw error;
-        }
+        this.loadingTask = pdfjsLib.getDocument(url);
+        this.pdfDoc = await this.loadingTask.promise;
+        return this.pdfDoc;
     }
 
     getPageCount() {

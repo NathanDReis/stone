@@ -30,7 +30,7 @@ export const themes = {
     },
 
     terr: {
-        name: 'Terra',
+        name: 'Earthy',
         id: 'terr',
         variables: {
             '--bg-main': '#f5f1ea',
@@ -45,7 +45,7 @@ export const themes = {
     },
 
     'terr-dark': {
-        name: 'Terra Dark',
+        name: 'Earthy Dark',
         id: 'terr-dark',
         variables: {
             '--bg-main': '#1f1a17',
@@ -86,155 +86,6 @@ export const themes = {
             '--text-muted': '#9aa0c8',
             '--border-muted': '#44475a',
             '--accent': '#ff79c6'
-        }
-    },
-
-    solarized: {
-        name: 'Solarized Dark',
-        id: 'solarized',
-        variables: {
-            '--bg-main': '#002b36',
-            '--bg-secondary': '#073642',
-            '--bg-tertiary': '#0f4b5a',
-            '--text-primary': '#fdf6e3',
-            '--text-secondary': '#93a1a1',
-            '--text-muted': '#657b83',
-            '--border-muted': '#1f4b57',
-            '--accent': '#b58900'
-        }
-    },
-
-    ocean: {
-        name: 'Ocean',
-        id: 'ocean',
-        variables: {
-            '--bg-main': '#0b1d2a',
-            '--bg-secondary': '#102a3a',
-            '--bg-tertiary': '#15394f',
-            '--text-primary': '#e0f2fe',
-            '--text-secondary': '#9ac5e8',
-            '--text-muted': '#6ba4c7',
-            '--border-muted': '#1e4d6b',
-            '--accent': '#38bdf8'
-        }
-    },
-
-    rose: {
-        name: 'Rose',
-        id: 'rose',
-        variables: {
-            '--bg-main': '#fff1f2',
-            '--bg-secondary': '#ffe4e6',
-            '--bg-tertiary': '#fecdd3',
-            '--text-primary': '#4c0519',
-            '--text-secondary': '#881337',
-            '--text-muted': '#9f1239',
-            '--border-muted': '#fda4af',
-            '--accent': '#e11d48'
-        }
-    },
-    light: {
-        name: 'Light',
-        id: 'light',
-        variables: {
-            '--bg-main': '#ffffff',
-            '--bg-secondary': '#f6f8fa',
-            '--bg-tertiary': '#eaeef2',
-            '--text-primary': '#0d1117',
-            '--text-secondary': '#57606a',
-            '--text-muted': '#8c959f',
-            '--border-muted': '#d1d5da',
-            '--accent': '#2563eb'
-        }
-    },
-
-    dark: {
-        name: 'Dark',
-        id: 'dark',
-        variables: {
-            '--bg-main': '#0d1117',
-            '--bg-secondary': '#161b22',
-            '--bg-tertiary': '#21262d',
-            '--text-primary': '#e6edf3',
-            '--text-secondary': '#9da7b3',
-            '--text-muted': '#6e7681',
-            '--border-muted': '#30363d',
-            '--accent': '#8b5cf6'
-        }
-    },
-
-    terr: {
-        name: 'Terr',
-        id: 'terr',
-        variables: {
-            '--bg-main': '#f5f1ea',
-            '--bg-secondary': '#ede7dc',
-            '--bg-tertiary': '#e2d8c8',
-            '--text-primary': '#3b2f2a',
-            '--text-secondary': '#6b5a4d',
-            '--text-muted': '#9c8a78',
-            '--border-muted': '#d4c5b0',
-            '--accent': '#8b5e34'
-        }
-    },
-
-    'terr-dark': {
-        name: 'Terr Dark',
-        id: 'terr-dark',
-        variables: {
-            '--bg-main': '#1f1a17',
-            '--bg-secondary': '#29221d',
-            '--bg-tertiary': '#3a3029',
-            '--text-primary': '#e6dccf',
-            '--text-secondary': '#c5b8a5',
-            '--text-muted': '#9c8f7d',
-            '--border-muted': '#443930',
-            '--accent': '#c08552'
-        }
-    },
-
-    nord: {
-        name: 'Nord',
-        id: 'nord',
-        variables: {
-            '--bg-main': '#2e3440',
-            '--bg-secondary': '#3b4252',
-            '--bg-tertiary': '#434c5e',
-            '--text-primary': '#eceff4',
-            '--text-secondary': '#d8dee9',
-            '--text-muted': '#a3abb8',
-            '--border-muted': '#4c566a',
-            '--accent': '#88c0d0'
-        }
-    },
-
-    dracula: {
-        name: 'Dracula',
-        id: 'dracula',
-        variables: {
-            '--bg-main': '#282a36',
-            '--bg-secondary': '#343746',
-            '--bg-tertiary': '#3e4154',
-            '--text-primary': '#f8f8f2',
-            '--text-secondary': '#cfd3f0',
-            '--text-muted': '#9aa0c8',
-            '--border-muted': '#44475a',
-            '--accent': '#ff79c6'
-        }
-    },
-
-    solarized: {
-        name: 'Solarized Dark',
-        id: 'solarized',
-        variables: {
-            '--bg-main': '#002b36',
-            '--bg-secondary': '#073642',
-            '--bg-tertiary': '#0f4b5a',
-            '--text-primary': '#fdf6e3',
-            '--text-secondary': '#93a1a1',
-            '--text-muted': '#657b83',
-            '--border-muted': '#1f4b57',
-            '--accent': '#b58900'
         }
     },
 

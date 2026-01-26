@@ -1,8 +1,9 @@
+import { Toast } from "../ui/Toast";
+
 export class ThemeManager {
     constructor() {
         this.themes = new Map();
-        this.customThemes = new Map(); // Store custom ones separately to easy ID
-        this.currentTheme = null;
+        this.customThemes = new Map();
         this.styleElementId = 'app-theme';
         this.loadCustomThemes();
     }
@@ -18,7 +19,7 @@ export class ThemeManager {
                 });
             }
         } catch (e) {
-            console.error('Failed to load custom themes', e);
+            Toast.error("Falha ao carregar temas personalizados");
         }
     }
 
@@ -36,7 +37,6 @@ export class ThemeManager {
             this.themes.delete(themeId);
             this._persistCustomThemes();
 
-            // If deleted theme was active, switch to default
             if (this.currentTheme === themeId) {
                 this.apply('light');
             }
@@ -54,8 +54,7 @@ export class ThemeManager {
 
     register(theme) {
         if (!theme.id) {
-            console.error('Theme must have an ID');
-            return;
+            return Toast.error("O tema deve ter um ID");
         }
         this.themes.set(theme.id, theme);
     }
@@ -66,8 +65,8 @@ export class ThemeManager {
 
     apply(themeId) {
         if (!this.themes.has(themeId)) {
-            console.warn(`Theme ${themeId} not found`);
-            // Fallback to light if saved theme doesn't exist anymore
+            Toast.warning(`Tema ${themeId} não encontrado`);
+
             if (themeId !== 'light') {
                 this.apply('light');
             }

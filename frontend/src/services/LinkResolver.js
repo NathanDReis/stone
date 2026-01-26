@@ -14,10 +14,8 @@ export class LinkResolver {
             return this.cache.get(content);
         }
 
-        // First, try to resolve as an ID
         let node = this.fs.getNode(content);
 
-        // If not found, try to resolve as a file name
         if (!node || node.type !== 'file') {
             const nodes = this.fs.getNodes().filter(n => n.type === 'file');
             node = nodes.find(n => n.name === content);
@@ -42,7 +40,6 @@ export class LinkResolver {
      * @returns {object} - Resolution result with UUID
      */
     resolveByName(name) {
-        // Search for a file node with matching name
         const nodes = this.fs.getNodes().filter(n => n.type === 'file');
         const matchingNode = nodes.find(n => n.name === name);
 
@@ -50,7 +47,6 @@ export class LinkResolver {
             return this.resolve(matchingNode.id);
         }
 
-        // If not found, return invalid result
         return {
             valid: false,
             uuid: null,
@@ -72,7 +68,6 @@ export class LinkResolver {
         const backlinks = [];
         const allNodes = this.fs.getNodes().filter(n => n.type === 'file');
 
-        // Get the node to find its name
         const targetNode = this.fs.getNode(uuid);
         if (!targetNode) return backlinks;
 
@@ -82,7 +77,6 @@ export class LinkResolver {
             const doc = this.fs.getDocument(node.id);
             if (!doc) continue;
 
-            // Search for both ID-based and name-based links
             const idRegex = new RegExp(`\\[\\[${uuid}\\]\\]`, 'g');
             const nameRegex = new RegExp(`\\[\\[${targetNode.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\]`, 'g');
 
@@ -127,7 +121,6 @@ export class LinkResolver {
         if (!doc) return [];
 
         const links = [];
-        // Match any content inside [[ ]], not just UUIDs
         const regex = /\[\[([^\]]+)\]\]/g;
 
         let match;

@@ -121,7 +121,6 @@ export class EditorController {
     }
 
     initEditor() {
-        // Initialize LinkResolver if fileSystem is provided
         if (this.fileSystem) {
             this.linkResolver = new LinkResolver(this.fileSystem);
         }
@@ -158,12 +157,10 @@ export class EditorController {
             })
         ];
 
-        // Add internal link plugin if linkResolver is available
         if (this.linkResolver) {
             extensions.push(createInternalLinkPlugin(this.linkResolver, this.onNavigate));
         }
 
-        // Add link autocomplete if fileSystem is available
         if (this.fileSystem) {
             extensions.push(createLinkAutocomplete(this.fileSystem));
         }

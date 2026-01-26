@@ -16,7 +16,6 @@ export class InternalLinkWidget extends WidgetType {
     }
 
     toDOM() {
-        // Resolve using the unified resolve method (handles both IDs and names)
         const resolved = this.linkResolver.resolve(this.content);
 
         const link = document.createElement("a");
@@ -24,7 +23,6 @@ export class InternalLinkWidget extends WidgetType {
             ? "internal-link internal-link-valid"
             : "internal-link internal-link-invalid";
 
-        // Always display the current file name
         link.textContent = resolved.displayName;
         link.href = "#";
 

@@ -12,6 +12,7 @@ import {
     getGraphOrientation,
     updateGraphOrientation
 } from "../mermaidUtils";
+import { Toast } from "../../ui/Toast";
 
 mermaid.initialize({
     startOnLoad: false,
@@ -61,8 +62,7 @@ export class MermaidWidget extends WidgetType {
 
             const line = doc.lineAt(pos);
             if (!line.text.trim().startsWith("```")) {
-                console.warn("Could not find start of block at pos", pos);
-                return;
+                return Toast.warning(`Não foi possível encontrar o início do bloco na pos: ${pos}`)
             }
 
             let currentLine = line;
@@ -151,7 +151,7 @@ export class MermaidWidget extends WidgetType {
                     view.focus();
                 }
             } catch (e) {
-                console.warn("Could not determine position of Mermaid widget", e);
+                Toast.warning("Não foi possível determinar a posição do widget Mermaid");
             }
         };
 
@@ -168,7 +168,7 @@ export class MermaidWidget extends WidgetType {
             const { svg } = await mermaid.render(this.id, this.code);
             container.innerHTML = svg;
         } catch (error) {
-            console.error("Mermaid rendering failed:", error);
+            Toast.error("Falha na renderização do Mermaid");
             container.innerHTML = `
                 <div class="mermaid-error" style="cursor: pointer; padding: 1rem; border: 1px solid #ef4444; border-radius: 6px; background: rgba(239, 68, 68, 0.1);">
                     <div style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Erro de Renderização (Clique para editar)</div>

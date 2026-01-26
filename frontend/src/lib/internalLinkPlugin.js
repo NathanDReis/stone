@@ -21,7 +21,6 @@ export const createInternalLinkPlugin = (linkResolver, onNavigate) => {
             for (let { from, to } of view.visibleRanges) {
                 const text = view.state.doc.sliceString(from, to);
 
-                // Match all [[ ]] patterns
                 const regex = /\[\[([^\]]+)\]\]/g;
 
                 let match;

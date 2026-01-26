@@ -1,3 +1,5 @@
+import { Toast } from '../ui/Toast';
+
 export class ThemeModal {
     constructor(themeManager) {
         this.themeManager = themeManager;
@@ -5,7 +7,6 @@ export class ThemeModal {
         this.overlay = null;
         this.isEditorMode = false;
 
-        // Default new theme template
         this.newTheme = {
             name: '',
             id: '',
@@ -48,7 +49,6 @@ export class ThemeModal {
     renderContent() {
         this.container.innerHTML = '';
 
-        // Header
         const header = document.createElement('div');
         header.className = 'theme-modal-header';
 
@@ -76,14 +76,12 @@ export class ThemeModal {
         const grid = document.createElement('div');
         grid.className = 'theme-grid';
 
-        // Available Themes
         const themes = this.themeManager.getAvailableThemes();
         themes.forEach(theme => {
             const card = this.createThemeCard(theme);
             grid.appendChild(card);
         });
 
-        // Create New Button
         const createBtn = document.createElement('button');
         createBtn.className = 'theme-card theme-card-create';
         createBtn.innerHTML = `
@@ -92,7 +90,6 @@ export class ThemeModal {
         `;
         createBtn.onclick = () => {
             this.isEditorMode = true;
-            // Reset template
             this.newTheme.name = '';
             this.newTheme.id = '';
             this.renderContent();
@@ -141,7 +138,6 @@ export class ThemeModal {
         card.appendChild(preview);
         card.appendChild(name);
 
-        // Delete button for custom themes
         if (this.themeManager.isCustom(theme.id)) {
             const delBtn = document.createElement('button');
             delBtn.className = 'theme-delete-btn';
@@ -151,7 +147,7 @@ export class ThemeModal {
                 e.stopPropagation();
                 if (confirm(`Excluir o tema "${theme.name}"?`)) {
                     this.themeManager.deleteCustomTheme(theme.id);
-                    this.renderContent(); // Re-render logic
+                    this.renderContent();
                 }
             };
             card.appendChild(delBtn);
@@ -169,7 +165,6 @@ export class ThemeModal {
         const editor = document.createElement('div');
         editor.className = 'theme-editor';
 
-        // Name Input
         const nameGroup = document.createElement('div');
         nameGroup.className = 'form-group';
         nameGroup.innerHTML = `
@@ -182,7 +177,6 @@ export class ThemeModal {
         });
         editor.appendChild(nameGroup);
 
-        // Colors
         const colorsLabel = document.createElement('label');
         colorsLabel.style.cssText = 'font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; margin-top: 8px;';
         colorsLabel.textContent = 'Cores';
@@ -211,7 +205,6 @@ export class ThemeModal {
             input.value = val;
             input.oninput = (e) => {
                 this.newTheme.variables[key] = e.target.value;
-                // Live preview could happen here if we applied it to a dummy element
             };
 
             const label = document.createElement('span');
@@ -224,7 +217,6 @@ export class ThemeModal {
 
         editor.appendChild(colorGrid);
 
-        // Actions
         const actions = document.createElement('div');
         actions.className = 'editor-actions';
 
@@ -250,15 +242,14 @@ export class ThemeModal {
 
     saveTheme() {
         if (!this.newTheme.name.trim()) {
-            alert('Por favor, dê um nome ao tema.');
+            Toast.warning('Por favor, dê um nome ao tema.', 3000)
             return;
         }
 
-        // Generate ID
         const id = 'custom-' + Date.now();
         this.newTheme.id = id;
 
-        this.themeManager.saveCustomTheme({ ...this.newTheme }); // Clone object
+        this.themeManager.saveCustomTheme({ ...this.newTheme });
 
         this.isEditorMode = false;
         this.renderContent();
@@ -266,25 +257,7 @@ export class ThemeModal {
 
     updateActiveState() {
         if (!this.element || this.isEditorMode) return;
-        const cards = this.element.querySelectorAll('.theme-card');
-        const themes = this.themeManager.getAvailableThemes();
-
-        // Note: The "Create" card is at the end, and arrays might align differently
-        // It's safer to re-render or match by title, but re-render is cheap here
         this.renderGrid();
-        // Or simple selection logic if we assume order is preserved before "Add" button
-        // But since we have a mix of custom/default, easiest is just to re-render content or simpler:
-
-        const allThemes = this.themeManager.getAvailableThemes();
-        const currentId = this.themeManager.currentTheme;
-
-        // Simple class toggle if possible, otherwise re-render
-        cards.forEach(card => {
-            // We didn't store ID on card in previous implementation, let's just re-render grid
-            // to be safe and simple
-        });
-
-        // Actually, let's just re-render content to show new active border cleanly
         this.container.innerHTML = '';
         this.renderContent();
     }
@@ -293,7 +266,7 @@ export class ThemeModal {
         if (!this.overlay) {
             this.create();
         }
-        this.isEditorMode = false; // Always start in list mode
+        this.isEditorMode = false;
         this.renderContent();
 
         requestAnimationFrame(() => {
