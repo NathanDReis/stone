@@ -55,6 +55,24 @@ export class PdfViewer {
         await page.render(renderContext).promise;
     }
 
+    async getPageDimensions(pageNumber, scale = 1.0) {
+        if (!this.pdfDoc) return null;
+
+        let page;
+        if (this.pageCache.has(pageNumber)) {
+            page = this.pageCache.get(pageNumber);
+        } else {
+            page = await this.pdfDoc.getPage(pageNumber);
+            this.pageCache.set(pageNumber, page);
+        }
+
+        const viewport = page.getViewport({ scale });
+        return {
+            width: viewport.width,
+            height: viewport.height
+        };
+    }
+
     destroy() {
         if (this.loadingTask) {
             this.loadingTask.destroy();
