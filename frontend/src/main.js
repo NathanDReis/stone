@@ -207,13 +207,20 @@ document.getElementById('btn-sync').addEventListener('click', () => {
     Toast.success('Sincronização realizada com sucesso!');
 });
 
-document.getElementById('btn-add-separator').addEventListener('click', () => {
-    try {
-        fileSystem.createSeparator(getActiveParentId());
-        loadTree();
-    } catch (e) {
-        Toast.error(e.message);
-    }
+const btnAddSeparator = document.getElementById('btn-add-separator');
+if (btnAddSeparator) {
+    btnAddSeparator.addEventListener('click', () => {
+        try {
+            fileSystem.createSeparator(getActiveParentId());
+            loadTree();
+        } catch (e) {
+            Toast.error(e.message);
+        }
+    });
+}
+
+document.getElementById('btn-rename').addEventListener('click', () => {
+    fileTree.startRenaming();
 });
 
 document.getElementById('btn-toggle-menu').addEventListener('click', toggleSiteMenu);

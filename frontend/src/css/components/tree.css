@@ -1,7 +1,7 @@
 .tree-container {
     padding: 10px 0;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     overflow-y: auto;
     height: calc(100dvh - 115px - 2rem);
     outline: none;
@@ -104,6 +104,8 @@
     padding: 4px 12px;
     background-color: var(--bg-tertiary);
     border: 1px solid var(--accent);
+    width: 80%;
+    margin-left: 10%;
 }
 
 .tree-input {

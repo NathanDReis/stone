@@ -101,7 +101,6 @@ export class FileTree {
             label.appendChild(text);
 
             label.onclick = (e) => this._handleNodeClick(node, e);
-            label.ondblclick = (e) => this._handleNodeDblClick(node, e, label, text);
 
             label.addEventListener('dragstart', (e) => this._handleDragStart(e, node));
             label.addEventListener('dragover', (e) => this._handleDragOver(e, node));
@@ -205,6 +204,66 @@ export class FileTree {
         });
     }
 
+    startRenaming(nodeId = null) {
+        const idToRename = nodeId || this.activeNodeId;
+        if (!idToRename) return;
+
+        const node = this.nodes.find(n => n.id === idToRename);
+        if (!node) return;
+
+        const li = this.container.querySelector(`li[data-id="${node.id}"]`);
+        if (!li) return;
+
+        const labelElement = li.querySelector('.tree-label');
+        const textElement = li.querySelector('.tree-text');
+
+        if (!labelElement || !textElement) return;
+        if (labelElement.querySelector('input')) return;
+
+        textElement.style.display = 'none';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'tree-input';
+        input.value = node.name;
+        input.style.width = 'calc(100% - 30px)';
+
+        labelElement.appendChild(input);
+
+        input.focus();
+        input.select();
+
+        const commit = () => {
+            const newName = input.value.trim();
+            if (newName && newName !== node.name) {
+                this.onNodeRename(node.id, newName);
+            } else {
+                cancel();
+            }
+        };
+
+        const cancel = () => {
+            input.remove();
+            textElement.style.display = '';
+        };
+
+        input.addEventListener('blur', () => {
+            commit();
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                input.blur();
+            } else if (e.key === 'Escape') {
+                cancel();
+                e.stopPropagation();
+            }
+        });
+
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('dblclick', (e) => e.stopPropagation());
+    }
+
     _handleDragStart(e, node) {
         e.dataTransfer.setData('application/json', JSON.stringify({
             nodeId: node.id,
@@ -284,21 +343,18 @@ export class FileTree {
     _handleNodeClick(node, event) {
         event.stopPropagation();
 
-        const isArrow = event.target.classList.contains('tree-arrow');
-
-        if (node.type === 'folder' && isArrow) {
+        if (node.type === 'folder') {
             if (this.expandedFolders.has(node.id)) {
                 this.expandedFolders.delete(node.id);
             } else {
                 this.expandedFolders.add(node.id);
             }
             this.render(this.nodes);
-        } else {
-            this.activeNodeId = node.id;
-            this.onFileSelect(node);
-
-            this._updateActiveClasses();
         }
+
+        this.activeNodeId = node.id;
+        this.onFileSelect(node);
+        this._updateActiveClasses();
     }
 
     setActiveNode(id) {
@@ -354,55 +410,6 @@ export class FileTree {
         }
     }
 
-    _handleNodeDblClick(node, event, labelElement, textElement) {
-        event.stopPropagation();
-
-        if (labelElement.querySelector('input')) return;
-
-        textElement.style.display = 'none';
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'tree-input';
-        input.value = node.name;
-        input.style.width = 'calc(100% - 30px)';
-
-        labelElement.appendChild(input);
-
-        input.focus();
-
-        input.select();
-
-        const commit = () => {
-            const newName = input.value.trim();
-            if (newName && newName !== node.name) {
-                this.onNodeRename(node.id, newName);
-            } else {
-                cancel();
-            }
-        };
-
-        const cancel = () => {
-            input.remove();
-            textElement.style.display = '';
-        };
-
-        input.addEventListener('blur', () => {
-            commit();
-        });
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                input.blur();
-            } else if (e.key === 'Escape') {
-                cancel();
-                e.stopPropagation();
-            }
-        });
-
-        input.addEventListener('click', (e) => e.stopPropagation());
-        input.addEventListener('dblclick', (e) => e.stopPropagation());
-    }
 
     _handleSeparatorDblClick(node, event) {
         event.stopPropagation();
