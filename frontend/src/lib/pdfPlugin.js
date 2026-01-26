@@ -28,13 +28,17 @@ const pdfPlugin = ViewPlugin.fromClass(class {
         const start = from + match.index;
         const end = start + match[0].length;
 
-        let url, page = 1;
+        let url, page = 1, linkText = null;
 
         if (match[1]) {
+          // Wikilink format: [[file.pdf]]
           url = match[2];
+          linkText = match[2].split('/').pop();
           if (match[3]) page = parseInt(match[3], 10);
         } else {
+          // Markdown link format: [text](file.pdf)
           url = match[6];
+          linkText = match[5];
           if (match[7]) page = parseInt(match[7], 10);
         }
 
@@ -42,27 +46,19 @@ const pdfPlugin = ViewPlugin.fromClass(class {
           r => r.from <= end && r.to >= start
         );
 
-        const widget = new PdfWidget(url);
+        const widget = new PdfWidget(url, linkText, view, start, end);
         if (page > 1) widget.currentPage = page;
 
         if (!isCursorInside) {
           builder.add(
             start,
             end,
-            Decoration.mark({
-              class: "cm-md-hidden"
+            Decoration.replace({
+              widget,
+              inclusive: false
             })
           );
         }
-
-        builder.add(
-          end,
-          end,
-          Decoration.widget({
-            widget,
-            side: 1
-          })
-        );
       }
     }
 

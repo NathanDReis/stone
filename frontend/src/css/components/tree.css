@@ -17,7 +17,7 @@
     display: block;
 }
 
-/* Transparent Editor Scrollbar */
+/*  Editor Scrollbar Transparente */
 .tree-container::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -148,7 +148,7 @@
     user-select: none;
 }
 
-/* Drag & Drop Visual Indicators */
+/* Drag & Drop Visual */
 .tree-label.drop-top {
     box-shadow: 0 -2px 0 var(--accent);
 }
@@ -182,5 +182,4 @@
 .tree-separator.drop-bottom {
     border-bottom: 2px solid var(--accent);
     border-top: 1px solid var(--border-muted);
-    /* Reset top */
 }

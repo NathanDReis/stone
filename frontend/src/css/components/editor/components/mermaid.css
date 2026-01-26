@@ -17,7 +17,6 @@
   height: auto;
 }
 
-/* Mermaid Nodes Interaction */
 .mermaid-widget .node {
   cursor: pointer;
   transition: opacity 0.2s;
@@ -28,7 +27,6 @@
   filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.5));
 }
 
-/* Mermaid Editor Popover */
 .mermaid-editor-popover {
   position: fixed;
   z-index: 10000;

@@ -11,7 +11,7 @@
   scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
 }
 
-/* Transparent Editor Scrollbar */
+/*  Editor Scrollbar Transparente */
 .site-index::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -118,7 +118,6 @@
   color: var(--accent);
 }
 
-/* Hierarchical indentation */
 .toc-list .toc-list {
   margin-left: 14px;
   border-left: 1px solid var(--bg-tertiary);
@@ -137,7 +136,6 @@
   transition: transform 0.2s ease;
 }
 
-/* Custom Scrollbar for ToC */
 .site-index::-webkit-scrollbar {
   width: 4px;
 }

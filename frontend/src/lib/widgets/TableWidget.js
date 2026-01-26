@@ -28,10 +28,8 @@ export class TableWidget extends WidgetType {
     const table = document.createElement("table");
     table.className = "cm-md-table";
 
-    // Header Removal Buttons
     const removeColRow = document.createElement("tr");
     removeColRow.className = "cm-md-table-remove-row";
-    // Empty cell for the row removal column
     removeColRow.appendChild(document.createElement("td"));
 
     this.rows[0].forEach((_, j) => {
@@ -45,7 +43,6 @@ export class TableWidget extends WidgetType {
     this.rows.forEach((row, i) => {
       const tr = document.createElement("tr");
 
-      // Row Removal Button
       const removeTd = document.createElement("td");
       removeTd.className = "cm-md-table-remove-cell";
       const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
@@ -147,11 +144,6 @@ export class TableWidget extends WidgetType {
 
   removeRow(index, view) {
     this.rows.splice(index, 1);
-    if (this.rows.length === 1) { // Only header removal row left logically, or handle empty
-      // If we remove the last data row, should we remove the header too? 
-      // User says "when it has a single row it should be able to exclude too".
-      // Let's check if the remaining row is the one we just spliced from.
-    }
     this.sync(view);
   }
 

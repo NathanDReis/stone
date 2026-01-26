@@ -2,9 +2,13 @@ import { WidgetType } from "@codemirror/view";
 import { PdfViewer } from "../pdf/PdfViewer";
 
 export class PdfWidget extends WidgetType {
-    constructor(url) {
+    constructor(url, linkText = null, view = null, start = 0, end = 0) {
         super();
         this.url = url;
+        this.linkText = linkText;
+        this.view = view;
+        this.start = start;
+        this.end = end;
         this.viewer = new PdfViewer();
         this.currentPage = 1;
         this.scale = 1.0;
@@ -24,11 +28,9 @@ export class PdfWidget extends WidgetType {
         container.className = "pdf-widget-container";
         this.container = container;
 
-        // Controls bar
         const controls = document.createElement("div");
         controls.className = "pdf-controls";
 
-        // Page navigation input
         const pageInputWrapper = document.createElement("div");
         pageInputWrapper.className = "pdf-page-input-wrapper";
 
@@ -62,7 +64,6 @@ export class PdfWidget extends WidgetType {
         pageInputWrapper.appendChild(pageInput);
         pageInputWrapper.appendChild(pageTotal);
 
-        // Zoom controls
         const zoomSelect = document.createElement("select");
         zoomSelect.className = "pdf-zoom-select";
         const zoomLevels = [
@@ -86,7 +87,6 @@ export class PdfWidget extends WidgetType {
             this.setZoom(parseFloat(e.target.value));
         });
 
-        // Menu dropdown
         const menuBtn = document.createElement("button");
         menuBtn.className = "pdf-menu-btn";
         menuBtn.textContent = "⋮";
@@ -121,17 +121,31 @@ export class PdfWidget extends WidgetType {
         menuWrapper.appendChild(menuBtn);
         menuWrapper.appendChild(menuDropdown);
 
-        // Assemble controls
+        const toggleLinkBtn = document.createElement("button");
+        toggleLinkBtn.className = "pdf-toggle-link-btn";
+        toggleLinkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M318-120q-82 0-140-58t-58-140q0-40 15-76t43-64l134-133 56 56-134 134q-17 17-25.5 38.5T200-318q0 49 34.5 83.5T318-200q23 0 45-8.5t39-25.5l133-134 57 57-134 133q-28 28-64 43t-76 15Zm79-220-57-57 223-223 57 57-223 223Zm251-28-56-57 134-133q17-17 25-38t8-44q0-50-34-85t-84-35q-23 0-44.5 8.5T558-726L425-592l-57-56 134-134q28-28 64-43t76-15q82 0 139.5 58T839-641q0 39-14.5 75T782-502L648-368Z"/></svg>';
+        toggleLinkBtn.title = "Editar link";
+        toggleLinkBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (this.view && this.start !== undefined && this.end !== undefined) {
+                this.view.dispatch({
+                    selection: { anchor: this.start, head: this.start },
+                    scrollIntoView: true
+                });
+                this.view.focus();
+            }
+        });
+
+        controls.appendChild(toggleLinkBtn);
         controls.appendChild(pageInputWrapper);
         controls.appendChild(zoomSelect);
         controls.appendChild(menuWrapper);
 
-        // Pages container with scroll
         const wrapper = document.createElement("div");
         wrapper.className = "pdf-pages-wrapper";
         this.pagesContainer = wrapper;
 
-        // Add scroll listener for page tracking
         wrapper.addEventListener("scroll", () => {
             this.handleScroll();
         });
@@ -139,7 +153,6 @@ export class PdfWidget extends WidgetType {
         container.appendChild(controls);
         container.appendChild(wrapper);
 
-        // Lazy load PDF when visible
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 this.loadPdf();
@@ -158,7 +171,6 @@ export class PdfWidget extends WidgetType {
             this.pageInput.max = this.totalPages;
             this.pageTotal.textContent = `/ ${this.totalPages}`;
 
-            // Create all page containers
             await this.createAllPages();
         } catch (error) {
             this.pagesContainer.innerHTML = `<div class="pdf-error">Erro ao carregar PDF: ${error.message}</div>`;
@@ -167,7 +179,6 @@ export class PdfWidget extends WidgetType {
     }
 
     async createAllPages() {
-        // Clear existing pages
         this.pagesContainer.innerHTML = "";
         this.pageElements = [];
 
@@ -190,7 +201,6 @@ export class PdfWidget extends WidgetType {
             });
         }
 
-        // Setup intersection observer for lazy rendering
         const renderObserver = new IntersectionObserver(
             (entries) => {
                 entries.forEach(entry => {
@@ -202,7 +212,7 @@ export class PdfWidget extends WidgetType {
             },
             {
                 root: this.pagesContainer,
-                rootMargin: "200px" // Pre-render pages 200px before they come into view
+                rootMargin: "200px"
             }
         );
 
@@ -228,12 +238,10 @@ export class PdfWidget extends WidgetType {
     async setZoom(newScale) {
         this.scale = newScale;
 
-        // Mark all pages as not rendered
         this.pageElements.forEach(pageEl => {
             pageEl.rendered = false;
         });
 
-        // Re-render visible pages
         const visiblePages = this.getVisiblePages();
         for (const pageNum of visiblePages) {
             await this.renderPageIfNeeded(pageNum);
@@ -268,7 +276,6 @@ export class PdfWidget extends WidgetType {
         const wrapperRect = this.pagesContainer.getBoundingClientRect();
         const centerY = wrapperRect.top + wrapperRect.height / 2;
 
-        // Find which page is closest to center
         let closestPage = 1;
         let closestDistance = Infinity;
 

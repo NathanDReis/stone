@@ -42,7 +42,6 @@
     line-height: 1.4;
 }
 
-/* Variants */
 .toast-success {
     border-left: 4px solid var(--success, #4caf50);
 }

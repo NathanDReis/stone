@@ -51,14 +51,12 @@ export function updateNodeLabel(code, nodeId, newLabel) {
     const newLines = lines.map(line => {
         const trimmed = line.trim();
         if (trimMatchesId(trimmed, nodeId)) {
-            // Robust match for trailing content (e.g. semicolon)
             const match = trimmed.match(/^([a-zA-Z0-9_]+)\s*(\(\(|\(|\[|\{|>)(.+?)(\)\)|\)|\]|\}|])(\s*;?.*)$/);
             if (match) {
                 found = true;
                 const [_full, id, open, oldLabel, close, rest] = match;
                 return `${id}${open}${newLabel}${close}${rest}`;
             }
-            // Fallback for simple match
             const matchSimple = trimmed.match(/^([a-zA-Z0-9_]+)\s*(\(\(|\(|\[|\{|>)(.+?)(\)\)|\)|\]|\}|])$/);
             if (matchSimple) {
                 found = true;
@@ -88,14 +86,12 @@ export function updateNodeShape(code, nodeId, newShape) {
     const newLines = lines.map(line => {
         const trimmed = line.trim();
         if (trimMatchesId(trimmed, nodeId)) {
-            // Robust match
             const match = trimmed.match(/^([a-zA-Z0-9_]+)\s*(\(\(|\(|\[|\{|>)(.+?)(\)\)|\)|\]|\}|])(\s*;?.*)$/);
             if (match) {
                 found = true;
                 const [_full, id, _oldOpen, label, _oldClose, rest] = match;
                 return `${id}${open}${label}${close}${rest}`;
             }
-            // Simple match fallback
             const matchSimple = trimmed.match(/^([a-zA-Z0-9_]+)\s*(\(\(|\(|\[|\{|>)(.+?)(\)\)|\)|\]|\}|])$/);
             if (matchSimple) {
                 found = true;

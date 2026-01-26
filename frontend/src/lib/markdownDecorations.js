@@ -245,6 +245,10 @@ export const markdownDecorations = ViewPlugin.fromClass(
             const label = match[1];
             const href = match[2];
 
+            if (href.toLowerCase().endsWith('.pdf') || href.toLowerCase().match(/\.pdf(?:#page=\d+)?$/)) {
+              return;
+            }
+
             const isCursorInside = ranges.some(r =>
               r.from <= node.to && r.to >= node.from
             );
