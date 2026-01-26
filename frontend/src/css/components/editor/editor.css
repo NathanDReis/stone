@@ -19,6 +19,7 @@
 .cm-scroller {
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
+  scroll-behavior: auto !important;
 }
 
 .cm-scroller::-webkit-scrollbar {
