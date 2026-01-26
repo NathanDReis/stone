@@ -29,24 +29,24 @@
     gap: 3px;
     transition: background-color 0.1s ease;
     margin-bottom: 2px;
-    color: #dcddde;
+    color: var(--text-primary);
 }
 
 .cm-tooltip-autocomplete>ul>li:hover,
 .cm-tooltip-autocomplete>ul>li[aria-selected] {
-    background-color: #2f2f2f;
+    background-color: var(--bg-main);
 }
 
 .cm-completionLabel {
     font-size: 14px;
     font-weight: 600;
-    color: #dcddde;
+    color: var(--text-primary);
     line-height: 1.2;
 }
 
 .cm-completionDetail {
     font-size: 12px;
-    color: #8c8c8c;
+    color: var(--text-secondary);
     opacity: 0.8;
     font-family: monospace;
 }
@@ -58,9 +58,9 @@
 .cm-tooltip-autocomplete::after {
     content: "Digite # para linkar o título \00A0 Digite ^ para linkar blocos \A Digite | para alterar o texto de exibição";
     display: block;
-    border-top: 1px solid #111;
-    background-color: #1f1f1f;
-    color: #8c8c8c;
+    border-top: 1px solid var(--accent);
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
     font-size: 11px;
     padding: 8px 12px;
     text-align: center;
@@ -79,10 +79,10 @@
 }
 
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb {
-    background-color: #444;
+    background-color: var(--bg-tertiary);
     border-radius: 3px;
 }
 
 .cm-tooltip-autocomplete>ul::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+    background-color: var(--bg-tertiary);
 }
