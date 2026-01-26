@@ -1,4 +1,5 @@
 import { Toast } from '../ui/Toast';
+import { ConfirmDialog } from './ConfirmDialog';
 
 export class ThemeModal {
     constructor(themeManager) {
@@ -6,6 +7,8 @@ export class ThemeModal {
         this.element = null;
         this.overlay = null;
         this.isEditorMode = false;
+        this.toast = new Toast();
+        this.dialog = new ConfirmDialog();
 
         this.newTheme = {
             name: '',
@@ -145,10 +148,15 @@ export class ThemeModal {
             delBtn.title = 'Excluir tema';
             delBtn.onclick = (e) => {
                 e.stopPropagation();
-                if (confirm(`Excluir o tema "${theme.name}"?`)) {
-                    this.themeManager.deleteCustomTheme(theme.id);
-                    this.renderContent();
-                }
+                this.dialog.show({
+                    title: "Excluir Tema",
+                    message: `Tem certeza que deseja excluir o tema "${theme.name}"?`,
+                    confirmText: "Excluir",
+                    onConfirm: () => {
+                        this.themeManager.deleteCustomTheme(theme.id);
+                        this.renderContent();
+                    }
+                });
             };
             card.appendChild(delBtn);
         }
@@ -242,7 +250,7 @@ export class ThemeModal {
 
     saveTheme() {
         if (!this.newTheme.name.trim()) {
-            Toast.warning('Por favor, dê um nome ao tema.', 3000)
+            this.toast.warning('Por favor, dê um nome ao tema.', 3000)
             return;
         }
 
