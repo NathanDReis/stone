@@ -153,47 +153,25 @@ function getActiveParentId() {
     return null;
 }
 
-const $html = document.querySelector("html");
-const $siteMenu = document.querySelector(".site-menu");
+import { ThemeManager } from './services/ThemeManager.js';
+import { themes } from './services/themes.js';
+import { ThemeModal } from './ui/ThemeModal.js';
 
-function alterTheme() {
-    const mapTheme = {
-        "terr": "terr-dark",
-        "terr-dark": "light",
-        "light": "dark",
-        "dark": "terr",
-    };
-    const current = $html.classList.length > 0 ? $html.classList[0] : "light";
-    const next = mapTheme[current] || "light";
+const themeManager = new ThemeManager();
+const themeModal = new ThemeModal(themeManager);
 
-    $html.classList.remove(current);
-    $html.classList.add(next);
-    localStorage.setItem("theme", next);
+// Register all defined themes
+Object.values(themes).forEach(theme => themeManager.register(theme));
+
+// Apply saved or default theme on startup
+const startTheme = themeManager.loadWait();
+themeManager.apply(startTheme);
+
+function openThemeModal() {
+    themeModal.show();
 }
 
-const savedTheme = localStorage.getItem("theme");
-$html.classList.add(savedTheme || "light");
 
-
-let activeSiteMenu = innerWidth >= 1920;
-function toggleSiteMenu() {
-    activeSiteMenu = !activeSiteMenu;
-    updateMenuState();
-}
-
-function updateMenuState() {
-    if (activeSiteMenu) {
-        $siteMenu.classList.add("actived");
-    } else {
-        $siteMenu.classList.remove("actived");
-    }
-}
-
-if ($siteMenu.classList.contains('actived')) {
-    activeSiteMenu = true;
-} else {
-    activeSiteMenu = false;
-}
 
 document.getElementById('btn-add-file').addEventListener('click', () => {
     fileTree.startCreation('file', getActiveParentId());
@@ -223,8 +201,8 @@ document.getElementById('btn-rename').addEventListener('click', () => {
     fileTree.startRenaming();
 });
 
-document.getElementById('btn-toggle-menu').addEventListener('click', toggleSiteMenu);
-document.getElementById('btn-theme').addEventListener('click', alterTheme);
+
+document.getElementById('btn-theme').addEventListener('click', openThemeModal);
 
 function handleClose() {
     if (activeFileId) {
