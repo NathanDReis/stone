@@ -83,6 +83,8 @@
     cursor: pointer;
     overflow: hidden;
     transition: all 0.2s ease;
+    position: relative;
+
 }
 
 .theme-card:hover {
@@ -92,7 +94,6 @@
 
 .theme-card.active {
     border-color: var(--accent);
-    position: relative;
 }
 
 .theme-preview {
@@ -128,4 +129,143 @@
     color: var(--text-primary);
     font-weight: 500;
     text-align: center;
+}
+
+/* New Create Card */
+.theme-card-create {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--border-muted);
+    background-color: transparent;
+    color: var(--text-muted);
+}
+
+.theme-card-create:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Delete Button */
+.theme-delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 14px;
+}
+
+.theme-card:hover .theme-delete-btn {
+    opacity: 1;
+}
+
+.theme-delete-btn:hover {
+    background: var(--error);
+}
+
+/* Editor Form */
+.theme-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.form-input {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-muted);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.color-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-secondary);
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border-muted);
+}
+
+.color-input-group input[type="color"] {
+    width: 24px;
+    height: 24px;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.color-input-group span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-muted);
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-muted);
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: white;
 }

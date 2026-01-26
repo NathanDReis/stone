@@ -1,8 +1,55 @@
 export class ThemeManager {
     constructor() {
         this.themes = new Map();
+        this.customThemes = new Map(); // Store custom ones separately to easy ID
         this.currentTheme = null;
         this.styleElementId = 'app-theme';
+        this.loadCustomThemes();
+    }
+
+    loadCustomThemes() {
+        try {
+            const stored = localStorage.getItem('custom_themes');
+            if (stored) {
+                const themes = JSON.parse(stored);
+                themes.forEach(theme => {
+                    this.customThemes.set(theme.id, theme);
+                    this.register(theme);
+                });
+            }
+        } catch (e) {
+            console.error('Failed to load custom themes', e);
+        }
+    }
+
+    saveCustomTheme(theme) {
+        if (!theme.id) return;
+        this.customThemes.set(theme.id, theme);
+        this.register(theme);
+        this._persistCustomThemes();
+        this.apply(theme.id);
+    }
+
+    deleteCustomTheme(themeId) {
+        if (this.customThemes.has(themeId)) {
+            this.customThemes.delete(themeId);
+            this.themes.delete(themeId);
+            this._persistCustomThemes();
+
+            // If deleted theme was active, switch to default
+            if (this.currentTheme === themeId) {
+                this.apply('light');
+            }
+        }
+    }
+
+    _persistCustomThemes() {
+        const themesList = Array.from(this.customThemes.values());
+        localStorage.setItem('custom_themes', JSON.stringify(themesList));
+    }
+
+    isCustom(themeId) {
+        return this.customThemes.has(themeId);
     }
 
     register(theme) {
@@ -20,6 +67,10 @@ export class ThemeManager {
     apply(themeId) {
         if (!this.themes.has(themeId)) {
             console.warn(`Theme ${themeId} not found`);
+            // Fallback to light if saved theme doesn't exist anymore
+            if (themeId !== 'light') {
+                this.apply('light');
+            }
             return;
         }
 
@@ -28,7 +79,6 @@ export class ThemeManager {
         localStorage.setItem('app-theme', themeId);
 
         document.documentElement.className = '';
-
         this._injectStyles(theme);
     }
 

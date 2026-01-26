@@ -30,7 +30,7 @@ export const themes = {
     },
 
     terr: {
-        name: 'Terr',
+        name: 'Terra',
         id: 'terr',
         variables: {
             '--bg-main': '#f5f1ea',
@@ -45,7 +45,7 @@ export const themes = {
     },
 
     'terr-dark': {
-        name: 'Terr Dark',
+        name: 'Terra Dark',
         id: 'terr-dark',
         variables: {
             '--bg-main': '#1f1a17',
@@ -101,21 +101,6 @@ export const themes = {
             '--text-muted': '#657b83',
             '--border-muted': '#1f4b57',
             '--accent': '#b58900'
-        }
-    },
-
-    forest: {
-        name: 'Forest',
-        id: 'forest',
-        variables: {
-            '--bg-main': '#0f1f17',
-            '--bg-secondary': '#162b21',
-            '--bg-tertiary': '#1f3d2e',
-            '--text-primary': '#e6f2ec',
-            '--text-secondary': '#b9d4c8',
-            '--text-muted': '#7fa99b',
-            '--border-muted': '#2d4f3e',
-            '--accent': '#4ade80'
         }
     },
 
@@ -250,21 +235,6 @@ export const themes = {
             '--text-muted': '#657b83',
             '--border-muted': '#1f4b57',
             '--accent': '#b58900'
-        }
-    },
-
-    forest: {
-        name: 'Forest',
-        id: 'forest',
-        variables: {
-            '--bg-main': '#0f1f17',
-            '--bg-secondary': '#162b21',
-            '--bg-tertiary': '#1f3d2e',
-            '--text-primary': '#e6f2ec',
-            '--text-secondary': '#b9d4c8',
-            '--text-muted': '#7fa99b',
-            '--border-muted': '#2d4f3e',
-            '--accent': '#4ade80'
         }
     },
 
@@ -415,21 +385,6 @@ export const themes = {
             '--text-muted': '#c2410c',
             '--border-muted': '#fdba74',
             '--accent': '#f97316'
-        }
-    },
-
-    emerald: {
-        name: 'Emerald',
-        id: 'emerald',
-        variables: {
-            '--bg-main': '#022c22',
-            '--bg-secondary': '#064e3b',
-            '--bg-tertiary': '#065f46',
-            '--text-primary': '#ecfdf5',
-            '--text-secondary': '#a7f3d0',
-            '--text-muted': '#6ee7b7',
-            '--border-muted': '#134e4a',
-            '--accent': '#10b981'
         }
     },
 
