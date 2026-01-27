@@ -6,8 +6,10 @@ import { EmptyState } from './ui/EmptyState.js';
 import { SearchController } from './ui/SearchController.js';
 import { FileTreeContextMenu } from './ui/FileTreeContextMenu.js';
 import { IconPickerModal } from './ui/IconPickerModal.js';
+import { IconManager } from './services/IconManager.js';
 
 const fileSystem = new FileSystemService();
+const iconManager = new IconManager();
 let activeFileId = null;
 
 const menuElement = document.querySelector('.site-menu');
@@ -18,7 +20,7 @@ treeContainer.id = 'file-tree-root';
 menuElement.appendChild(treeContainer);
 
 const emptyState = new EmptyState(emptyStateContainer);
-const iconPicker = new IconPickerModal();
+const iconPicker = new IconPickerModal(iconManager);
 
 
 const editor = new EditorController(editorContainer, {

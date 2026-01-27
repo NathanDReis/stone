@@ -90,12 +90,12 @@ export class FileTree {
             arrow.style.opacity = node.type === 'folder' ? '1' : '0';
 
             const icon = document.createElement('span');
-            icon.className = 'material-symbols-outlined tree-icon';
+            icon.className = `material-symbols-outlined tree-icon${node.type === 'folder' ? ' tree-icon-folder' : ''}`;
 
             if (node.icon) {
                 icon.textContent = node.icon;
             } else {
-                icon.textContent = node.type === 'folder' ? 'folder' : 'article';
+                icon.textContent = node.type === 'folder' ? 'folder' : 'description';
             }
 
             if (node.type === 'folder') icon.style.color = 'var(--text-secondary)';
@@ -167,8 +167,8 @@ export class FileTree {
         div.style.paddingLeft = parentId ? '0px' : '1px';
 
         const icon = document.createElement('span');
-        icon.className = 'material-symbols-outlined tree-icon';
-        icon.textContent = type === 'folder' ? 'folder' : 'article';
+        icon.className = `material-symbols-outlined tree-icon${type === 'folder' ? ' tree-icon-folder' : ''}`;
+        icon.textContent = type === 'folder' ? 'folder' : 'description';
         icon.style.color = type === 'folder' ? 'var(--text-secondary)' : 'var(--accent)';
 
         const input = document.createElement('input');
