@@ -7,4 +7,5 @@ export { updateToC } from "./toc";
 export { ContextMenu } from "./contextMenu";
 export { pdfPlugin } from "./pdfPlugin";
 export { createInternalLinkPlugin } from "./internalLinkPlugin";
-export { createLinkAutocomplete } from "./linkAutocomplete";
+export { linkAutocompleteSource } from "./linkAutocomplete";
+export { tagAutocompleteSource } from "./tagAutocomplete";

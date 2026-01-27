@@ -80,8 +80,10 @@ import {
     ContextMenu,
     pdfPlugin,
     createInternalLinkPlugin,
-    createLinkAutocomplete
+    linkAutocompleteSource,
+    tagAutocompleteSource
 } from "../lib";
+import { autocompletion } from "@codemirror/autocomplete";
 import { mermaidPlugin } from "../lib/mermaidPlugin";
 import { LinkResolver } from "../services/LinkResolver";
 
@@ -189,7 +191,15 @@ export class EditorController {
         }
 
         if (this.fileSystem) {
-            extensions.push(createLinkAutocomplete(this.fileSystem));
+            extensions.push(autocompletion({
+                override: [
+                    linkAutocompleteSource(this.fileSystem),
+                    tagAutocompleteSource(this.fileSystem)
+                ],
+                activateOnTyping: true,
+                closeOnBlur: true,
+                defaultKeymap: true
+            }));
         }
 
         const state = EditorState.create({
