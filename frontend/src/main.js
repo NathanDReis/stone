@@ -22,6 +22,15 @@ const editor = new EditorController(editorContainer, {
     onNavigate: (node) => {
         openFile(node);
     },
+    onTagClick: (tag) => {
+        if (!searchController) return;
+        
+        if (tag) {
+            searchController.filterByTag(tag);
+        } else {
+            searchController.clearFilter();
+        }
+    },
     onSave: (content) => {
         try {
             fileSystem.updateDocument(activeFileId, content);

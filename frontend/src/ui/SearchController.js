@@ -148,6 +148,34 @@ export class SearchController {
         this.renderResults(results, query);
     }
 
+    filterByTag(tag) {
+        const nodes = this.fileSystem.getNodes();
+        const filteredNodes = [];
+        const query = tag.toLowerCase();
+
+        nodes.forEach(node => {
+            if (node.type !== 'file') return;
+            const doc = this.fileSystem.getDocument(node.id);
+            if (doc && doc.content) {
+                const contentLower = doc.content.toLowerCase();
+                if (contentLower.includes(query)) {
+                    filteredNodes.push(node);
+                }
+            }
+        });
+
+        this.onFilter(filteredNodes);
+        this.hideResults();
+
+        if (filteredNodes.length === 0) {
+            this.toast.info(`Nenhum arquivo encontrado com a tag ${tag}`);
+        }
+    }
+
+    clearFilter() {
+        this.onFilter(null);
+    }
+
     renderResults(results, query) {
         this.resultsContainer.innerHTML = '';
 

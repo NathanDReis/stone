@@ -111,6 +111,7 @@ export class EditorController {
         this.parentElement = parentElement;
         this.onSave = options.onSave || (() => { });
         this.onNavigate = options.onNavigate || (() => { });
+        this.onTagClick = options.onTagClick || (() => { });
         this.fileSystem = options.fileSystem;
         this.lastSavedMarkdown = null;
         this.saveTimeout = null;
@@ -150,6 +151,32 @@ export class EditorController {
             mermaidPlugin,
             pdfPlugin,
             EditorView.updateListener.of((update) => {
+                if (update.docChanged || update.selectionSet) {
+                    const state = update.state;
+                    const pos = state.selection.main.head;
+                    const word = state.wordAt(pos);
+                    let currentTag = null;
+
+                    if (word) {
+                        const text = state.sliceDoc(word.from, word.to);
+                        if (text && text.trim().length > 0) {
+                            if (text.startsWith('#')) {
+                                currentTag = text;
+                            } else {
+                                const prevChar = state.sliceDoc(word.from - 1, word.from);
+                                if (prevChar === '#') {
+                                    currentTag = '#' + text;
+                                }
+                            }
+                        }
+                    }
+
+                    if (currentTag !== this.lastActiveTag) {
+                        this.lastActiveTag = currentTag;
+                        this.onTagClick(currentTag);
+                    }
+                }
+
                 if (update.docChanged) {
                     updateToC(update.view);
                     this.scheduleSave(update.state);
