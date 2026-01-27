@@ -9,6 +9,8 @@ export class FileTree {
         this.onNodeRename = options.onNodeRename || (() => { });
         this.onNodeReorder = options.onNodeReorder || (() => { });
         this.onNodeDelete = options.onNodeDelete || (() => { });
+        this.onChangeIcon = options.onChangeIcon || (() => { });
+        this.contextMenu = options.contextMenu || null;
 
         this.expandedFolders = new Set();
         this.nodes = [];
@@ -28,6 +30,7 @@ export class FileTree {
         this.container.addEventListener('drop', (e) => this._handleContainerDrop(e));
         this.container.addEventListener('click', (e) => this._handleContainerClick(e));
         this.container.addEventListener('keydown', (e) => this._handleKeyDown(e));
+        this.container.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
     render(nodes) {
@@ -62,6 +65,7 @@ export class FileTree {
                 hr.addEventListener('dragover', (e) => this._handleDragOver(e, node));
                 hr.addEventListener('drop', (e) => this._handleDrop(e, node));
                 hr.addEventListener('dblclick', (e) => this._handleSeparatorDblClick(node, e));
+                hr.addEventListener('contextmenu', (e) => this._handleContextMenu(e, node));
 
                 li.appendChild(hr);
                 ul.appendChild(li);
@@ -87,7 +91,12 @@ export class FileTree {
 
             const icon = document.createElement('span');
             icon.className = 'material-symbols-outlined tree-icon';
-            icon.textContent = node.type === 'folder' ? 'folder' : 'article';
+
+            if (node.icon) {
+                icon.textContent = node.icon;
+            } else {
+                icon.textContent = node.type === 'folder' ? 'folder' : 'article';
+            }
 
             if (node.type === 'folder') icon.style.color = 'var(--text-secondary)';
             if (node.type === 'file') icon.style.color = 'var(--accent)';
@@ -101,6 +110,7 @@ export class FileTree {
             label.appendChild(text);
 
             label.onclick = (e) => this._handleNodeClick(node, e);
+            label.oncontextmenu = (e) => this._handleContextMenu(e, node);
 
             label.addEventListener('dragstart', (e) => this._handleDragStart(e, node));
             label.addEventListener('dragover', (e) => this._handleDragOver(e, node));
@@ -425,15 +435,21 @@ export class FileTree {
         }
     }
 
+    _handleContextMenu(e, node) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setActiveNode(node.id);
+        this.onFileSelect(node);
+
+        if (this.contextMenu) {
+            this.contextMenu.show(e.clientX, e.clientY, node);
+        }
+    }
 
     _handleSeparatorDblClick(node, event) {
         event.stopPropagation();
-        this.dialog.show({
-            title: "Excluir Separador",
-            message: "Tem certeza que deseja remover este separador?",
-            confirmText: "Excluir",
-            onConfirm: () => this.onNodeDelete(node.id)
-        });
+        this.onNodeDelete(node.id);
     }
 
     _handleKeyDown(e) {

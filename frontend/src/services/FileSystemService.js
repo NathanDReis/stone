@@ -57,6 +57,7 @@ export class FileSystemService {
             type: 'folder',
             path,
             order,
+            icon: 'folder',
             created_at: now,
             updated_at: now
         };
@@ -78,6 +79,7 @@ export class FileSystemService {
             type: 'file',
             path,
             order,
+            icon: 'description',
             created_at: now,
             updated_at: now
         };
@@ -236,6 +238,15 @@ export class FileSystemService {
 
         node.updated_at = this._generateTimestamp();
 
+        return node;
+    }
+
+    updateNodeIcon(id, iconName) {
+        const node = this.getNode(id);
+        if (!node) throw new Error(`Node ${id} not found`);
+
+        node.icon = iconName;
+        node.updated_at = this._generateTimestamp();
         return node;
     }
 

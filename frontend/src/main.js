@@ -4,6 +4,8 @@ import { EditorController } from './ui/EditorController.js';
 import { Toast } from './ui/Toast.js';
 import { EmptyState } from './ui/EmptyState.js';
 import { SearchController } from './ui/SearchController.js';
+import { FileTreeContextMenu } from './ui/FileTreeContextMenu.js';
+import { IconPickerModal } from './ui/IconPickerModal.js';
 
 const fileSystem = new FileSystemService();
 let activeFileId = null;
@@ -16,6 +18,8 @@ treeContainer.id = 'file-tree-root';
 menuElement.appendChild(treeContainer);
 
 const emptyState = new EmptyState(emptyStateContainer);
+const iconPicker = new IconPickerModal();
+
 
 const editor = new EditorController(editorContainer, {
     fileSystem: fileSystem,
@@ -24,7 +28,7 @@ const editor = new EditorController(editorContainer, {
     },
     onTagClick: (tag) => {
         if (!searchController) return;
-        
+
         if (tag) {
             searchController.filterByTag(tag);
         } else {
@@ -111,6 +115,40 @@ const fileTree = new FileTree(treeContainer, {
         }
     }
 });
+
+const contextMenu = new FileTreeContextMenu(fileTree, {
+    onDelete: (node) => {
+        fileTree.dialog.show({
+            title: "Excluir Item",
+            message: `Tem certeza que deseja excluir "${node.name}"?`,
+            confirmText: "Excluir",
+            onConfirm: () => {
+                try {
+                    fileSystem.deleteNode(node.id);
+                    if (editor.linkResolver) editor.linkResolver.invalidateCache();
+                    loadTree();
+                } catch (e) {
+                    Toast.error(e.message);
+                }
+            }
+        });
+    },
+    onRename: (node) => {
+        fileTree.startRenaming(node.id);
+    },
+    onChangeIcon: (node) => {
+        iconPicker.show((iconName) => {
+            try {
+                fileSystem.updateNodeIcon(node.id, iconName);
+                loadTree();
+            } catch (e) {
+                Toast.error(e.message);
+            }
+        });
+    }
+});
+
+fileTree.contextMenu = contextMenu;
 
 function loadTree() {
     const nodes = fileSystem.getNodes();

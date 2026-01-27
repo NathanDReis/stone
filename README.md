@@ -22,3 +22,4 @@ The software is still in the early stages of development.
 - [ ] permissões de visualização do documento
 - [ ] grafo com todos os documentos e seus relacionamentos por links internos
 - [ ] permitir escolher o íconoe das pastas
+- [ ] poder adicionar texto nas linhas do mermaid
