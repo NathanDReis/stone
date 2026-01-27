@@ -359,7 +359,19 @@ export class FileTree {
 
     setActiveNode(id) {
         this.activeNodeId = id;
+        if (id) {
+            this._expandParents(id);
+            this.render(this.nodes);
+        }
         this._updateActiveClasses();
+    }
+
+    _expandParents(nodeId) {
+        const node = this.nodes.find(n => n.id === nodeId);
+        if (node && node.parent_id) {
+            this.expandedFolders.add(node.parent_id);
+            this._expandParents(node.parent_id);
+        }
     }
 
     _updateActiveClasses() {
