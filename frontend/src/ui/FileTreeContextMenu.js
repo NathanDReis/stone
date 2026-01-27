@@ -48,25 +48,30 @@ export class FileTreeContextMenu {
         ];
 
         if (node) {
+            if (node.type !== 'separator') {
+                items.push(
+                    { type: 'separator' },
+                    {
+                        label: 'Renomear',
+                        icon: 'edit',
+                        action: () => this.onRename(node)
+                    },
+                    {
+                        label: 'Alterar Ícone',
+                        icon: 'sentiment_satisfied',
+                        action: () => this.onChangeIcon(node)
+                    },
+                );
+            }
+
             items.push(
-                { type: 'separator' },
-                {
-                    label: 'Renomear',
-                    icon: 'edit',
-                    action: () => this.onRename(node)
-                },
-                {
-                    label: 'Alterar Ícone',
-                    icon: 'sentiment_satisfied',
-                    action: () => this.onChangeIcon(node)
-                },
                 { type: 'separator' },
                 {
                     label: 'Excluir',
                     icon: 'delete',
                     action: () => this.onDelete(node),
                     danger: true
-                }
+                },
             );
         }
 

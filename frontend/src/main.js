@@ -204,27 +204,21 @@ function openFile(node) {
     activeFileId = node.id;
     const doc = fileSystem.getDocument(node.id);
 
-    if (doc) {
-        editor.setContent(doc.content);
-        fileTree.setActiveNode(node.id);
-    } else {
-        Toast.error(`Document for node ${node.id} not found.`);
-        editor.setContent('');
-    }
+    if (!doc) return editor.setContent('');
+
+    editor.setContent(doc.content);
+    fileTree.setActiveNode(node.id);
 }
 
 function getActiveParentId() {
-    if (fileTree.activeNodeId) {
-        const activeNode = fileSystem.getNode(fileTree.activeNodeId);
-        if (activeNode) {
-            if (activeNode.type === 'folder') {
-                return activeNode.id;
-            } else {
-                return activeNode.parent_id;
-            }
-        }
-    }
-    return null;
+    if (!fileTree.activeNodeId) return null;
+    
+    const activeNode = fileSystem.getNode(fileTree.activeNodeId);
+    if (!activeNode) return null;
+
+    return activeNode.type === 'folder' 
+        ? activeNode.id 
+        : activeNode.parent_id;
 }
 
 import { ThemeManager } from './services/ThemeManager.js';
