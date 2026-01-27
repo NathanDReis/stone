@@ -58,7 +58,12 @@ export class FileTree {
     _buildTree(nodes, parentId) {
         const children = nodes.filter(n => n.parent_id === parentId);
 
-        children.sort((a, b) => (a.order || 0) - (b.order || 0));
+        children.sort((a, b) => {
+            if (a.type === 'folder' && b.type !== 'folder') return -1;
+            if (a.type !== 'folder' && b.type === 'folder') return 1;
+
+            return (a.order || 0) - (b.order || 0);
+        });
 
         const ul = document.createElement('ul');
         ul.className = 'tree-list';
