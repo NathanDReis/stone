@@ -269,11 +269,6 @@ if (btnAddSeparator) {
     });
 }
 
-document.getElementById('btn-rename').addEventListener('click', () => {
-    fileTree.startRenaming();
-});
-
-
 document.getElementById('btn-theme').addEventListener('click', openThemeModal);
 
 function handleClose() {

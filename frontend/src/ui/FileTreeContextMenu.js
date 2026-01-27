@@ -3,6 +3,7 @@ export class FileTreeContextMenu {
         this.fileTree = fileTree;
         this.onDelete = options.onDelete || (() => { });
         this.onRename = options.onRename || (() => { });
+        this.onChangeIcon = options.onChangeIcon || (() => { });
         this.onCreateSeparator = options.onCreateSeparator || (() => { });
         this.menu = null;
         this.activeNode = null;
@@ -45,7 +46,7 @@ export class FileTreeContextMenu {
                 action: () => this.onCreateSeparator(parentId)
             },
         ];
-        
+
         if (node) {
             items.push(
                 { type: 'separator' },
