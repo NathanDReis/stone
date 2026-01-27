@@ -64,7 +64,6 @@
 .search-item {
   display: flex;
   align-items: flex-start;
-  /* Align icon to top if multi-line */
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-radius: 8px;
@@ -90,10 +89,8 @@
   font-size: 1.25rem;
   color: var(--text-secondary);
   margin-top: 2px;
-  /* slight adjustment for alignment */
 }
 
-/* Content specific styles */
 .search-item-content {
   display: flex;
   flex-direction: column;

@@ -18,8 +18,6 @@ Document processes, record knowledge.
 The software is still in the early stages of development.
 
 - [ ] salvar documentação
-- [ ] poder fazer busca geral, ou por tags
-- [ ] links internos entre páginas
 - [ ] cadastro por usuário
 - [ ] permissões de visualização do documento
 - [ ] grafo com todos os documentos e seus relacionamentos por links internos

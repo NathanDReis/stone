@@ -370,7 +370,10 @@ export class FileTree {
             const li = this.container.querySelector(`li[data-id="${this.activeNodeId}"]`);
             if (li) {
                 const label = li.querySelector('.tree-label');
-                if (label) label.classList.add('active');
+                if (label) {
+                    label.classList.add('active');
+                    label.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }
             }
         }
     }
