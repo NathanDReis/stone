@@ -239,6 +239,17 @@ const searchController = new SearchController(
     {
         onSelect: (node) => {
             openFile(node);
+        },
+        onFilter: (nodes) => {
+            if (nodes) {
+                const flatNodes = nodes.map(n => ({
+                    ...n,
+                    parent_id: null
+                }));
+                fileTree.render(flatNodes);
+            } else {
+                loadTree();
+            }
         }
     }
 );

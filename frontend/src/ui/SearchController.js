@@ -5,6 +5,7 @@ export class SearchController {
         this.input = searchElement;
         this.fileSystem = fileSystem;
         this.onSelect = options.onSelect || (() => { });
+        this.onFilter = options.onFilter || (() => { });
         this.resultsContainer = null;
         this.toast = new Toast();
 
@@ -40,8 +41,16 @@ export class SearchController {
         const query = e.target.value.toLowerCase().trim();
         if (!query) {
             this.hideResults();
+            this.onFilter(null);
             return;
         }
+
+        if (query.startsWith('#')) {
+            this.handleTagSearch(query);
+            return;
+        }
+
+        this.onFilter(null);
 
         const nodes = this.fileSystem.getNodes();
         const results = [];
@@ -59,6 +68,7 @@ export class SearchController {
                 const index = contentLower.indexOf(query);
                 if (index !== -1) {
                     contentMatch = true;
+
                     const start = Math.max(0, index - 20);
                     const end = Math.min(doc.content.length, index + query.length + 40);
                     snippet = (start > 0 ? '...' : '') +
@@ -79,51 +89,140 @@ export class SearchController {
         this.renderResults(results, query);
     }
 
+    handleTagSearch(query) {
+        const allTags = new Set();
+        const nodes = this.fileSystem.getNodes();
+
+        nodes.forEach(node => {
+            if (node.type !== 'file') return;
+            const doc = this.fileSystem.getDocument(node.id);
+            if (doc && doc.content) {
+                const matches = doc.content.match(/#[a-zA-Z0-9_\-]+/g);
+                if (matches) {
+                    matches.forEach(tag => allTags.add(tag.toLowerCase()));
+                }
+            }
+        });
+
+        const matchingTags = Array.from(allTags)
+            .filter(tag => tag.startsWith(query))
+            .sort();
+
+        const results = [];
+        const filteredNodes = [];
+
+        matchingTags.forEach(tag => {
+            results.push({
+                type: 'tag',
+                name: tag,
+                snippet: 'Filtrar por esta tag'
+            });
+        });
+
+        if (results.length > 0 || query.length > 1) {
+            nodes.forEach(node => {
+                if (node.type !== 'file') return;
+                const doc = this.fileSystem.getDocument(node.id);
+                if (doc && doc.content) {
+                    const contentLower = doc.content.toLowerCase();
+
+                    if (contentLower.includes(query)) {
+                        results.push({
+                            type: 'document',
+                            node: node,
+                            matchType: 'content',
+                            snippet: `...${query}...`
+                        });
+                        filteredNodes.push(node);
+                    }
+                }
+            });
+        }
+
+        if (query.length > 1) {
+            this.onFilter(filteredNodes);
+        } else {
+            this.onFilter(null);
+        }
+
+        this.renderResults(results, query);
+    }
+
     renderResults(results, query) {
         this.resultsContainer.innerHTML = '';
 
         if (results.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'search-item empty';
-            empty.textContent = 'Nenhum documento encontrado';
+            empty.textContent = 'Nenhum resultado encontrado';
             this.resultsContainer.appendChild(empty);
             this.showResults();
             return;
         }
 
         results.forEach(result => {
-            const { node, matchType, snippet } = result;
             const item = document.createElement('div');
             item.className = 'search-item';
 
-            const icon = document.createElement('span');
-            icon.className = 'material-symbols-outlined';
-            icon.textContent = 'description';
+            if (result.type === 'tag') {
+                const icon = document.createElement('span');
+                icon.className = 'material-symbols-outlined';
+                icon.textContent = 'grid_3x3';
 
-            const content = document.createElement('div');
-            content.className = 'search-item-content';
+                const content = document.createElement('div');
+                content.className = 'search-item-content';
 
-            const title = document.createElement('div');
-            title.className = 'search-item-title';
-            title.textContent = node.name;
-            content.appendChild(title);
+                const title = document.createElement('div');
+                title.className = 'search-item-title';
+                title.textContent = result.name;
 
-            if (snippet) {
-                const snippetEl = document.createElement('div');
-                snippetEl.className = 'search-item-snippet';
-                const regex = new RegExp(`(${query})`, 'gi');
-                snippetEl.innerHTML = snippet.replace(regex, '<strong>$1</strong>');
-                content.appendChild(snippetEl);
+                const snippet = document.createElement('div');
+                snippet.className = 'search-item-snippet';
+                snippet.textContent = result.snippet;
+
+                content.appendChild(title);
+                content.appendChild(snippet);
+                item.appendChild(icon);
+                item.appendChild(content);
+
+                item.addEventListener('click', () => {
+                    this.input.value = result.name;
+                    this.input.focus();
+                    this.handleInput({ target: this.input });
+                });
+
+            } else {
+                const { node, snippet } = result;
+
+                const icon = document.createElement('span');
+                icon.className = 'material-symbols-outlined';
+                icon.textContent = 'description';
+
+                const content = document.createElement('div');
+                content.className = 'search-item-content';
+
+                const title = document.createElement('div');
+                title.className = 'search-item-title';
+                title.textContent = node.name;
+                content.appendChild(title);
+
+                if (snippet) {
+                    const snippetEl = document.createElement('div');
+                    snippetEl.className = 'search-item-snippet';
+                    const regex = new RegExp(`(${query})`, 'gi');
+                    snippetEl.innerHTML = snippet.replace(regex, '<strong>$1</strong>');
+                    content.appendChild(snippetEl);
+                }
+
+                item.appendChild(icon);
+                item.appendChild(content);
+
+                item.addEventListener('click', () => {
+                    this.onSelect(node);
+                    this.hideResults();
+                    this.input.value = '';
+                });
             }
-
-            item.appendChild(icon);
-            item.appendChild(content);
-
-            item.addEventListener('click', () => {
-                this.onSelect(node);
-                this.hideResults();
-                this.input.value = '';
-            });
 
             this.resultsContainer.appendChild(item);
         });
