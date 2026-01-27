@@ -23,6 +23,27 @@ const emptyState = new EmptyState(emptyStateContainer);
 const iconPicker = new IconPickerModal(iconManager);
 
 
+const searchController = new SearchController(
+    document.getElementById('search'),
+    fileSystem,
+    {
+        onSelect: (node) => {
+            openFile(node);
+        },
+        onFilter: (nodes) => {
+            if (nodes) {
+                const flatNodes = nodes.map(n => ({
+                    ...n,
+                    parent_id: null
+                }));
+                fileTree.render(flatNodes);
+            } else {
+                loadTree();
+            }
+        }
+    }
+);
+
 const editor = new EditorController(editorContainer, {
     fileSystem: fileSystem,
     onNavigate: (node) => {
@@ -147,6 +168,14 @@ const contextMenu = new FileTreeContextMenu(fileTree, {
                 Toast.error(e.message);
             }
         });
+    },
+    onCreateSeparator: (parentId) => {
+        try {
+            fileSystem.createSeparator(parentId);
+            loadTree();
+        } catch (e) {
+            Toast.error(e.message);
+        }
     }
 });
 
@@ -282,26 +311,7 @@ document.addEventListener('app-close', () => {
     handleClose();
 });
 
-const searchController = new SearchController(
-    document.getElementById('search'),
-    fileSystem,
-    {
-        onSelect: (node) => {
-            openFile(node);
-        },
-        onFilter: (nodes) => {
-            if (nodes) {
-                const flatNodes = nodes.map(n => ({
-                    ...n,
-                    parent_id: null
-                }));
-                fileTree.render(flatNodes);
-            } else {
-                loadTree();
-            }
-        }
-    }
-);
+
 
 loadTree();
 openFile(null);

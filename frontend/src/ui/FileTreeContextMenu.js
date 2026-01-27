@@ -3,7 +3,7 @@ export class FileTreeContextMenu {
         this.fileTree = fileTree;
         this.onDelete = options.onDelete || (() => { });
         this.onRename = options.onRename || (() => { });
-        this.onChangeIcon = options.onChangeIcon || (() => { });
+        this.onCreateSeparator = options.onCreateSeparator || (() => { });
         this.menu = null;
         this.activeNode = null;
 
@@ -21,6 +21,8 @@ export class FileTreeContextMenu {
         this.hide();
         this.activeNode = node;
 
+        const parentId = node ? (node.type === 'folder' ? node.id : node.parent_id) : null;
+
         this.menu = document.createElement('div');
         this.menu.className = 'context-menu is-visible';
         this.menu.style.left = `${x}px`;
@@ -28,23 +30,44 @@ export class FileTreeContextMenu {
 
         const items = [
             {
-                label: 'Renomear',
-                icon: 'edit',
-                action: () => this.onRename(node)
+                label: 'Novo Arquivo',
+                icon: 'note_add',
+                action: () => this.fileTree.startCreation('file', parentId)
             },
             {
-                label: 'Alterar Ícone',
-                icon: 'sentiment_satisfied',
-                action: () => this.onChangeIcon(node)
+                label: 'Nova Pasta',
+                icon: 'create_new_folder',
+                action: () => this.fileTree.startCreation('folder', parentId)
             },
-            { type: 'separator' },
             {
-                label: 'Excluir',
-                icon: 'delete',
-                action: () => this.onDelete(node),
-                danger: true
-            }
+                label: 'Separador',
+                icon: 'horizontal_rule',
+                action: () => this.onCreateSeparator(parentId)
+            },
         ];
+        
+        if (node) {
+            items.push(
+                { type: 'separator' },
+                {
+                    label: 'Renomear',
+                    icon: 'edit',
+                    action: () => this.onRename(node)
+                },
+                {
+                    label: 'Alterar Ícone',
+                    icon: 'sentiment_satisfied',
+                    action: () => this.onChangeIcon(node)
+                },
+                { type: 'separator' },
+                {
+                    label: 'Excluir',
+                    icon: 'delete',
+                    action: () => this.onDelete(node),
+                    danger: true
+                }
+            );
+        }
 
         items.forEach(item => {
             if (item.type === 'separator') {

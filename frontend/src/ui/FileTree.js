@@ -17,6 +17,20 @@ export class FileTree {
         this.activeNodeId = null;
         this.dialog = new ConfirmDialog();
 
+        // Bind methods to preserve 'this' context
+        this._handleNodeClick = this._handleNodeClick.bind(this);
+        this._handleContextMenu = this._handleContextMenu.bind(this);
+        this._handleContainerClick = this._handleContainerClick.bind(this);
+        this._handleContainerDragOver = this._handleContainerDragOver.bind(this);
+        this._handleContainerDragLeave = this._handleContainerDragLeave.bind(this);
+        this._handleContainerDrop = this._handleContainerDrop.bind(this);
+        this._handleKeyDown = this._handleKeyDown.bind(this);
+        this._handleSeparatorDblClick = this._handleSeparatorDblClick.bind(this);
+        this._handleDragStart = this._handleDragStart.bind(this);
+        this._handleDragOver = this._handleDragOver.bind(this);
+        this._handleDragLeave = this._handleDragLeave.bind(this);
+        this._handleDrop = this._handleDrop.bind(this);
+
         this.init();
     }
 
@@ -30,7 +44,7 @@ export class FileTree {
         this.container.addEventListener('drop', (e) => this._handleContainerDrop(e));
         this.container.addEventListener('click', (e) => this._handleContainerClick(e));
         this.container.addEventListener('keydown', (e) => this._handleKeyDown(e));
-        this.container.addEventListener('contextmenu', (e) => e.preventDefault());
+        this.container.addEventListener('contextmenu', (e) => this._handleContextMenu(e, null));
     }
 
     render(nodes) {
@@ -274,6 +288,44 @@ export class FileTree {
         input.addEventListener('dblclick', (e) => e.stopPropagation());
     }
 
+    setActiveNode(nodeId) {
+        if (this.activeNodeId) {
+            const prevLi = this.container.querySelector(`li[data-id="${this.activeNodeId}"]`);
+            if (prevLi) {
+                const label = prevLi.querySelector('.tree-label');
+                if (label) label.classList.remove('active');
+            }
+        }
+
+        this.activeNodeId = nodeId;
+
+        if (nodeId) {
+            const nextLi = this.container.querySelector(`li[data-id="${nodeId}"]`);
+            if (nextLi) {
+                const label = nextLi.querySelector('.tree-label');
+                if (label) label.classList.add('active');
+            }
+        }
+    }
+
+    _handleNodeClick(node, e) {
+        if (e) {
+            e.stopPropagation();
+        }
+
+        if (node.type === 'folder') {
+            if (this.expandedFolders.has(node.id)) {
+                this.expandedFolders.delete(node.id);
+            } else {
+                this.expandedFolders.add(node.id);
+            }
+            this.render(this.nodes);
+        }
+
+        this.setActiveNode(node.id);
+        this.onFileSelect(node);
+    }
+
     _handleDragStart(e, node) {
         e.dataTransfer.setData('application/json', JSON.stringify({
             nodeId: node.id,
@@ -350,56 +402,6 @@ export class FileTree {
         this.onNodeReorder(nodeId, targetNode.id, position);
     }
 
-    _handleNodeClick(node, event) {
-        event.stopPropagation();
-
-        if (node.type === 'folder') {
-            if (this.expandedFolders.has(node.id)) {
-                this.expandedFolders.delete(node.id);
-            } else {
-                this.expandedFolders.add(node.id);
-            }
-            this.render(this.nodes);
-        }
-
-        this.activeNodeId = node.id;
-        this.onFileSelect(node);
-        this._updateActiveClasses();
-    }
-
-    setActiveNode(id) {
-        this.activeNodeId = id;
-        if (id) {
-            this._expandParents(id);
-            this.render(this.nodes);
-        }
-        this._updateActiveClasses();
-    }
-
-    _expandParents(nodeId) {
-        const node = this.nodes.find(n => n.id === nodeId);
-        if (node && node.parent_id) {
-            this.expandedFolders.add(node.parent_id);
-            this._expandParents(node.parent_id);
-        }
-    }
-
-    _updateActiveClasses() {
-        const allLabels = this.container.querySelectorAll('.tree-label');
-        allLabels.forEach(l => l.classList.remove('active'));
-
-        if (this.activeNodeId) {
-            const li = this.container.querySelector(`li[data-id="${this.activeNodeId}"]`);
-            if (li) {
-                const label = li.querySelector('.tree-label');
-                if (label) {
-                    label.classList.add('active');
-                    label.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                }
-            }
-        }
-    }
-
     _handleContainerDragOver(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
@@ -439,8 +441,13 @@ export class FileTree {
         e.preventDefault();
         e.stopPropagation();
 
-        this.setActiveNode(node.id);
-        this.onFileSelect(node);
+        if (node) {
+            this.setActiveNode(node.id);
+            this.onFileSelect(node);
+        } else {
+            this.setActiveNode(null);
+            this.onFileSelect(null);
+        }
 
         if (this.contextMenu) {
             this.contextMenu.show(e.clientX, e.clientY, node);
