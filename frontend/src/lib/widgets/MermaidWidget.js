@@ -87,7 +87,7 @@ export class MermaidWidget extends WidgetType {
 
             const handleEdgeInteraction = (e) => {
                 const edgePath = e.target.closest('.edgePath, .flowchart-link, .edge-paths path');
-                const edgeLabelBoundary = e.target.closest('.edgeLabel, .edge-labels .label, .label');
+                const edgeLabelBoundary = e.target.closest('.edgeLabel, .edge-labels .label, .label, .label-container');
                 const edgeElement = edgePath || edgeLabelBoundary;
 
                 if (edgeElement) {
@@ -97,25 +97,38 @@ export class MermaidWidget extends WidgetType {
                     const parsed = parseMermaid(this.code);
                     let matchedEdge = null;
 
-                    const elementClasses = Array.from(edgeElement.classList).join(" ");
-                    const parentClasses = edgeElement.parentElement ? Array.from(edgeElement.parentElement.classList).join(" ") : "";
-                    const combinedClasses = elementClasses + " " + parentClasses;
-
-                    matchedEdge = parsed.edges.find(edge => {
-                        return combinedClasses.includes(`LS-${edge.from}`) && combinedClasses.includes(`LE-${edge.to}`);
-                    });
+                    let current = edgeElement;
+                    let foundByClasses = false;
+                    while (current && current !== this.div && !foundByClasses) {
+                        const classes = Array.from(current.classList).join(" ");
+                        matchedEdge = parsed.edges.find(edge => {
+                            return classes.includes(`LS-${edge.from}`) && classes.includes(`LE-${edge.to}`);
+                        });
+                        if (matchedEdge) {
+                            foundByClasses = true;
+                            break;
+                        }
+                        current = current.parentElement;
+                    }
 
                     if (!matchedEdge) {
-                        const elementId = edgeElement.id || "";
-                        matchedEdge = parsed.edges.find(edge => {
-                            return (elementId.includes(edge.from) && elementId.includes(edge.to));
-                        });
+                        current = edgeElement;
+                        while (current && current !== this.div) {
+                            const id = current.id || "";
+                            matchedEdge = parsed.edges.find(edge => {
+                                return id.includes(edge.from) && id.includes(edge.to);
+                            });
+                            if (matchedEdge) break;
+                            current = current.parentElement;
+                        }
                     }
 
                     if (!matchedEdge && edgeLabelBoundary) {
                         const labelText = edgeLabelBoundary.innerText.trim();
                         if (labelText) {
-                            matchedEdge = parsed.edges.find(edge => edge.label && edge.label.trim() === labelText);
+                            matchedEdge = parsed.edges.find(edge =>
+                                edge.label && edge.label.trim().toLowerCase() === labelText.toLowerCase()
+                            );
                         }
                     }
 

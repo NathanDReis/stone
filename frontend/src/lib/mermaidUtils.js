@@ -8,7 +8,7 @@ export function parseMermaid(code) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith('graph') || trimmed.startsWith('flowchart')) return;
 
-        const edgeRegex = /^([a-zA-Z0-9_]+(?:\s*(?:\[.*?\]|\(.*?\)|\{.*?\}|\( \(.*?\) \)|>.*?\]))?)\s*([-=\.]{1,}.*?|→.*?)\s*([a-zA-Z0-9_]+(?:\s*(?:\[.*?\]|\(.*?\)|\{.*?\}|\( \(.*?\) \)|>.*?\]))?.*)$/;
+        const edgeRegex = /^([a-zA-Z0-9_]+(?:\s*(?:\[.*?\]|\(.*?\)|\{.*?\}|\( \(.*?\) \)|>.*?\]))?)\s*([-=\.x>o\s]{1,}.*?(?:\|.*?\|)?.*?)\s*([a-zA-Z0-9_]+(?:\s*(?:\[.*?\]|\(.*?\)|\{.*?\}|\( \(.*?\) \)|>.*?\]))?.*)$/;
         const edgeMatch = trimmed.match(edgeRegex);
 
         if (edgeMatch) {
