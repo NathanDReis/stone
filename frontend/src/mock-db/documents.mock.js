@@ -10,5 +10,11 @@ export const initialDocuments = [
         "content": "# Introdução\n\nBem-vindo à documentação.\n\n[[2]]\n\nDocumento a parte para teste do filtro do search\n\n#financeiro\n#dialog",
         "version": 1,
         "updated_at": "2026-01-01T00:00:01.000Z"
+    },
+    {
+        "id": "4",
+        "content": "# Introdução\n\n```mermaid\ngraph TD;\n    A-->B;\n    A-->C;\n    B-->D;\n    C-->D;\n```\n",
+        "version": 1,
+        "updated_at": "2026-01-01T00:00:01.000Z"
     }
 ];

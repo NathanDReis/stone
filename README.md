@@ -17,15 +17,19 @@ Document processes, record knowledge.
 
 The software is still in the early stages of development.
 
-- [ ] poder adicionar texto nas linhas do mermaid 
-- [ ] ver opções de gráfico no mermaid para implementar
+// Estilização
+- [ ] ctrl+f para busca no editor estilizado
+- [ ] melhorar usabilidade das tabelas igual no obsidian
+- [ ] grafo com todos os documentos e seus relacionamentos por links internos
+// Necessárioi
+- [x] resolver bugs gráfico no mermaid (layout do gráfico, layout dos models)
 - [ ] criar um modo leitura onde não é possível editar o tema
-- [ ] modelar para cada arquivo uma descrição abaixo do site-index e a data em que foi criado. 
+- [ ] modelar para cada arquivo uma descrição abaixo do site-index, a data em que foi criado e o último a editar. 
     - Configuração da página como permissões para depois validar os perfis de usuário, 
     - um input de campo aberto (observação - onde colocarei o caminho do projeto ASTI)
+    - um botão de permissões para adicionar permissões do documento
 - [ ] modelos estabelecidos para o banco de dados
 - [ ] criar um banco de dados postgress
 - [ ] salvar documentação (icons, nodes, documents)
 - [ ] cadastro do perfil (cada perfil terá suas permissões)
 - [ ] cadastro do usuário
-- [ ] grafo com todos os documentos e seus relacionamentos por links internos
