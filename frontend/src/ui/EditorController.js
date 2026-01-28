@@ -1,4 +1,4 @@
-import { EditorState } from "@codemirror/state";
+import { EditorState, Compartment } from "@codemirror/state";
 import {
     EditorView,
     keymap,
@@ -119,6 +119,10 @@ export class EditorController {
         this.saveTimeout = null;
         this.visible = true;
         this.linkResolver = null;
+        this.readOnly = false;
+
+        this.readOnlyCompartment = new Compartment();
+        this.editableCompartment = new Compartment();
 
         this.initEditor();
     }
@@ -152,6 +156,8 @@ export class EditorController {
             placeholder("O que irá documentar hoje?"),
             mermaidPlugin,
             pdfPlugin,
+            this.readOnlyCompartment.of(EditorState.readOnly.of(false)),
+            this.editableCompartment.of(EditorView.editable.of(true)),
             EditorView.updateListener.of((update) => {
                 if (update.docChanged || update.selectionSet) {
                     const state = update.state;
@@ -256,5 +262,15 @@ export class EditorController {
         });
         this.view.dispatch(transaction);
         updateToC(this.view);
+    }
+
+    setReadOnly(readOnly) {
+        this.readOnly = readOnly;
+        this.view.dispatch({
+            effects: [
+                this.readOnlyCompartment.reconfigure(EditorState.readOnly.of(readOnly)),
+                this.editableCompartment.reconfigure(EditorView.editable.of(!readOnly))
+            ]
+        });
     }
 }

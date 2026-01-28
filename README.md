@@ -23,7 +23,7 @@ The software is still in the early stages of development.
 - [ ] grafo com todos os documentos e seus relacionamentos por links internos
 // Necessárioi
 - [x] resolver bugs gráfico no mermaid (layout do gráfico, layout dos models)
-- [ ] criar um modo leitura onde não é possível editar o tema
+- [ ] criar um modo leitura onde é possível editar somente o tema
 - [ ] modelar para cada arquivo uma descrição abaixo do site-index, a data em que foi criado e o último a editar. 
     - Configuração da página como permissões para depois validar os perfis de usuário, 
     - um input de campo aberto (observação - onde colocarei o caminho do projeto ASTI)

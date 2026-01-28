@@ -340,6 +340,19 @@
   color: var(--accent);
 }
 
+.tree-container.is-read-only {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.tree-container.is-read-only .tree-label:hover {
+  background-color: transparent !important;
+}
+
+.tree-container.is-read-only .tree-text {
+  user-select: none;
+}
+
 .mermaid-color-picker-row {
   display: flex;
   align-items: center;

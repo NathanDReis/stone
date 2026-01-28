@@ -11,13 +11,13 @@ export class FileTree {
         this.onNodeDelete = options.onNodeDelete || (() => { });
         this.onChangeIcon = options.onChangeIcon || (() => { });
         this.contextMenu = options.contextMenu || null;
+        this.readOnly = false;
 
         this.expandedFolders = new Set();
         this.nodes = [];
         this.activeNodeId = null;
         this.dialog = new ConfirmDialog();
 
-        // Bind methods to preserve 'this' context
         this._handleNodeClick = this._handleNodeClick.bind(this);
         this._handleContextMenu = this._handleContextMenu.bind(this);
         this._handleContainerClick = this._handleContainerClick.bind(this);
@@ -53,6 +53,17 @@ export class FileTree {
 
         const tree = this._buildTree(nodes, null);
         this.container.appendChild(tree);
+
+        if (this.readOnly) {
+            this.container.classList.add('is-read-only');
+        } else {
+            this.container.classList.remove('is-read-only');
+        }
+    }
+
+    setReadOnly(readOnly) {
+        this.readOnly = readOnly;
+        this.render(this.nodes);
     }
 
     _buildTree(nodes, parentId) {
@@ -150,6 +161,7 @@ export class FileTree {
     }
 
     startCreation(type, parentId = null) {
+        if (this.readOnly) return;
         let targetList;
         if (parentId) {
             this.expandedFolders.add(parentId);
@@ -234,6 +246,7 @@ export class FileTree {
     }
 
     startRenaming(nodeId = null) {
+        if (this.readOnly) return;
         const idToRename = nodeId || this.activeNodeId;
         if (!idToRename) return;
 
@@ -332,6 +345,10 @@ export class FileTree {
     }
 
     _handleDragStart(e, node) {
+        if (this.readOnly) {
+            e.preventDefault();
+            return;
+        }
         e.dataTransfer.setData('application/json', JSON.stringify({
             nodeId: node.id,
             nodeType: node.type,
@@ -341,6 +358,7 @@ export class FileTree {
     }
 
     _handleDragOver(e, targetNode) {
+        if (this.readOnly) return;
         e.preventDefault();
         e.stopPropagation();
         e.dataTransfer.dropEffect = 'move';
@@ -384,6 +402,7 @@ export class FileTree {
     }
 
     _handleDrop(e, targetNode) {
+        if (this.readOnly) return;
         e.preventDefault();
         e.stopPropagation();
         const element = e.currentTarget;
@@ -408,6 +427,7 @@ export class FileTree {
     }
 
     _handleContainerDragOver(e) {
+        if (this.readOnly) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         this.container.classList.add('drop-target-root');
@@ -421,6 +441,7 @@ export class FileTree {
     }
 
     _handleContainerDrop(e) {
+        if (this.readOnly) return;
         e.preventDefault();
         this.container.classList.remove('drop-target-root');
 
@@ -443,6 +464,10 @@ export class FileTree {
     }
 
     _handleContextMenu(e, node) {
+        if (this.readOnly) {
+            e.preventDefault();
+            return;
+        }
         e.preventDefault();
         e.stopPropagation();
 
@@ -465,6 +490,7 @@ export class FileTree {
     }
 
     _handleKeyDown(e) {
+        if (this.readOnly) return;
         if (e.key === 'Delete') {
             if (e.target.tagName === 'INPUT') return;
 

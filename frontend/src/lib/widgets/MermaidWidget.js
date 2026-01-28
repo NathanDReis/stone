@@ -40,50 +40,54 @@ mermaid.initialize({
 const editorUI = new MermaidEditorUI();
 
 export class MermaidWidget extends WidgetType {
-    constructor(code) {
+    constructor(code, readOnly = false) {
         super();
         this.code = code;
+        this.readOnly = readOnly;
         this.id = "mermaid-" + Math.random().toString(36).substr(2, 9);
     }
 
     eq(other) {
-        return other.code === this.code;
+        return other.code === this.code && other.readOnly === this.readOnly;
     }
 
     toDOM(view) {
         if (!this.div) {
+            const isReadOnly = this.readOnly;
             this.div = document.createElement("div");
             this.div.className = "mermaid-widget";
             this.div.style.position = "relative";
             this.div.style.cursor = "default";
 
-            const settingsBtn = document.createElement("button");
-            settingsBtn.className = "mermaid-block-settings-btn";
-            settingsBtn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg>
-            `;
-            settingsBtn.title = "Configurações do Diagrama";
-            this.div.appendChild(settingsBtn);
+            if (!isReadOnly) {
+                const settingsBtn = document.createElement("button");
+                settingsBtn.className = "mermaid-block-settings-btn";
+                settingsBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg>
+                `;
+                settingsBtn.title = "Configurações do Diagrama";
+                this.div.appendChild(settingsBtn);
 
-            settingsBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const parsed = parseMermaid(this.code);
-                const orientation = getGraphOrientation(this.code);
-                const currentBg = getBackgroundColor(this.code);
+                settingsBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const parsed = parseMermaid(this.code);
+                    const orientation = getGraphOrientation(this.code);
+                    const currentBg = getBackgroundColor(this.code);
 
-                editorUI.show(
-                    e.clientX,
-                    e.clientY,
-                    null,
-                    parsed.nodes,
-                    parsed.edges,
-                    this.getCallbacks(view, this.div),
-                    orientation,
-                    currentBg,
-                    'global'
-                );
-            };
+                    editorUI.show(
+                        e.clientX,
+                        e.clientY,
+                        null,
+                        parsed.nodes,
+                        parsed.edges,
+                        this.getCallbacks(view, this.div),
+                        orientation,
+                        currentBg,
+                        'global'
+                    );
+                };
+            }
 
             const handleEdgeInteraction = (e) => {
                 const edgePath = e.target.closest('.edgePath, .flowchart-link, .edge-paths path');
@@ -153,10 +157,14 @@ export class MermaidWidget extends WidgetType {
             };
 
             this.div.oncontextmenu = (e) => {
+                if (isReadOnly) return;
                 if (handleEdgeInteraction(e)) return;
             };
 
             this.div.onclick = (e) => {
+                if (isReadOnly) {
+                    return;
+                }
                 const nodeElement = e.target.closest('.node');
 
                 if (nodeElement) {

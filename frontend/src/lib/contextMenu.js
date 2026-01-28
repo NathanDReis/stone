@@ -17,6 +17,7 @@ export class ContextMenu {
     }
 
     handleContextMenu(e) {
+        if (this.view.state.readOnly) return;
         e.preventDefault();
         this.show(e.clientX, e.clientY);
     }

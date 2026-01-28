@@ -33,7 +33,7 @@ function getMermaidDecorations(state) {
                     if (content) {
                         widgets.push(
                             Decoration.replace({
-                                widget: new MermaidWidget(content),
+                                widget: new MermaidWidget(content, state.readOnly),
                                 inclusive: false,
                                 block: true
                             }).range(node.from, node.to)
@@ -52,7 +52,7 @@ export const mermaidPlugin = StateField.define({
         return getMermaidDecorations(state);
     },
     update(decorations, transaction) {
-        if (transaction.docChanged || transaction.selection) {
+        if (transaction.docChanged || transaction.selection || transaction.reconfigured) {
             return getMermaidDecorations(transaction.state);
         }
         return decorations;

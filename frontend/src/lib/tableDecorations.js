@@ -9,7 +9,7 @@ export const tableDecorations = StateField.define({
   },
 
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || tr.reconfigured) {
       return buildDecorations(tr.state);
     }
     return deco;
@@ -50,7 +50,7 @@ function buildDecorations(state) {
 
       decorations.push(
         Decoration.replace({
-          widget: new TableWidget(rows, from, to),
+          widget: new TableWidget(rows, from, to, state.readOnly),
           block: true,
         }).range(from, to)
       );

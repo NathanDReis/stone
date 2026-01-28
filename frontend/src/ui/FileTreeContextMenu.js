@@ -23,57 +23,60 @@ export class FileTreeContextMenu {
         this.activeNode = node;
 
         const parentId = node ? (node.type === 'folder' ? node.id : node.parent_id) : null;
+        const items = [];
+
+        if (!this.fileTree.readOnly) {
+            items.push(
+                {
+                    label: 'Novo Arquivo',
+                    icon: 'note_add',
+                    action: () => this.fileTree.startCreation('file', parentId)
+                },
+                {
+                    label: 'Nova Pasta',
+                    icon: 'create_new_folder',
+                    action: () => this.fileTree.startCreation('folder', parentId)
+                },
+                {
+                    label: 'Separador',
+                    icon: 'horizontal_rule',
+                    action: () => this.onCreateSeparator(parentId)
+                }
+            );
+
+            if (node) {
+                if (node.type !== 'separator') {
+                    items.push(
+                        { type: 'separator' },
+                        {
+                            label: 'Renomear',
+                            icon: 'edit',
+                            action: () => this.onRename(node)
+                        },
+                        {
+                            label: 'Alterar Ícone',
+                            icon: 'sentiment_satisfied',
+                            action: () => this.onChangeIcon(node)
+                        }
+                    );
+                }
+
+                items.push(
+                    { type: 'separator' },
+                    {
+                        label: 'Excluir',
+                        icon: 'delete',
+                        action: () => this.onDelete(node),
+                        danger: true
+                    }
+                );
+            }
+        }
 
         this.menu = document.createElement('div');
         this.menu.className = 'context-menu is-visible';
         this.menu.style.left = `${x}px`;
         this.menu.style.top = `${y}px`;
-
-        const items = [
-            {
-                label: 'Novo Arquivo',
-                icon: 'note_add',
-                action: () => this.fileTree.startCreation('file', parentId)
-            },
-            {
-                label: 'Nova Pasta',
-                icon: 'create_new_folder',
-                action: () => this.fileTree.startCreation('folder', parentId)
-            },
-            {
-                label: 'Separador',
-                icon: 'horizontal_rule',
-                action: () => this.onCreateSeparator(parentId)
-            },
-        ];
-
-        if (node) {
-            if (node.type !== 'separator') {
-                items.push(
-                    { type: 'separator' },
-                    {
-                        label: 'Renomear',
-                        icon: 'edit',
-                        action: () => this.onRename(node)
-                    },
-                    {
-                        label: 'Alterar Ícone',
-                        icon: 'sentiment_satisfied',
-                        action: () => this.onChangeIcon(node)
-                    },
-                );
-            }
-
-            items.push(
-                { type: 'separator' },
-                {
-                    label: 'Excluir',
-                    icon: 'delete',
-                    action: () => this.onDelete(node),
-                    danger: true
-                },
-            );
-        }
 
         items.forEach(item => {
             if (item.type === 'separator') {

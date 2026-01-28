@@ -1,21 +1,24 @@
 import { WidgetType } from "@codemirror/view";
 
 export class TableWidget extends WidgetType {
-  constructor(rows, from, to) {
+  constructor(rows, from, to, readOnly = false) {
     super();
     this.rows = rows;
     this.from = from;
     this.to = to;
+    this.readOnly = readOnly;
     this.isEditing = false;
   }
 
   eq(other) {
     return JSON.stringify(this.rows) === JSON.stringify(other.rows) &&
       this.from === other.from &&
-      this.to === other.to;
+      this.to === other.to &&
+      this.readOnly === other.readOnly;
   }
 
   toDOM(view) {
+    const isReadOnly = this.readOnly;
     const container = document.createElement("div");
     container.className = "cm-md-table-container";
 
@@ -28,60 +31,58 @@ export class TableWidget extends WidgetType {
     const table = document.createElement("table");
     table.className = "cm-md-table";
 
-    const removeColRow = document.createElement("tr");
-    removeColRow.className = "cm-md-table-remove-row";
-    removeColRow.appendChild(document.createElement("td"));
+    if (!isReadOnly) {
+      const removeColRow = document.createElement("tr");
+      removeColRow.className = "cm-md-table-remove-row";
+      removeColRow.appendChild(document.createElement("td"));
 
-    this.rows[0].forEach((_, j) => {
-      const td = document.createElement("td");
-      const btn = this.createRemoveBtn(() => this.removeColumn(j, view), "Remover Coluna");
-      td.appendChild(btn);
-      removeColRow.appendChild(td);
-    });
-    table.appendChild(removeColRow);
+      this.rows[0].forEach((_, j) => {
+        const td = document.createElement("td");
+        const btn = this.createRemoveBtn(() => this.removeColumn(j, view), "Remover Coluna");
+        td.appendChild(btn);
+        removeColRow.appendChild(td);
+      });
+      table.appendChild(removeColRow);
+    }
 
     this.rows.forEach((row, i) => {
       const tr = document.createElement("tr");
 
-      const removeTd = document.createElement("td");
-      removeTd.className = "cm-md-table-remove-cell";
-      const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
-      removeTd.appendChild(btn);
-      tr.appendChild(removeTd);
+      if (!isReadOnly) {
+        const removeTd = document.createElement("td");
+        removeTd.className = "cm-md-table-remove-cell";
+        const btn = this.createRemoveBtn(() => this.removeRow(i, view), "Remover Linha");
+        removeTd.appendChild(btn);
+        tr.appendChild(removeTd);
+      }
 
       row.forEach((cell, j) => {
         const el = document.createElement(i === 0 ? "th" : "td");
         el.textContent = cell;
-        el.contentEditable = "true";
+        el.contentEditable = isReadOnly ? "false" : "true";
         el.className = "cm-md-table-cell";
 
-        el.onfocus = () => {
-          this.isEditing = true;
-        };
+        if (!isReadOnly) {
+          el.onfocus = () => {
+            this.isEditing = true;
+          };
 
-        el.onblur = () => {
-          this.isEditing = false;
-          this.sync(view);
-        };
+          el.onblur = () => {
+            this.isEditing = false;
+            this.sync(view);
+          };
 
-        el.oninput = () => {
-          this.rows[i][j] = el.textContent;
-        };
+          el.oninput = () => {
+            this.rows[i][j] = el.textContent;
+          };
 
-        el.onmousedown = (e) => {
-          e.stopPropagation();
-        };
-
-        el.onclick = (e) => {
-          e.stopPropagation();
-        };
-
-        el.onkeydown = (e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            el.blur();
-          }
-        };
+          el.onkeydown = (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              el.blur();
+            }
+          };
+        }
 
         tr.appendChild(el);
       });
@@ -90,30 +91,35 @@ export class TableWidget extends WidgetType {
 
     wrap.appendChild(table);
 
-    const addColBtn = document.createElement("button");
-    addColBtn.className = "cm-md-table-add-btn cm-add-col";
-    addColBtn.title = "Adicionar Coluna";
-    addColBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
-    addColBtn.onclick = (e) => {
-      e.stopPropagation();
-      this.addColumn(view);
-    };
+    if (!isReadOnly) {
+      const addColBtn = document.createElement("button");
+      addColBtn.className = "cm-md-table-add-btn cm-add-col";
+      addColBtn.title = "Adicionar Coluna";
+      addColBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+      addColBtn.onclick = (e) => {
+        e.stopPropagation();
+        this.addColumn(view);
+      };
 
-    mainWrap.appendChild(wrap);
-    mainWrap.appendChild(addColBtn);
+      mainWrap.appendChild(wrap);
+      mainWrap.appendChild(addColBtn);
 
-    container.appendChild(mainWrap);
+      container.appendChild(mainWrap);
 
-    const addRowBtn = document.createElement("button");
-    addRowBtn.className = "cm-md-table-add-btn cm-add-row";
-    addRowBtn.title = "Adicionar Linha";
-    addRowBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
-    addRowBtn.onclick = (e) => {
-      e.stopPropagation();
-      this.addRow(view);
-    };
+      const addRowBtn = document.createElement("button");
+      addRowBtn.className = "cm-md-table-add-btn cm-add-row";
+      addRowBtn.title = "Adicionar Linha";
+      addRowBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+      addRowBtn.onclick = (e) => {
+        e.stopPropagation();
+        this.addRow(view);
+      };
 
-    container.appendChild(addRowBtn);
+      container.appendChild(addRowBtn);
+    } else {
+      mainWrap.appendChild(wrap);
+      container.appendChild(mainWrap);
+    }
 
     return container;
   }

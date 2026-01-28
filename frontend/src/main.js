@@ -212,12 +212,12 @@ function openFile(node) {
 
 function getActiveParentId() {
     if (!fileTree.activeNodeId) return null;
-    
+
     const activeNode = fileSystem.getNode(fileTree.activeNodeId);
     if (!activeNode) return null;
 
-    return activeNode.type === 'folder' 
-        ? activeNode.id 
+    return activeNode.type === 'folder'
+        ? activeNode.id
         : activeNode.parent_id;
 }
 
@@ -239,21 +239,72 @@ function openThemeModal() {
 
 
 
+const btnReadMode = document.getElementById('btn-read-mode');
+let isReadOnly = false;
+
+function toggleReadMode() {
+    isReadOnly = !isReadOnly;
+
+    const icon = btnReadMode.querySelector('.material-symbols-outlined');
+    if (isReadOnly) {
+        btnReadMode.classList.add('is-active');
+        icon.textContent = 'book';
+        Toast.info('Modo de leitura ativado');
+    } else {
+        btnReadMode.classList.remove('is-active');
+        icon.textContent = 'book_ribbon';
+        Toast.info('Modo de edição ativado');
+    }
+
+    editor.setReadOnly(isReadOnly);
+    fileTree.setReadOnly(isReadOnly);
+
+    const creationButtons = [
+        document.getElementById('btn-add-file'),
+        document.getElementById('btn-add-folder'),
+        document.getElementById('btn-add-separator'),
+        document.getElementById('btn-sync')
+    ];
+
+    creationButtons.forEach(btn => {
+        if (btn) {
+            btn.style.display = isReadOnly ? 'none' : '';
+        }
+    });
+
+    const menuActions = document.querySelector('.site-menu-actions');
+    if (menuActions) {
+        if (isReadOnly) {
+            menuActions.classList.add('is-read-only');
+        } else {
+            menuActions.classList.remove('is-read-only');
+        }
+    }
+}
+
+if (btnReadMode) {
+    btnReadMode.addEventListener('click', toggleReadMode);
+}
+
 document.getElementById('btn-add-file').addEventListener('click', () => {
+    if (isReadOnly) return;
     fileTree.startCreation('file', getActiveParentId());
 });
 
 document.getElementById('btn-add-folder').addEventListener('click', () => {
+    if (isReadOnly) return;
     fileTree.startCreation('folder', getActiveParentId());
 });
 
 document.getElementById('btn-sync').addEventListener('click', () => {
+    if (isReadOnly) return;
     Toast.success('Sincronização realizada com sucesso!');
 });
 
 const btnAddSeparator = document.getElementById('btn-add-separator');
 if (btnAddSeparator) {
     btnAddSeparator.addEventListener('click', () => {
+        if (isReadOnly) return;
         try {
             fileSystem.createSeparator(getActiveParentId());
             loadTree();
