@@ -4,6 +4,7 @@ export class FileTreeContextMenu {
         this.onDelete = options.onDelete || (() => { });
         this.onRename = options.onRename || (() => { });
         this.onChangeIcon = options.onChangeIcon || (() => { });
+        this.onPermissions = options.onPermissions || (() => { });
         this.onCreateSeparator = options.onCreateSeparator || (() => { });
         this.menu = null;
         this.activeNode = null;
@@ -59,6 +60,14 @@ export class FileTreeContextMenu {
                             action: () => this.onChangeIcon(node)
                         }
                     );
+
+                    if (node.type === 'folder') {
+                        items.push({
+                            label: 'Permissões',
+                            icon: 'lock',
+                            action: () => this.onPermissions(node)
+                        });
+                    }
                 }
 
                 items.push(

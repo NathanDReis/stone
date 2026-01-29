@@ -78,6 +78,7 @@
     transition: background-color 0.15s;
     border-radius: 4px;
     margin-bottom: 2px;
+    background-color: #000;
 
     border: 1px solid transparent;
 }
@@ -154,6 +155,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
+    height: 18px;
 }
 
 /* Drag & Drop Visual */

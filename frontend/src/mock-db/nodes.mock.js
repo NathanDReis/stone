@@ -6,6 +6,11 @@ export const initialNodes = [
     "type": "folder",
     "path": "/docs",
     "order": 0,
+    "permissions": [
+      { "profileId": "admin", "view": true, "edit": true, "delete": true },
+      { "profileId": "editor", "view": true, "edit": true, "delete": false },
+      { "profileId": "guest", "view": true, "edit": false, "delete": false }
+    ],
     "created_at": "2026-01-01T00:00:00.000Z",
     "updated_at": "2026-01-01T00:00:00.000Z"
   },

@@ -7,6 +7,7 @@ import { SearchController } from './ui/SearchController.js';
 import { FileTreeContextMenu } from './ui/FileTreeContextMenu.js';
 import { IconPickerModal } from './ui/IconPickerModal.js';
 import { DocumentSettingsModal } from './ui/DocumentSettingsModal.js';
+import { FolderSettingsModal } from './ui/FolderSettingsModal.js';
 import { IconManager } from './services/IconManager.js';
 
 const fileSystem = new FileSystemService();
@@ -23,6 +24,7 @@ menuElement.appendChild(treeContainer);
 const emptyState = new EmptyState(emptyStateContainer);
 const iconPicker = new IconPickerModal(iconManager);
 const docSettingsModal = new DocumentSettingsModal(fileSystem);
+const folderSettingsModal = new FolderSettingsModal(fileSystem);
 
 
 const searchController = new SearchController(
@@ -171,6 +173,9 @@ const contextMenu = new FileTreeContextMenu(fileTree, {
             }
         });
     },
+    onPermissions: (node) => {
+        folderSettingsModal.show(node.id);
+    },
     onCreateSeparator: (parentId) => {
         try {
             fileSystem.createSeparator(parentId);
@@ -267,7 +272,6 @@ function toggleReadMode() {
         document.getElementById('btn-add-file'),
         document.getElementById('btn-add-folder'),
         document.getElementById('btn-add-separator'),
-        document.getElementById('btn-sync')
     ];
 
     creationButtons.forEach(btn => {
@@ -306,11 +310,6 @@ document.getElementById('btn-add-file').addEventListener('click', () => {
 document.getElementById('btn-add-folder').addEventListener('click', () => {
     if (isReadOnly) return;
     fileTree.startCreation('folder', getActiveParentId());
-});
-
-document.getElementById('btn-sync').addEventListener('click', () => {
-    if (isReadOnly) return;
-    Toast.success('Sincronização realizada com sucesso!');
 });
 
 const btnAddSeparator = document.getElementById('btn-add-separator');

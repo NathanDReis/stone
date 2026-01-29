@@ -9,6 +9,7 @@
   font-family: var(--font-sans);
   background-color: var(--bg-main);
   overflow: hidden;
+  min-width: 200px;
 }
 
 .toc-upper {

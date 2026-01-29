@@ -23,11 +23,15 @@ The software is still in the early stages of development.
 - [ ] grafo com todos os documentos e seus relacionamentos por links internos
 // Necessárioi
 - [x] resolver bugs gráfico no mermaid (layout do gráfico, layout dos models)
-- [ ] criar um modo leitura onde é possível editar somente o tema
-- [ ] modelar para cada arquivo uma descrição abaixo do site-index, a data em que foi criado e o último a editar. 
+- [x] criar um modo leitura onde é possível editar somente o tema
+- [x] modelar para cada arquivo uma descrição abaixo do site-index, a data em que foi criado e o autor. 
     - Configuração da página como permissões para depois validar os perfis de usuário, 
     - um input de campo aberto (observação - onde colocarei o caminho do projeto ASTI)
     - um botão de permissões para adicionar permissões do documento
+- [ ] permitir modal para configurar as permissões dos perfis nas pastas também.
+- [ ] adicionar o modo leitura para a configuração do item anterior
+- [ ] criar validação de permissões no frontend para configuração de página conforme o login do usuário (usar token jwt para buscar o perfil e validar)
+    - [ ] além das configurações da página validar também a criação e edição de arquivos, pasta e separadores 
 - [ ] modelos estabelecidos para o banco de dados
 - [ ] criar um banco de dados postgress
 - [ ] salvar documentação (icons, nodes, documents)

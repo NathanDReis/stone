@@ -75,6 +75,11 @@ export class FileSystemService {
             path,
             order,
             icon: 'folder',
+            permissions: [
+                { profileId: 'admin', view: true, edit: true, delete: true },
+                { profileId: 'editor', view: true, edit: true, delete: false },
+                { profileId: 'guest', view: true, edit: false, delete: false }
+            ],
             created_at: now,
             updated_at: now
         };
@@ -132,6 +137,17 @@ export class FileSystemService {
 
         this.nodes.push(separatorNode);
         return separatorNode;
+    }
+
+    updateNodePermissions(id, permissions) {
+        const nodeIndex = this.nodes.findIndex(n => n.id === id);
+        if (nodeIndex === -1) {
+            throw new Error(`Node with id ${id} not found`);
+        }
+
+        this.nodes[nodeIndex].permissions = permissions;
+        this.nodes[nodeIndex].updated_at = this._generateTimestamp();
+        return this.nodes[nodeIndex];
     }
 
     updateDocument(id, updates) {
