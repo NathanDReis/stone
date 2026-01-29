@@ -186,7 +186,7 @@ export class EditorController {
                 }
 
                 if (update.docChanged) {
-                    updateToC(update.view);
+                    updateToC(update.view, this.fileSystem);
                     this.scheduleSave(update.state);
                 }
             })
@@ -217,7 +217,7 @@ export class EditorController {
             parent: this.parentElement
         });
 
-        updateToC(this.view);
+        updateToC(this.view, this.fileSystem);
         new ContextMenu(this.view);
     }
 
@@ -261,7 +261,11 @@ export class EditorController {
             changes: { from: 0, to: this.view.state.doc.length, insert: text }
         });
         this.view.dispatch(transaction);
-        updateToC(this.view);
+        updateToC(this.view, this.fileSystem);
+    }
+
+    refreshMetadata() {
+        updateToC(this.view, this.fileSystem);
     }
 
     setReadOnly(readOnly) {

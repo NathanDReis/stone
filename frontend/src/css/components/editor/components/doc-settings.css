@@ -1,0 +1,145 @@
+.doc-meta-sidebar {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.meta-row .material-symbols-outlined {
+    font-size: 14px;
+}
+
+.meta-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 10px;
+    line-height: 1.4;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gear-settings-btn {
+    position: absolute;
+    top: 24px;
+    right: 20px;
+    background-color: transparent !important;
+    color: var(--text-muted) !important;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.gear-settings-btn:hover {
+    opacity: 1;
+    transform: rotate(45deg);
+    color: var(--accent) !important;
+}
+
+/* Document Settings Modal */
+.doc-settings-box {
+    width: 600px !important;
+    max-width: 90vw;
+}
+
+.doc-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.doc-settings-close {
+    background: transparent !important;
+    color: var(--text-muted) !important;
+}
+
+.doc-settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.settings-group input,
+.settings-group textarea {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 6px;
+    padding: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.settings-group input:focus,
+.settings-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Permissions Grid */
+.permissions-grid {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.permissions-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px 60px;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.permissions-row:last-child {
+    border-bottom: none;
+}
+
+.permissions-row.header {
+    background-color: var(--bg-tertiary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.perm-profile {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.perm-check {
+    display: flex;
+    justify-content: center;
+}
+
+.perm-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent);
+}

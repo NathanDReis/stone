@@ -1,14 +1,29 @@
 .site-index {
   border-left: 1px solid var(--bg-tertiary);
   border-bottom: 1px solid var(--bg-tertiary);
-  height: calc(50dvh - 70px);
-  padding: 24px 20px;
-  max-height: calc(100dvh - 70px);  
-  overflow-y: auto;
+  height: calc(100dvh - 140px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   font-family: var(--font-sans);
   background-color: var(--bg-main);
+  overflow: hidden;
+}
+
+.toc-upper {
+  flex: 1;
+  padding: 24px 20px;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
+}
+
+.toc-lower {
+  padding: 24px 20px;
+  border-top: 1px solid var(--bg-tertiary);
+  background-color: var(--bg-secondary);
+  position: relative;
 }
 
 /*  Editor Scrollbar Transparente */

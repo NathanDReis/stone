@@ -70,9 +70,9 @@
 }
 
 .dialog-confirm {
-    background-color: var(--error);
+    background-color: var(--success);
     color: #fff;
-    border: 1px solid var(--error);
+    border: 1px solid var(--success);
 }
 
 .dialog-confirm:hover {

@@ -6,6 +6,7 @@ import { EmptyState } from './ui/EmptyState.js';
 import { SearchController } from './ui/SearchController.js';
 import { FileTreeContextMenu } from './ui/FileTreeContextMenu.js';
 import { IconPickerModal } from './ui/IconPickerModal.js';
+import { DocumentSettingsModal } from './ui/DocumentSettingsModal.js';
 import { IconManager } from './services/IconManager.js';
 
 const fileSystem = new FileSystemService();
@@ -21,6 +22,7 @@ menuElement.appendChild(treeContainer);
 
 const emptyState = new EmptyState(emptyStateContainer);
 const iconPicker = new IconPickerModal(iconManager);
+const docSettingsModal = new DocumentSettingsModal(fileSystem);
 
 
 const searchController = new SearchController(
@@ -193,6 +195,7 @@ function loadTree() {
 function openFile(node) {
     if (!node || node.type === 'folder') {
         activeFileId = null;
+        fileSystem.currentOpenFileId = null;
         editor.setContent('');
         emptyState.show();
         editor.hide();
@@ -202,6 +205,7 @@ function openFile(node) {
     emptyState.hide();
     editor.show();
     activeFileId = node.id;
+    fileSystem.currentOpenFileId = node.id;
     const doc = fileSystem.getDocument(node.id);
 
     if (!doc) return editor.setContent('');
@@ -285,6 +289,14 @@ function toggleReadMode() {
 if (btnReadMode) {
     btnReadMode.addEventListener('click', toggleReadMode);
 }
+
+window.addEventListener('openDocumentSettings', (e) => {
+    docSettingsModal.show(e.detail.docId);
+});
+
+window.addEventListener('documentMetadataUpdated', (e) => {
+    editor.refreshMetadata();
+});
 
 document.getElementById('btn-add-file').addEventListener('click', () => {
     if (isReadOnly) return;

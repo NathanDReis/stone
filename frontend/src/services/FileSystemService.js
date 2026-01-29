@@ -1,10 +1,15 @@
 import { initialNodes } from '../mock-db/nodes.mock.js';
 import { initialDocuments } from '../mock-db/documents.mock.js';
+import { initialUsers } from '../mock-db/users.mock.js';
+import { initialProfiles } from '../mock-db/profiles.mock.js';
 
 export class FileSystemService {
     constructor() {
         this.nodes = [...initialNodes];
         this.documents = [...initialDocuments];
+        this.users = [...initialUsers];
+        this.profiles = [...initialProfiles];
+        this.currentOpenFileId = null;
     }
 
     getNodes() {
@@ -17,6 +22,18 @@ export class FileSystemService {
 
     getNode(id) {
         return this.nodes.find(node => node.id === id);
+    }
+
+    getUsers() {
+        return this.users;
+    }
+
+    getProfiles() {
+        return this.profiles;
+    }
+
+    getUser(id) {
+        return this.users.find(u => u.id === id);
     }
 
     _generateId() {
@@ -117,7 +134,7 @@ export class FileSystemService {
         return separatorNode;
     }
 
-    updateDocument(id, content) {
+    updateDocument(id, updates) {
         const docIndex = this.documents.findIndex(d => d.id === id);
         if (docIndex === -1) {
             throw new Error(`Document with id ${id} not found`);
@@ -126,7 +143,12 @@ export class FileSystemService {
         const now = this._generateTimestamp();
         const doc = this.documents[docIndex];
 
-        doc.content = content;
+        if (typeof updates === 'string') {
+            doc.content = updates;
+        } else {
+            Object.assign(doc, updates);
+        }
+
         doc.version += 1;
         doc.updated_at = now;
 

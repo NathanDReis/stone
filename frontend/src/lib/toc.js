@@ -3,7 +3,7 @@ import { EditorView } from "@codemirror/view";
 
 const collapsedPaths = new Set();
 
-export function updateToC(view) {
+export function updateToC(view, fileSystem = null) {
     const container = document.querySelector(".site-index");
     if (!container) return;
 
@@ -21,7 +21,7 @@ export function updateToC(view) {
     });
 
     const hierarchy = buildHierarchy(headings);
-    renderToC(view, container, hierarchy);
+    renderToC(view, container, hierarchy, fileSystem);
 }
 
 function buildHierarchy(headings) {
@@ -42,18 +42,76 @@ function buildHierarchy(headings) {
     return root;
 }
 
-function renderToC(view, container, hierarchy) {
+function renderToC(view, container, hierarchy, fileSystem) {
     container.innerHTML = "";
+
+    const upper = document.createElement("div");
+    upper.className = "toc-upper";
 
     const title = document.createElement("h3");
     title.className = "toc-title";
     title.textContent = "CONTEÚDO DA PÁGINA";
-    container.appendChild(title);
+    upper.appendChild(title);
 
     const list = renderList(view, hierarchy, "");
     if (list) {
-        container.appendChild(list);
+        upper.appendChild(list);
     }
+    container.appendChild(upper);
+
+    // Document Metadata section (Bottom)
+    const lower = document.createElement("div");
+    lower.className = "toc-lower";
+
+    if (fileSystem && fileSystem.currentOpenFileId) {
+        const docId = fileSystem.currentOpenFileId;
+        const node = fileSystem.getNode(docId);
+        const doc = fileSystem.getDocument(docId);
+
+        if (node && doc) {
+            const author = fileSystem.getUser(node.author_id);
+            const meta = document.createElement("div");
+            meta.className = "doc-meta-sidebar";
+
+            const date = new Date(doc.updated_at).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            meta.innerHTML = `
+                <div class="meta-row">
+                    <span class="material-symbols-outlined">calendar_today</span>
+                    <span>${date}</span>
+                </div>
+                <div class="meta-row">
+                    <span class="material-symbols-outlined">person</span>
+                    <span>${author ? author.name : 'Desconhecido'}</span>
+                </div>
+                ${doc.description ? `
+                <div class="meta-description" title="${doc.description.replace(/"/g, '&quot;')}">
+                    ${doc.description}
+                </div>
+                ` : ''}
+            `;
+
+            const gearBtn = document.createElement("button");
+            gearBtn.className = "fab fab-mini gear-settings-btn";
+            gearBtn.title = "Configurações do Documento";
+            gearBtn.innerHTML = `<span class="material-symbols-outlined">settings</span>`;
+            gearBtn.onclick = () => {
+                const event = new CustomEvent('openDocumentSettings', { detail: { docId } });
+                window.dispatchEvent(event);
+            };
+
+            lower.appendChild(meta);
+            lower.appendChild(gearBtn);
+        }
+    }
+
+    container.appendChild(lower);
 }
 
 function renderList(view, nodes, parentPath) {
