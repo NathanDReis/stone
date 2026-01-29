@@ -90,7 +90,6 @@ export class DocumentSettingsModal {
 
         document.body.appendChild(this.overlay);
 
-        // Bind events
         this.overlay.querySelector('.doc-settings-close').onclick = () => this.close();
         this.overlay.querySelector('.doc-settings-cancel').onclick = () => this.close();
         this.overlay.querySelector('.doc-settings-save').onclick = () => this.handleSave();
@@ -128,7 +127,6 @@ export class DocumentSettingsModal {
             Toast.success("Configurações salvas com sucesso");
             this.close();
 
-            // Re-render ToC to show updated description if open
             const event = new CustomEvent('documentMetadataUpdated', { detail: { docId: this.currentDocId } });
             window.dispatchEvent(event);
         } catch (e) {

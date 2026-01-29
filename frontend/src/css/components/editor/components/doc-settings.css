@@ -45,7 +45,6 @@
     color: var(--accent) !important;
 }
 
-/* Document Settings Modal */
 .doc-settings-box {
     width: 600px !important;
     max-width: 90vw;
@@ -98,7 +97,6 @@
     border-color: var(--accent);
 }
 
-/* Permissions Grid */
 .permissions-grid {
     background-color: var(--bg-secondary);
     border: 1px solid var(--bg-tertiary);

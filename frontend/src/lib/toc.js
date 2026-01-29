@@ -59,7 +59,6 @@ function renderToC(view, container, hierarchy, fileSystem) {
     }
     container.appendChild(upper);
 
-    // Document Metadata section (Bottom)
     const lower = document.createElement("div");
     lower.className = "toc-lower";
 

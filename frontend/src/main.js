@@ -26,7 +26,6 @@ const iconPicker = new IconPickerModal(iconManager);
 const docSettingsModal = new DocumentSettingsModal(fileSystem);
 const folderSettingsModal = new FolderSettingsModal(fileSystem);
 
-
 const searchController = new SearchController(
     document.getElementById('search'),
     fileSystem,
@@ -246,8 +245,6 @@ function openThemeModal() {
     themeModal.show();
 }
 
-
-
 const btnReadMode = document.getElementById('btn-read-mode');
 let isReadOnly = false;
 
@@ -361,8 +358,6 @@ window.addEventListener('keydown', (e) => {
 document.addEventListener('app-close', () => {
     handleClose();
 });
-
-
 
 loadTree();
 openFile(null);
